@@ -12,7 +12,7 @@ interface ProductListingProps {
 }
 
 export default function ProductListing({ product }: ProductListingProps) {
-  console.log(product.length)
+  console.log("inside ProductListing", product.length)
   
   const router = useRouter()
   const urlSearchParams = useSearchParams()
@@ -98,16 +98,16 @@ export default function ProductListing({ product }: ProductListingProps) {
 
 function applyFiltersAndSort(products: Product[], urlSearchParams: URLSearchParams): Product[] {
   let filtered = [...products]
-  console.log(filtered.length, "initial products", )
+
   if (urlSearchParams.getAll("brand").length > 0) {
-    console.log("Filtering by brand")
+
     
     const brands = urlSearchParams.getAll("brand")
     filtered = filtered.filter((product) => brands?.includes(product.brand))
   }
 
   if ((urlSearchParams.getAll("minPrice") || urlSearchParams.getAll("maxPrice")).length > 0) {
-    console.log("Filtering by price range")
+
     const minPrice = urlSearchParams.get("minPrice")
       ? Number.parseFloat(urlSearchParams.get("minPrice") || "0")
       : 0
@@ -122,7 +122,7 @@ function applyFiltersAndSort(products: Product[], urlSearchParams: URLSearchPara
   }
 
   if (urlSearchParams.get("sort")) {
-    console.log("Sorting products")
+
     switch (urlSearchParams.get("sort")) {
       case "price-low":
         filtered.sort((a, b) => {
@@ -140,6 +140,6 @@ function applyFiltersAndSort(products: Product[], urlSearchParams: URLSearchPara
         break
     }
   }
-  console.log(filtered.length)
+
   return filtered
 }
