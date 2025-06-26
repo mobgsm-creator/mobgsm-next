@@ -3,12 +3,14 @@ import ProductListing from "../components/ProductListing"
 import FilterSidebar from "../components/FilterSidebar"
 import { Skeleton } from "../components/ui/skeleton"
 import { getProducts } from "../lib/supabase"
-
+import BNPLESIMSidebar from "../components/bnpl-esim-sidebar"
 export default async function HomePage() {
   const products = await getProducts()
  
   return (
+    
     <div className="min-h-screen bg-gray-50">
+      <BNPLESIMSidebar />
       <header className="bg-white shadow-sm border-b">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
           <h1 className="justify-center text-center text-2xl font-bold text-gray-900">MobGSM India</h1>
