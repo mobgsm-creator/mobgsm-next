@@ -11,9 +11,7 @@ interface ProductListingProps {
   product: Product[]
 }
 
-export default function ProductListing({ product }: ProductListingProps) {
-  console.log("inside ProductListing", product.length)
-  
+export default function ProductListing({ product }: ProductListingProps) {  
   const router = useRouter()
   const urlSearchParams = useSearchParams()
 
@@ -27,7 +25,6 @@ export default function ProductListing({ product }: ProductListingProps) {
   useEffect(() => {
     const filtered = applyFiltersAndSort(product, urlSearchParams)
     setFilteredProducts(filtered)
-    console.log(filtered.length, "filtered products")
   }, [product, urlSearchParams])
 
   const [totalProducts, setTotalProducts] = useState<number>(0)

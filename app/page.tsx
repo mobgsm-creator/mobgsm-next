@@ -22,7 +22,7 @@ export default async function HomePage() {
           <div className="hidden lg:block w-80 flex-shrink-0">
             <div className="sticky top-6">
               <Suspense fallback={<Skeleton className="h-96 w-full" />}>
-                <FilterSidebar />
+                <FilterSidebar product={products}/>
               </Suspense>
             </div>
           </div>

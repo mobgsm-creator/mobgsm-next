@@ -7,18 +7,19 @@ import { Checkbox } from "../components/ui/checkbox"
 import { Button } from "../components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "../components/ui/card"
 import { Separator } from "../components/ui/separator"
-
-export default function FilterSidebar() {
+import type { Product } from "../lib/types"
+interface ProductListingProps {
+  product: Product[]
+}
+export default function FilterSidebar( { product }: ProductListingProps ) {
   const router = useRouter()
   const searchParams = useSearchParams()
-  const [brands, setBrands] = useState<string[]>([])
   const [selectedBrands, setSelectedBrands] = useState<string[]>([])
   const [priceRange, setPriceRange] = useState([0, 50000])
-  
+  const allBrands = Array.from(new Set(product.map((p) => p.brand)))
 
   useEffect(() => {
-    // Fetch available brands
-    fetchBrands()
+    
 
     // Initialize filters from URL params
     const brandParam = searchParams.getAll("brand")
@@ -35,23 +36,6 @@ export default function FilterSidebar() {
     
   }, [searchParams])
 
-  const fetchBrands = async () => {
-    try {
-      const response = await fetch("/api/brands")
-      const data: unknown = await response.json()
-
-      // Ensure we only set an array; otherwise reset to an empty array
-      if (Array.isArray(data)) {
-        setBrands(data as string[])
-      } else {
-        console.error("Unexpected brands payload:", data)
-        setBrands([])
-      }
-    } catch (error) {
-      console.error("Error fetching brands:", error)
-      setBrands([]) // Fail gracefully
-    }
-  }
 
   const applyFilters = () => {
     const params = new URLSearchParams()
@@ -111,8 +95,8 @@ export default function FilterSidebar() {
         <div>
           <h3 className="font-medium mb-3">Brand</h3>
           <div className="space-y-2 max-h-48 overflow-y-auto">
-            {brands.length > 0 ? (
-              brands.map((brand) => (
+            {allBrands.length > 0 ? (
+              allBrands.map((brand) => (
                 <div key={brand} className="flex items-center space-x-2">
                   <Checkbox
                     id={brand}
