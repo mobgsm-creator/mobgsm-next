@@ -95,7 +95,12 @@ export default function ProductListing({ product }: ProductListingProps) {
 
 function applyFiltersAndSort(products: Product[], urlSearchParams: URLSearchParams): Product[] {
   let filtered = [...products]
-
+  const searchQuery = urlSearchParams.get("search")?.toLowerCase() || ""
+  if(searchQuery) {
+    filtered = filtered.filter((product) =>
+      product.product_name.toLowerCase().includes(searchQuery)
+    )
+  }
   if (urlSearchParams.getAll("brand").length > 0) {
 
     

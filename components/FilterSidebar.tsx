@@ -16,6 +16,8 @@ export default function FilterSidebar( { product }: ProductListingProps ) {
   const searchParams = useSearchParams()
   const [selectedBrands, setSelectedBrands] = useState<string[]>([])
   const [priceRange, setPriceRange] = useState([0, 50000])
+  const [searchQuery, setSearchQuery] = useState("")
+
   const allBrands = Array.from(new Set(product.map((p) => p.brand)))
 
   useEffect(() => {
@@ -25,6 +27,10 @@ export default function FilterSidebar( { product }: ProductListingProps ) {
     const brandParam = searchParams.getAll("brand")
     if (brandParam) {
       setSelectedBrands(brandParam)
+    }
+    const queryParam = searchParams.get("search")
+    if (queryParam) {
+      setSearchQuery(queryParam)
     }
 
     const minPrice = searchParams.get("minPrice")
@@ -38,6 +44,7 @@ export default function FilterSidebar( { product }: ProductListingProps ) {
 
 
   const applyFilters = () => {
+
     const params = new URLSearchParams()
 
     if (selectedBrands.length > 0) {
@@ -59,7 +66,11 @@ export default function FilterSidebar( { product }: ProductListingProps ) {
     if (currentSort) {
       params.set("sort", currentSort)
     }
-
+    if (searchQuery.trim() !== "") {
+      params.set("search", searchQuery.trim())
+    }
+    console.log(params)
+    
     router.push(`/?${params.toString()}`)
   }
 
@@ -73,6 +84,7 @@ export default function FilterSidebar( { product }: ProductListingProps ) {
     if (currentSort) {
       params.set("sort", currentSort)
     }
+    setSearchQuery("")
 
     router.push(`/?${params.toString()}`)
   }
@@ -91,6 +103,16 @@ export default function FilterSidebar( { product }: ProductListingProps ) {
         <CardTitle className="text-lg">Filters</CardTitle>
       </CardHeader>
       <CardContent className="space-y-6">
+      <div>
+        <input
+          type="text"
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          placeholder="Search products..."
+          className="w-full px-3 py-2 text-sm border rounded-md"
+        />
+      </div>
+
         {/* Brand Filter */}
         <div>
           <h3 className="font-medium mb-3">Brand</h3>
