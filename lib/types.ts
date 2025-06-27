@@ -10,4 +10,5 @@ export interface Product {
   rating: string
   reviews: string
   img_link: string
+  flag: number
 }

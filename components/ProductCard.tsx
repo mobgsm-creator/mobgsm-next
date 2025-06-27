@@ -4,25 +4,39 @@ import { Star, ExternalLink } from "lucide-react"
 import type { Product } from "../lib/types"
 import { Button } from "../components/ui/button"
 import { Badge } from "../components/ui/badge"
+import { useState } from "react";
 
-interface ProductCardProps {
-  product: Product
-}
+type ProductCardProps = {
+  product: Product[];
+};
 
 export default function ProductCard({ product }: ProductCardProps) {
-  //const reviews = product.reviews ? product.reviews.split(",").map((r) => r.trim()) : []
+
+  const [currentIndex, setCurrentIndex] = useState(0);
+
+  const handleNext = () => {
+    setCurrentIndex((prevIndex) => (prevIndex + 1) % product.length);
+  };
+
+  const handlePrev = () => {
+    setCurrentIndex((prevIndex) => (prevIndex - 1 + product.length) % product.length);
+  };
+
+  const currentProduct = product[currentIndex];
 
   return (
     <div className="bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300 overflow-hidden">
       <div className="relative">
         <img
-          src={product.img_link}
-          alt={product.product_name}
+          src={currentProduct.img_link}
+          alt={currentProduct.product_name}
           width={300}
           height={200}
           className="w-full h-48 object-cover"
         />
-        <Badge className="absolute top-2 right-2 bg-red-500 hover:bg-red-600">{product.discount}</Badge>
+        <Badge className="absolute top-2 right-2 bg-red-500 hover:bg-red-600">
+          {currentProduct.discount}
+        </Badge>
       </div>
 
       <div className="p-4">
@@ -34,53 +48,56 @@ export default function ProductCard({ product }: ProductCardProps) {
             height={20}
             className="h-5 w-auto"
           />
-          
         </div>
 
-        <h3 className="font-semibold text-gray-900 mb-2 line-clamp-2 min-h-[3rem]">{product.product_name}</h3>
+        <h3 className="font-semibold text-gray-900 mb-2 line-clamp-2 min-h-[3rem]">
+          {currentProduct.product_name}
+        </h3>
 
         <div className="flex items-center gap-2 mb-2">
-          <span className="text-lg font-bold text-green-600">{product.price}</span>
-          <span className="text-sm text-gray-500 line-through">{product.mrp}</span>
+          <span className="text-lg font-bold text-green-600">{currentProduct.price}</span>
+          <span className="text-sm text-gray-500 line-through">{currentProduct.mrp}</span>
         </div>
 
         <div className="flex items-center gap-2 mb-3">
           <div className="flex items-center">
             <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
-            <span className="text-sm font-medium ml-1">{product.rating}</span>
+            <span className="text-sm font-medium ml-1">{currentProduct.rating}</span>
           </div>
           <span className="text-xs text-gray-500">•</span>
           <Badge variant="outline" className="text-xs">
-            {product.status}
+            {currentProduct.status}
           </Badge>
         </div>
 
-        {/* {reviews.length > 0 && (
-          <div className="mb-3">
-            <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-hide">
-              {reviews.slice(0, 3).map((review, index) => (
-                <div
-                  key={index}
-                  className="flex-shrink-0 bg-gray-50 rounded-md px-3 py-1 text-xs text-gray-600 max-w-[200px]"
-                >
-                  {review}
-                </div>
-              ))}
-            </div>
-          </div>
-        )} */}
-
         <div className="space-y-2">
           <Button asChild className="w-full">
-            <Link href={product.product_links} target="_blank" rel="noopener noreferrer">
+            <Link
+              href={currentProduct.product_links}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
               Buy Now
               <ExternalLink className="w-4 h-4 ml-2" />
             </Link>
           </Button>
 
-          {product.payment_options && <p className="text-xs text-gray-500 text-center">{product.payment_options}</p>}
+          {currentProduct.payment_options && (
+            <p className="text-xs text-gray-500 text-center">
+              {currentProduct.payment_options}
+            </p>
+          )}
+        </div>
+
+        <div className="flex justify-between mt-4">
+          <Button variant="outline" onClick={handlePrev}>
+            Previous
+          </Button>
+          <Button variant="outline" onClick={handleNext}>
+            Next
+          </Button>
         </div>
       </div>
     </div>
-  )
+  );
 }

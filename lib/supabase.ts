@@ -10,6 +10,7 @@ export function createClient() {
 
 // Server-side function to get products
 export async function getProducts(): Promise<Product[]> {
+
   try {
     const response = await fetch(`${process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"}/api/products`, {
       cache: "no-store", // Disable caching for real-time data

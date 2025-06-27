@@ -19,10 +19,10 @@ export async function GET() {
         status,
         payment_options,
         rating,
-        img_link
+        img_link, flag
       `)
       .range(0, 1999)
-
+   
     if (error) {
       console.error("Supabase error:", error)
       return NextResponse.json({ error: "Failed to fetch products" }, { status: 500 })
