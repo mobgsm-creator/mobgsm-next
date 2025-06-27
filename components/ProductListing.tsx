@@ -155,6 +155,7 @@ function applyFiltersAndSort(products: Product[], urlSearchParams: URLSearchPara
     }
     groupedMap.get(flag)!.push(product)
   }
+  
 
   const grouped: GroupedProduct[] = Array.from(groupedMap.entries()).map(
     ([flag, items]) => ({

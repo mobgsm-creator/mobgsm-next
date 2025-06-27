@@ -1,11 +1,11 @@
 import Image from "next/image"
 import Link from "next/link"
-import { Star, ExternalLink } from "lucide-react"
+import { Star } from "lucide-react"
 import type { Product } from "../lib/types"
 import { Button } from "../components/ui/button"
 import { Badge } from "../components/ui/badge"
 import { useState } from "react";
-
+import ComparePopup from "./comparePopup";
 type ProductCardProps = {
   product: Product[];
 };
@@ -13,6 +13,7 @@ type ProductCardProps = {
 export default function ProductCard({ product }: ProductCardProps) {
 
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [showCompare, setShowCompare] = useState(false)
 
   const handleNext = () => {
     setCurrentIndex((prevIndex) => (prevIndex + 1) % product.length);
@@ -21,6 +22,11 @@ export default function ProductCard({ product }: ProductCardProps) {
   const handlePrev = () => {
     setCurrentIndex((prevIndex) => (prevIndex - 1 + product.length) % product.length);
   };
+
+  const handleCompare = () => {
+    setShowCompare(true)
+
+  }
 
   const currentProduct = product[currentIndex];
 
@@ -71,16 +77,31 @@ export default function ProductCard({ product }: ProductCardProps) {
         </div>
 
         <div className="space-y-2">
-          <Button asChild className="w-full">
+          <Button asChild className="w-1/3">
             <Link
               href={currentProduct.product_links}
               target="_blank"
               rel="noopener noreferrer"
+              className='ml-6 flex items-center justify-center gap-2 text-white'
             >
               Buy Now
-              <ExternalLink className="w-4 h-4 ml-2" />
+              
             </Link>
           </Button>
+          <Button asChild onClick={handleCompare} className="w-1/3">
+          
+            
+         
+              <span className = 'ml-12'>Compare</span>
+              
+       
+          </Button>
+          {showCompare && (
+        <ComparePopup
+          products={product}
+          onClose={() => setShowCompare(false)}
+        />
+      )}
 
           {currentProduct.payment_options && (
             <p className="text-xs text-gray-500 text-center">
