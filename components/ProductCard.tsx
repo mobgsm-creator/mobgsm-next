@@ -148,7 +148,7 @@ export default function ProductCard({ product }: ProductCardProps) {
           alt={currentProduct.Name}
           width={300}
           height={200}
-          className="w-full h-48 object-cover"
+          className="ml-20 w-1/2"
         />
         <Badge className="absolute top-2 right-2 bg-blue-500 hover:bg-blue-600">
           BNPL
@@ -198,7 +198,7 @@ export default function ProductCard({ product }: ProductCardProps) {
           alt={currentProduct.provider}
           width={300}
           height={200}
-          className="w-full h-48 object-cover"
+          className="ml-20 w-1/2"
         />
         <Badge className="absolute top-2 right-2 bg-green-500 hover:bg-green-600">
           eSIM
