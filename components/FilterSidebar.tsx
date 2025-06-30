@@ -69,7 +69,7 @@ export default function FilterSidebar( { product }: ProductListingProps ) {
     if (searchQuery.trim() !== "") {
       params.set("search", searchQuery.trim())
     }
-    console.log(params)
+
     
     router.push(`/?${params.toString()}`)
   }

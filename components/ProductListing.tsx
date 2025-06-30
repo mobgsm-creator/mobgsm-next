@@ -1,24 +1,43 @@
 
 'use client'
 
-import type { Product } from "../lib/types"
+import type { Product, ESIMProvider,BNPLProvider } from "../lib/types"
 import { useSearchParams, useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import ProductCard from './ProductCard'
 import SortOptions from './SortOptions'
+import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
 type GroupedProduct = {
   flag: number
   items: Product[]
 }
 interface ProductListingProps {
   product: Product[]
+  esimProviders?: ESIMProvider[]
+  BNPLProvider?: BNPLProvider[]
 }
-
-export default function ProductListing({ product }: ProductListingProps) {  
+interface ToggleTabsProps {
+  onChange: (value: 'products' | 'esim' | 'bnpl') => void
+  currentView: 'products' | 'esim' | 'bnpl'
+}
+function ToggleTabs({ onChange, currentView }: ToggleTabsProps) {
+  return (
+    <Tabs value={currentView} onValueChange={(val: string) => onChange(val as 'products' | 'esim' | 'bnpl')}>
+      <TabsList>
+        <TabsTrigger value="products">Mobiles</TabsTrigger>
+        <TabsTrigger value="esim">eSIM Offers</TabsTrigger>
+        <TabsTrigger value="bnpl">BNPL Offers</TabsTrigger>
+      </TabsList>
+    </Tabs>
+  )
+}
+export default function ProductListing({ product, esimProviders, BNPLProvider }: ProductListingProps) {  
   const router = useRouter()
   const urlSearchParams = useSearchParams()
-
+  const [view, setView] = useState<'products' | 'esim' | 'bnpl'>('products')
   const [filteredProducts, setFilteredProducts] = useState<GroupedProduct[]>([])
+  const [BNPLitems, setBNPLitems] = useState<BNPLProvider[]>([])
+  const [ESIMitems, setESIMitems] = useState<ESIMProvider[]>([])
   
   const currentPage = parseInt(urlSearchParams.get('page') || '1')
  
@@ -26,15 +45,29 @@ export default function ProductListing({ product }: ProductListingProps) {
 
   // Run filters and sort every time product or searchParams change
   useEffect(() => {
+ 
+    if (view === 'products') {
     const filtered = applyFiltersAndSort(product, urlSearchParams)
-    setFilteredProducts(filtered)
-  }, [product, urlSearchParams])
+    setFilteredProducts(filtered) }
+    else if (view === 'esim') {
+  
+    
+      setESIMitems(esimProviders || [])
+    }
+    else if (view === 'bnpl') {
+      
+      setBNPLitems(BNPLProvider || []) }
+  }, [view, product, urlSearchParams, BNPLProvider, esimProviders])
 
   const [totalProducts, setTotalProducts] = useState<number>(0)
   const [totalPages, setTotalPages] = useState<number>(0)
   const [paginatedProducts, setPaginatedProducts] = useState<GroupedProduct[]>([])
-
+  const [paginatedBNPL, setPaginatedBNPL] = useState<BNPLProvider[]>([])
+  const [paginatedESIM, setPaginatedESIM] = useState<ESIMProvider[]>([])
   useEffect(() => {
+
+    if (view === 'products') {
+ 
     const total = filteredProducts.length
     setTotalProducts(total)
 
@@ -45,35 +78,90 @@ export default function ProductListing({ product }: ProductListingProps) {
       (currentPage - 1) * itemsPerPage,
       currentPage * itemsPerPage
     )
-    setPaginatedProducts(paginated)
-  }, [filteredProducts, currentPage, itemsPerPage])
-  console.log(paginatedProducts)
+    setPaginatedProducts(paginated) }
+    else if (view === 'esim') {
+
+      const total = ESIMitems.length
+      setTotalProducts(total)
+      
+      const pages = Math.ceil(total / itemsPerPage)
+      setTotalPages(pages)
+
+      const paginated = ESIMitems.slice(
+        (currentPage - 1) * itemsPerPage,
+        currentPage * itemsPerPage
+      )
+      setPaginatedESIM(paginated)
+    }
+    else if  (view === 'bnpl') {
+   
+      const total = BNPLitems.length
+      setTotalProducts(total)
+ 
+      const pages = Math.ceil(total / itemsPerPage)
+      setTotalPages(pages)
+
+      const paginated = BNPLitems.slice(
+        (currentPage - 1) * itemsPerPage,
+        currentPage * itemsPerPage
+      )
+      setPaginatedBNPL(paginated)
+    }
+  }, [filteredProducts, currentPage, view, BNPLitems, ESIMitems])
+
   const handlePageChange = (newPage: number) => {
     const params = new URLSearchParams(urlSearchParams.toString())
     params.set('page', newPage.toString())
     router.push(`?${params.toString()}`)
   }
+  const data =
+  view === 'products'
+    ? paginatedProducts
+    : view === 'esim'
+    ? paginatedESIM
+    : paginatedBNPL
+
 
   return (
     <div>
       <div className="flex justify-between items-center mb-6">
+      <ToggleTabs currentView={view} onChange={setView}/>
         <h2 className="text-xl font-semibold text-gray-900">
           {totalProducts} Products Found
         </h2>
         <SortOptions />
       </div>
 
-      {paginatedProducts.length === 0 ? (
-        <div className="text-center py-12">
-          <p className="text-gray-500 text-lg">No products found matching your criteria.</p>
-        </div>
-      ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {paginatedProducts.map((product) => (
-            <ProductCard key={product.flag} product={product.items} />
-          ))}
-        </div>
-      )}
+      {data.length === 0 ? (
+  <div className="text-center py-12">
+    <p className="text-gray-500 text-lg">
+      No {view === 'products' ? 'products' : view === 'esim' ? 'eSIM offers' : 'BNPL offers'} found matching your criteria.
+    </p>
+  </div>
+) : (
+  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+    {view === 'products' &&
+      data.map((product) => (
+       
+          <ProductCard key={(product as GroupedProduct).flag} product={(product as GroupedProduct).items} />
+   
+      ))}
+
+    {view === 'esim' &&
+      data.map((provider, index) => {
+       
+        return <ProductCard key={index} product={[provider as ESIMProvider]} />;
+      })}
+
+    {view === 'bnpl' &&
+      data.map((provider, index) => {
+  
+        return (
+        <ProductCard key={index} product={[provider as BNPLProvider]} />)
+      })}
+  </div>
+)}
+
 
       <div className="flex justify-center mt-8 space-x-4">
         <button
@@ -163,6 +251,8 @@ function applyFiltersAndSort(products: Product[], urlSearchParams: URLSearchPara
       items,
     })
   )
+  
+    
   
 
 

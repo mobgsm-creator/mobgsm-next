@@ -2,20 +2,32 @@ import { Suspense } from "react"
 import ProductListing from "../components/ProductListing"
 import FilterSidebar from "../components/FilterSidebar"
 import { Skeleton } from "../components/ui/skeleton"
-import { getProducts } from "../lib/supabase"
-import BNPLESIMSidebar from "../components/bnpl-esim-sidebar"
+import { getProducts, getBNPL, getESIM } from "../lib/supabase"
+import  Image  from "next/image"
 export default async function HomePage() {
   const products = await getProducts()
+ 
+  const bnpl = await getBNPL()
+
+  const esim = await getESIM()
+ 
+
  
   return (
     
     <div className="min-h-screen bg-gray-50">
-      <BNPLESIMSidebar />
+
       <header className="bg-white shadow-sm border-b">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-          <h1 className="justify-center text-center text-2xl font-bold text-gray-900">MobGSM India</h1>
-          <p className="justify-center text-center text-gray-600 mt-1">Best deals from Shopclues</p>
-        </div>
+       
+  <Image 
+    src='/MOB GSM svg vector.svg' 
+    alt='' 
+    width={40} 
+    height={40} 
+  />
+</div>
+
       </header>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
@@ -32,7 +44,11 @@ export default async function HomePage() {
           {/* Main Content */}
           <div className="flex-1 min-w-0">
             <Suspense fallback={<ProductListingSkeleton />}>
-              <ProductListing product={products} />
+            <ProductListing 
+              product={products} 
+              esimProviders={esim} 
+              BNPLProvider={bnpl} 
+            />
             </Suspense>
           </div>
         </div>

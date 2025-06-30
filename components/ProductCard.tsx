@@ -1,13 +1,13 @@
 import Image from "next/image"
 import Link from "next/link"
 import { Star } from "lucide-react"
-import type { Product } from "../lib/types"
+import type { Product, ESIMProvider, BNPLProvider } from "../lib/types"
 import { Button } from "../components/ui/button"
 import { Badge } from "../components/ui/badge"
 import { useState } from "react";
 import ComparePopup from "./comparePopup";
 type ProductCardProps = {
-  product: Product[];
+  product: Product[] | ESIMProvider[] | BNPLProvider[];
 };
 
 export default function ProductCard({ product }: ProductCardProps) {
@@ -29,10 +29,30 @@ export default function ProductCard({ product }: ProductCardProps) {
   }
 
   const currentProduct = product[currentIndex];
+  function isProduct(item: Product | ESIMProvider | BNPLProvider): item is Product {
+    const flag = "product_name" in item && typeof item.product_name === "string";
+    //console.log("isProduct", flag, item);
+    return flag;
+  }
+  
+  function isESIM(item: Product | ESIMProvider | BNPLProvider): item is ESIMProvider {
+    const flag = "provider" in item && typeof item.provider === "string";
+    //console.log("isESIM", flag, item);
+    return flag;
+  }
+  
+  function isBNPL(item: Product | ESIMProvider | BNPLProvider): item is BNPLProvider {
+    const flag = "Name" in item && typeof item.Name === "string";
+    ///console.log("isBNPL", flag, item);
+    return flag;
+  }
+  
+  
 
   return (
+    
     <div className="bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300 overflow-hidden">
-      <div className="relative">
+      {isProduct(currentProduct) && ( <><div className="relative">
         <img
           src={currentProduct.img_link}
           alt={currentProduct.product_name}
@@ -98,7 +118,7 @@ export default function ProductCard({ product }: ProductCardProps) {
           </Button>
           {showCompare && (
         <ComparePopup
-          products={product}
+          products={product.filter(isProduct)}
           onClose={() => setShowCompare(false)}
         />
       )}
@@ -118,7 +138,116 @@ export default function ProductCard({ product }: ProductCardProps) {
             Next
           </Button>
         </div>
+      </div></>)}
+      {isBNPL(currentProduct)
+       && (<>
+      
+      <div className="relative">
+        <img
+          src={currentProduct.Image_URL}
+          alt={currentProduct.Name}
+          width={300}
+          height={200}
+          className="w-full h-48 object-cover"
+        />
+        <Badge className="absolute top-2 right-2 bg-blue-500 hover:bg-blue-600">
+          BNPL
+        </Badge>
       </div>
+      <div className="p-4">
+        <h3 className="font-semibold text-gray-900 mb-2 line-clamp-2 min-h-[3rem]">
+          {currentProduct.Name}
+        </h3>
+
+        <div className="space-y-1 text-sm text-gray-700">
+  <div className="flex justify-between">
+    <span className="font-medium text-gray-800">Credit Limit:</span>
+    <span>{currentProduct.Credit_Limit}</span>
+  </div>
+  <div className="flex justify-between">
+    <span className="font-medium text-gray-800  whitespace-nowrap">Interest Rate:</span>
+    <span>{currentProduct.Interest_Rate}</span>
+  </div>
+  <div className="flex justify-between">
+    <span className="font-medium text-gray-800">KYC Required:</span>
+    <span>{currentProduct.KYC ? "Yes" : "No"}</span>
+  </div>
+  <div className="flex justify-between">
+    <span className="font-medium text-gray-800">NBFC Partner:</span>
+    <span>{currentProduct.NBFC_Partner}</span>
+  </div>
+</div>
+
+
+        <Button asChild className="w-full mt-4">
+          <Link
+            href={currentProduct.Website}
+            target="_blank"
+            rel="noopener noreferrer"
+            className='flex items-center justify-center gap-2 text-white'
+          >
+            Visit Website
+          </Link>
+        </Button>
+      </div>
+      </>)}
+      {isESIM(currentProduct) && (<>
+      <div className="relative">
+        <img
+          src={currentProduct.img_link}
+          alt={currentProduct.provider}
+          width={300}
+          height={200}
+          className="w-full h-48 object-cover"
+        />
+        <Badge className="absolute top-2 right-2 bg-green-500 hover:bg-green-600">
+          eSIM
+        </Badge>
+      </div>
+      <div className="p-4">
+        <h3 className="font-semibold text-gray-900 mb-2 line-clamp-2 min-h-[3rem]">
+          {currentProduct.provider}
+        </h3>
+
+        <div className="space-y-3 text-sm text-gray-700 mt-2">
+  {/* Type Label */}
+  <div className="flex">
+    <span className="font-medium text-gray-800 mr-1">Type:</span>
+    <span>{currentProduct.type.join(", ")}</span>
+  </div>
+
+  {/* Plan List */}
+  <div>
+
+    <ul className="list-disc pl-5 mt-1 space-y-2">
+      {currentProduct.plans.map((plan, index) => (
+        <li key={index} className="text-gray-700 leading-snug">
+          <Link
+            href={plan.link}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-blue-600 hover:underline font-medium"
+            title={plan.name}
+          >
+            {plan.name}
+          </Link>
+          <span className="ml-1 text-gray-600">
+            – {plan.price || plan.price_range}
+            {plan.validity ? ` • ${plan.validity}` : ""}
+          </span>
+        </li>
+      ))}
+    </ul>
+  </div>
+</div>
+
+
+      
+      </div>
+      </>)
+
+      }
+    
     </div>
   );
 }
