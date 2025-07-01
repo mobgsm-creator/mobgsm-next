@@ -7,19 +7,28 @@ import { Checkbox } from "../components/ui/checkbox"
 import { Button } from "../components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "../components/ui/card"
 import { Separator } from "../components/ui/separator"
-import type { Product } from "../lib/types"
+import type { Product, ESIMProvider, BNPLProvider } from "../lib/types"
 interface ProductListingProps {
   product: Product[]
+  esimProviders?: ESIMProvider[]
+  BNPLProvider?: BNPLProvider[]
+  view: 'products' | 'esim' | 'bnpl'
 }
-export default function FilterSidebar( { product }: ProductListingProps ) {
+export default function FilterSidebar( { product, esimProviders, BNPLProvider,view }: ProductListingProps ) {
   const router = useRouter()
   const searchParams = useSearchParams()
   const [selectedBrands, setSelectedBrands] = useState<string[]>([])
   const [priceRange, setPriceRange] = useState([0, 50000])
   const [searchQuery, setSearchQuery] = useState("")
-
-  const allBrands = Array.from(new Set(product.map((p) => p.brand)))
-
+  let allBrands: string[] = []
+  if (view === 'products') {
+    allBrands = Array.from(new Set(product.map((p) => p.brand)))
+  } else if (view === 'esim') {
+    allBrands = Array.from(new Set(esimProviders?.map((p) => p.provider) || []))
+  } else if (view ==='bnpl') {
+    allBrands = Array.from(new Set(BNPLProvider?.map((p) => p.Name) || []))
+  }
+  
   useEffect(() => {
     
 
@@ -98,6 +107,8 @@ export default function FilterSidebar( { product }: ProductListingProps ) {
   }
 
   return (
+    <>
+     
     <Card>
       <CardHeader>
         <CardTitle className="text-lg">Filters</CardTitle>
@@ -142,6 +153,7 @@ export default function FilterSidebar( { product }: ProductListingProps ) {
         <Separator />
 
         {/* Price Range Filter */}
+        {view === 'products' && (
         <div>
           <h3 className="font-medium mb-3">Price Range</h3>
           <div className="px-2">
@@ -151,7 +163,7 @@ export default function FilterSidebar( { product }: ProductListingProps ) {
               <span>₹{priceRange[1].toLocaleString()}</span>
             </div>
           </div>
-        </div>
+        </div>)}
 
         <Separator />
 
@@ -167,6 +179,6 @@ export default function FilterSidebar( { product }: ProductListingProps ) {
           </Button>
         </div>
       </CardContent>
-    </Card>
+    </Card></>
   )
 }

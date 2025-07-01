@@ -15,6 +15,8 @@ interface ProductListingProps {
   product: Product[]
   esimProviders?: ESIMProvider[]
   BNPLProvider?: BNPLProvider[]
+  view: 'products' | 'esim' | 'bnpl'
+  setView: (view: 'products' | 'esim' | 'bnpl') => void
 }
 interface ToggleTabsProps {
   onChange: (value: 'products' | 'esim' | 'bnpl') => void
@@ -31,10 +33,10 @@ function ToggleTabs({ onChange, currentView }: ToggleTabsProps) {
     </Tabs>
   )
 }
-export default function ProductListing({ product, esimProviders, BNPLProvider }: ProductListingProps) {  
+export default function ProductListing({ product, esimProviders, BNPLProvider, view, setView }: ProductListingProps) {  
   const router = useRouter()
   const urlSearchParams = useSearchParams()
-  const [view, setView] = useState<'products' | 'esim' | 'bnpl'>('products')
+
   const [filteredProducts, setFilteredProducts] = useState<GroupedProduct[]>([])
   const [BNPLitems, setBNPLitems] = useState<BNPLProvider[]>([])
   const [ESIMitems, setESIMitems] = useState<ESIMProvider[]>([])
@@ -47,16 +49,16 @@ export default function ProductListing({ product, esimProviders, BNPLProvider }:
   useEffect(() => {
  
     if (view === 'products') {
-    const filtered = applyFiltersAndSort(product, urlSearchParams)
-    setFilteredProducts(filtered) }
+    const filtered = applyFiltersAndSort(product, esimProviders!, BNPLProvider!, view, urlSearchParams)
+    setFilteredProducts(filtered as GroupedProduct[]) }
     else if (view === 'esim') {
   
-    
-      setESIMitems(esimProviders || [])
+      const filteredESIM = applyFiltersAndSort(product, esimProviders!, BNPLProvider!, view, urlSearchParams)
+      setESIMitems(filteredESIM as ESIMProvider[])
     }
     else if (view === 'bnpl') {
-      
-      setBNPLitems(BNPLProvider || []) }
+      const filteredBNPL = applyFiltersAndSort(product, esimProviders!, BNPLProvider!, view, urlSearchParams)
+      setBNPLitems(filteredBNPL as BNPLProvider[]) }
   }, [view, product, urlSearchParams, BNPLProvider, esimProviders])
 
   const [totalProducts, setTotalProducts] = useState<number>(0)
@@ -129,7 +131,8 @@ export default function ProductListing({ product, esimProviders, BNPLProvider }:
         <h2 className="text-xl font-semibold text-gray-900">
           {totalProducts} Products Found
         </h2>
-        <SortOptions />
+        {view === 'products' && (
+        <SortOptions />)}
       </div>
 
       {data.length === 0 ? (
@@ -184,77 +187,107 @@ export default function ProductListing({ product, esimProviders, BNPLProvider }:
   )
 }
 
-function applyFiltersAndSort(products: Product[], urlSearchParams: URLSearchParams): GroupedProduct[] {
-  let filtered = [...products]
+function applyFiltersAndSort(products: Product[], esimProviders: ESIMProvider[], BNPLProvider: BNPLProvider[], view:string, urlSearchParams: URLSearchParams): GroupedProduct[] |  ESIMProvider[] | BNPLProvider[] {
+  let filtered: (Product | ESIMProvider | BNPLProvider)[] = []
+  if (view === "products") {
+    filtered = [...products]
+  } else if (view === "esim") {
+    filtered = [...esimProviders]
+  } else if (view === "bnpl") {
+    filtered = [...BNPLProvider]
+  }
   const searchQuery = urlSearchParams.get("search")?.toLowerCase() || ""
-  if(searchQuery) {
-    filtered = filtered.filter((product) =>
-      product.product_name.toLowerCase().includes(searchQuery)
-    )
+  if (searchQuery) {
+    filtered = filtered.filter((item) => {
+      if ("product_name" in item && item.product_name?.toLowerCase().includes(searchQuery)) {
+        return true
+      }
+      if ("provider" in item && item.provider?.toLowerCase().includes(searchQuery)) {
+        return true
+      }
+      if ("Name" in item && item.Name?.toLowerCase().includes(searchQuery)) {
+        return true
+      }
+      return false
+    })
   }
   if (urlSearchParams.getAll("brand").length > 0) {
-
-    
     const brands = urlSearchParams.getAll("brand")
-    filtered = filtered.filter((product) => brands?.includes(product.brand))
-  }
-
-  if ((urlSearchParams.getAll("minPrice") || urlSearchParams.getAll("maxPrice")).length > 0) {
-
-    const minPrice = urlSearchParams.get("minPrice")
-      ? Number.parseFloat(urlSearchParams.get("minPrice") || "0")
-      : 0
-    const maxPrice = urlSearchParams.get("maxPrice")
-      ? Number.parseFloat(urlSearchParams.get("maxPrice") || `${Number.POSITIVE_INFINITY}`)
-      : Number.POSITIVE_INFINITY
-
-    filtered = filtered.filter((product) => {
-      const price = Number.parseFloat(product.price.replace(/[₹,]/g, ""))
-      return price >= minPrice && price <= maxPrice
+  
+    filtered = filtered.filter((item) => {
+      if (view === "products" && "brand" in item) {
+        return brands.includes(item.brand)
+      }
+      if (view === "esim" && "provider" in item) {
+        return brands.includes(item.provider)
+      }
+      if (view === "bnpl" && "Name" in item) {
+        return brands.includes(item.Name)
+      }
+      return false
     })
-  }
-
-  if (urlSearchParams.get("sort")) {
-
-    switch (urlSearchParams.get("sort")) {
-      case "price-low":
-        filtered.sort((a, b) => {
-          const priceA = Number.parseFloat(a.price.replace(/[₹,]/g, ""))
-          const priceB = Number.parseFloat(b.price.replace(/[₹,]/g, ""))
-          return priceA - priceB
-        })
-        break
-      case "price-high":
-        filtered.sort((a, b) => {
-          const priceA = Number.parseFloat(a.price.replace(/[₹,]/g, ""))
-          const priceB = Number.parseFloat(b.price.replace(/[₹,]/g, ""))
-          return priceB - priceA
-        })
-        break
-    }
-  }
-  // 5. Group by `flag`
-  const groupedMap = new Map<number, Product[]>()
-
-  for (const product of filtered) {
-    const flag = product.flag
-    if (!groupedMap.has(flag)) {
-      groupedMap.set(flag, [])
-    }
-    groupedMap.get(flag)!.push(product)
   }
   
+  if (view === 'products') {
+    let productList = filtered as Product[]
 
-  const grouped: GroupedProduct[] = Array.from(groupedMap.entries()).map(
-    ([flag, items]) => ({
-      flag,
-      items,
-    })
-  )
+    if ((urlSearchParams.getAll("minPrice") || urlSearchParams.getAll("maxPrice")).length > 0) {
+
+      const minPrice = urlSearchParams.get("minPrice")
+        ? Number.parseFloat(urlSearchParams.get("minPrice") || "0")
+        : 0
+      const maxPrice = urlSearchParams.get("maxPrice")
+        ? Number.parseFloat(urlSearchParams.get("maxPrice") || `${Number.POSITIVE_INFINITY}`)
+        : Number.POSITIVE_INFINITY
+
+      productList = productList.filter((product) => {
+        const price = Number.parseFloat(product.price.replace(/[₹,]/g, ""))
+        return price >= minPrice && price <= maxPrice
+      })
+    }
+
+    if (urlSearchParams.get("sort")) {
+
+      switch (urlSearchParams.get("sort")) {
+        case "price-low":
+          productList.sort((a, b) => {
+            const priceA = Number.parseFloat(a.price.replace(/[₹,]/g, ""))
+            const priceB = Number.parseFloat(b.price.replace(/[₹,]/g, ""))
+            return priceA - priceB
+          })
+          break
+        case "price-high":
+          productList.sort((a, b) => {
+            const priceA = Number.parseFloat(a.price.replace(/[₹,]/g, ""))
+            const priceB = Number.parseFloat(b.price.replace(/[₹,]/g, ""))
+            return priceB - priceA
+          })
+          break
+      }
+    }
+    // 5. Group by `flag`
+    const groupedMap = new Map<number, Product[]>()
+
+    for (const product of productList) {
+      const flag = product.flag
+      if (!groupedMap.has(flag)) {
+        groupedMap.set(flag, [])
+      }
+      groupedMap.get(flag)!.push(product)
+    }
+    
+
+    const grouped: GroupedProduct[] = Array.from(groupedMap.entries()).map(
+      ([flag, items]) => ({
+        flag,
+        items,
+      })
+    )
+    return grouped
+  }
   
     
   
 
-
-  return grouped
+  return filtered as ESIMProvider[] | BNPLProvider[];
 }
