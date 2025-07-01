@@ -17,11 +17,11 @@ export async function GET() {
         Interest_Rate,
         KYC,
         NBFC_Partner,
-        Image_URL
+        Image_URL, country
        
       
       `)
-      
+    
     if (error) {
       console.error("Supabase error:", error)
       return NextResponse.json({ error: "Failed to fetch products" }, { status: 500 })

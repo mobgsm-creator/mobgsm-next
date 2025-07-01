@@ -2,12 +2,13 @@ import { NextResponse } from "next/server"
 import { createClient } from "@/lib/supabase"
 import type { ESIMProvider } from "@/lib/types"
 export const revalidate = 3600 // cache for 1 hour (optional for static rendering in RSC)
-function sanitizeESIM(raw: { provider: string; img_link: string; type: string | object; plans: string | object }): ESIMProvider {
+function sanitizeESIM(raw: { provider: string; img_link: string; type: string | object; plans: string | object, country:string }): ESIMProvider {
   return {
     provider: raw.provider,
     img_link: raw.img_link,
     type: typeof raw.type === "string" ? JSON.parse(raw.type) : raw.type,
     plans: typeof raw.plans === "string" ? JSON.parse(raw.plans) : raw.plans,
+    country: raw.country
    
   };
 }
@@ -22,7 +23,7 @@ export async function GET() {
         provider,
         type,
         img_link,
-        plans
+        plans, country
       
        
       

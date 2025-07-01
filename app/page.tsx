@@ -1,12 +1,14 @@
 import { getProducts, getBNPL, getESIM } from "../lib/supabase"
 import  Image  from "next/image"
 import ProductSectionWrapper from "@/components/ProductAndFilterSection"
+import CountrySelector from "@/components/CountrySelector"
 export default async function HomePage() {
   const products = await getProducts()
- 
+  
   const bnpl = await getBNPL()
 
   const esim = await getESIM()
+  console.log(esim)
  
 
  
@@ -23,6 +25,9 @@ export default async function HomePage() {
     width={40} 
     height={40} 
   />
+  <div className="absolute top-3 right-0">
+  <CountrySelector />
+  </div>
 </div>
 
       </header>

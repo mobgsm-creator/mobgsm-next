@@ -11,6 +11,7 @@ export interface Product {
   reviews: string
   img_link: string
   flag: number
+  country: string
 }
 
 export interface ESIMPlan {
@@ -26,6 +27,7 @@ export interface ESIMPlan {
   features?: string[]
   link: string
   type?: string
+  
 }
 
 export interface ESIMProvider {
@@ -33,6 +35,7 @@ export interface ESIMProvider {
   type: string[]
   plans: ESIMPlan[]
   img_link: string
+  country: string
 }
 
 export interface BNPLProvider {
@@ -43,4 +46,5 @@ export interface BNPLProvider {
   Interest_Rate: string
   KYC: boolean
   Image_URL: string
+  country: string
 }

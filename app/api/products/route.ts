@@ -19,7 +19,7 @@ export async function GET() {
         status,
         payment_options,
         rating,
-        img_link, flag
+        img_link, flag, country
       `)
       .range(0, 1999)
    
