@@ -91,9 +91,33 @@ export default function ProductCard({ product }: ProductCardProps) {
             <span className="text-sm font-medium ml-1">{currentProduct.rating}</span>
           </div>
           <span className="text-xs text-gray-500">•</span>
-          <Badge variant="outline" className="text-xs">
-            {currentProduct.status}
-          </Badge>
+          <Badge
+  variant="outline"
+  className="text-xs max-w-[12rem] overflow-hidden whitespace-nowrap p-0 relative"
+>
+  <div
+    style={{
+      display: "inline-block",
+      whiteSpace: "nowrap",
+      animation: "scroll-continuous 7s linear infinite",
+    }}
+  >
+    {currentProduct.status}
+  </div>
+
+  <style jsx>{`
+    @keyframes scroll-continuous {
+      0% {
+        transform: translateX(100%);
+      }
+      100% {
+        transform: translateX(-100%);
+      }
+    }
+  `}</style>
+</Badge>
+
+
         </div>
 
         <div className="space-y-2">
