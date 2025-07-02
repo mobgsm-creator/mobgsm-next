@@ -126,14 +126,16 @@ export default function ProductListing({ product, esimProviders, BNPLProvider, v
 
   return (
     <div>
-      <div className="flex justify-between items-center mb-6">
-      <ToggleTabs currentView={view} onChange={setView}/>
-        <h2 className="text-xl font-semibold text-gray-900">
-          {totalProducts} Products Found
-        </h2>
-        {view === 'products' && (
-        <SortOptions />)}
-      </div>
+      <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4 mb-6">
+  <ToggleTabs currentView={view} onChange={setView} />
+
+  <h2 className="hidden lg:block text-xl font-semibold text-gray-900">
+    {totalProducts} Products Found
+  </h2>
+
+  {view === 'products' && <SortOptions />}
+</div>
+
 
       {data.length === 0 ? (
   <div className="text-center py-12">

@@ -1,26 +1,20 @@
 'use client'
 
-import { useState,useEffect } from "react"
+import { useState } from "react"
 import ProductListing from "./ProductListing"
 import FilterSidebar from "./FilterSidebar"
 import { Skeleton } from "../components/ui/skeleton"
 import type { Product, ESIMProvider,BNPLProvider } from "../lib/types"
 import { Suspense } from "react"
 interface ProductListingProps {
+    country: string
     product: Product[]
     esimProviders?: ESIMProvider[]
     BNPLProvider?: BNPLProvider[]
   }
-export default function ProductSectionWrapper({ product, esimProviders, BNPLProvider } : ProductListingProps) {
+export default function ProductSectionWrapper({ country, product, esimProviders, BNPLProvider } : ProductListingProps) {
   const [view, setView] = useState<'products' | 'esim' | 'bnpl'>('products')
-  const [country, setCountry] = useState("IN");
 
-  useEffect(() => {
-    const storedCountry = localStorage.getItem("selectedCountry");
-    if (storedCountry) {
-      setCountry(storedCountry);
-    }
-  }, []);
 
   const filteredProducts = product.filter((item) => {
     return country === "IN" || country === "RU" || country === "CN"
@@ -42,8 +36,8 @@ export default function ProductSectionWrapper({ product, esimProviders, BNPLProv
   
  
   return (
-    <div className="flex gap-6">
-      <div className="hidden lg:block w-80 flex-shrink-0">
+    <div className="flex flex-col lg:flex-row gap-6">
+      <div className="block w-80 flex-shrink-0">
         <div className="sticky top-6">
         <Suspense fallback={<Skeleton className="h-96 w-full" />}>
                 <FilterSidebar product={filteredProducts}

@@ -1,19 +1,21 @@
+// CountrySelector.tsx
 "use client"
+import { useEffect } from "react"
 
-import { useState, useEffect } from "react"
+interface Props {
+  country: string
+  setCountry: (value: string) => void
+}
 
-const CountrySelector = () => {
-  const [country, setCountry] = useState("IN")
-
-  // Country data with flags
+const CountrySelector = ({ country, setCountry }: Props) => {
   const countries = [
     { code: "IN", name: "India", flag: "🇮🇳" },
     { code: "RU", name: "Russia", flag: "🇷🇺" },
     { code: "CN", name: "China", flag: "🇨🇳" },
   ]
 
-  // Store selected country in localStorage so ProductClientWrapper can use it
   useEffect(() => {
+
     localStorage.setItem("selectedCountry", country)
   }, [country])
 
@@ -21,7 +23,6 @@ const CountrySelector = () => {
 
   return (
     <div className="flex items-center gap-3">
-      
       <div className="relative">
         <select
           id="country"
@@ -35,15 +36,11 @@ const CountrySelector = () => {
             </option>
           ))}
         </select>
-
-        {/* Custom dropdown arrow */}
         <div className="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none">
           <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
           </svg>
         </div>
-
-        {/* Selected country flag display */}
         <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
           <span className="text-lg">{selectedCountry?.flag}</span>
         </div>
@@ -53,3 +50,4 @@ const CountrySelector = () => {
 }
 
 export default CountrySelector
+

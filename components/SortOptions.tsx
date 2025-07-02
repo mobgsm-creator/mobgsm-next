@@ -22,7 +22,7 @@ export default function SortOptions() {
 
   return (
     <div className="flex items-center gap-2">
-      <span className="text-sm font-medium">Sort by:</span>
+      
       <Select value={currentSort} onValueChange={handleSortChange}>
         <SelectTrigger className="w-48">
           <SelectValue placeholder="Select sorting" />
