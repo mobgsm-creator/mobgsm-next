@@ -1,5 +1,7 @@
-// CountrySelector.tsx
 "use client"
+
+import * as Select from "@radix-ui/react-select"
+import { ChevronDown } from "lucide-react"
 import { useEffect } from "react"
 
 interface Props {
@@ -9,45 +11,76 @@ interface Props {
 
 const CountrySelector = ({ country, setCountry }: Props) => {
   const countries = [
-    { code: "IN", name: "India", flag: "🇮🇳" },
-    { code: "RU", name: "Russia", flag: "🇷🇺" },
+    { code: "BD", name: "Bangladesh", flag: "🇧🇩" },
     { code: "CN", name: "China", flag: "🇨🇳" },
+    { code: "IN", name: "India", flag: "🇮🇳" },
+    { code: "MW", name: "Malawi", flag: "🇲🇼" },
+    { code: "NG", name: "Nigeria", flag: "🇳🇬" },
+    { code: "PH", name: "Philippines", flag: "🇵🇭" },
+    { code: "RW", name: "Rwanda", flag: "🇷🇼" },
+    { code: "KR", name: "South Korea", flag: "🇰🇷" },
+    { code: "LK", name: "Sri Lanka", flag: "🇱🇰" },
+    { code: "ZM", name: "Zambia", flag: "🇿🇲" },
   ]
+  
 
   useEffect(() => {
-
     localStorage.setItem("selectedCountry", country)
   }, [country])
 
   const selectedCountry = countries.find((c) => c.code === country)
 
   return (
-    <div className="flex items-center gap-3">
-      <div className="relative">
-        <select
-          id="country"
-          value={country}
-          onChange={(e) => setCountry(e.target.value)}
-          className="appearance-none bg-white border border-gray-300 rounded-lg px-4 py-2 pr-10 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent cursor-pointer min-w-[140px]"
+    <Select.Root value={country} onValueChange={setCountry}>
+      <Select.Trigger
+        className="inline-flex items-center justify-between rounded-lg px-4 py-2 border border-gray-300 bg-white text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 min-w-[160px]"
+        aria-label="Country"
+      >
+        <Select.Value>
+          {selectedCountry && (
+            <span className="flex items-center gap-2">
+              <img
+                    src={`https://flagcdn.com/w20/${selectedCountry.code.toLocaleLowerCase()}.png`}
+                    alt={selectedCountry.name}
+                    className="inline-block w-5 h-4 mr-2"
+                  />
+             
+              <span>{selectedCountry.name}</span>
+            </span>
+          )}
+        </Select.Value>
+        <Select.Icon className="ml-2 text-gray-400">
+          <ChevronDown />
+        </Select.Icon>
+      </Select.Trigger>
+
+      <Select.Portal>
+        <Select.Content
+          className="z-50 rounded-lg border border-gray-200 bg-white shadow-md"
+          position="popper"
         >
-          {countries.map((countryItem) => (
-            <option key={countryItem.code} value={countryItem.code}>
-              {countryItem.flag} {countryItem.name}
-            </option>
-          ))}
-        </select>
-        <div className="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none">
-          <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-          </svg>
-        </div>
-        <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-          <span className="text-lg">{selectedCountry?.flag}</span>
-        </div>
-      </div>
-    </div>
+          <Select.Viewport className="p-2">
+            {countries.map((item) => (
+              <Select.Item
+                key={item.code}
+                value={item.code}
+                className="flex items-center gap-2 rounded-md px-4 py-2 text-sm cursor-pointer focus:bg-blue-100 focus:outline-none"
+              >
+                <Select.ItemText>
+                  <img
+                    src={`https://flagcdn.com/w20/${item.code.toLowerCase()}.png`}
+                    alt={item.name}
+                    className="inline-block w-5 h-4 mr-2"
+                  />
+                  {item.name}
+                </Select.ItemText>
+              </Select.Item>
+            ))}
+          </Select.Viewport>
+        </Select.Content>
+      </Select.Portal>
+    </Select.Root>
   )
 }
 
 export default CountrySelector
-
