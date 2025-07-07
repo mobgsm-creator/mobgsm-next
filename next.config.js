@@ -20,7 +20,7 @@ const nextConfig = {
       allowedOrigins: ["localhost:3000"],
     },
   },
-  basePath: "/listings",
+ 
 }
 
 module.exports = nextConfig
