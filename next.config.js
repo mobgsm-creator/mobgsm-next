@@ -21,6 +21,14 @@ const nextConfig = {
     },
   },
   basePath: "/listings",
+  async rewrites() {
+    return [
+      {
+        source: "/listings/api/:path*", // 🔁 Add this
+        destination: "/api/:path*",     // Forward to real API
+      },
+    ]
+  },
 }
 
 module.exports = nextConfig
