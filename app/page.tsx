@@ -1,5 +1,6 @@
 import { getProducts, getBNPL, getESIM } from "../lib/supabase"
 import HomePageClient from "@/components/HomePage"
+export const runtime = 'edge';
 export default async function HomePage() {
   const products = await getProducts()
   
