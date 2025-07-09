@@ -13,7 +13,7 @@ export async function getProducts(): Promise<Product[]> {
 
   try {
     const response = await fetch(`${process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"}/listings/api/products`, {
-      cache: "no-store", // Disable caching for real-time data
+      cache: "force-cache", // Disable caching for real-time data
     })
 
     if (!response.ok) {
@@ -32,7 +32,7 @@ export async function getBNPL(): Promise<BNPLProvider[]> {
 
   try {
     const response = await fetch(`${process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"}/listings/api/BNPL`, {
-      cache: "no-store", // Disable caching for real-time data
+      cache: "force-cache", // Disable caching for real-time data
     })
 
     if (!response.ok) {
@@ -51,7 +51,7 @@ export async function getESIM(): Promise<ESIMProvider[]> {
 
   try {
     const response = await fetch(`${process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"}/listings/api/ESIM`, {
-      cache: "no-store", // Disable caching for real-time data
+      cache: "force-cache", // Disable caching for real-time data
     })
 
     if (!response.ok) {

@@ -21,6 +21,15 @@ const nextConfig = {
     },
   },
   basePath: "/listings",
+  async redirects() {
+    return [
+      {
+        source: "/listings/index",
+        destination: "/listings",
+        permanent: true,
+      },
+    ]
+  },
   async rewrites() {
     return [
       {
