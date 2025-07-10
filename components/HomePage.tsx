@@ -4,16 +4,12 @@ import { useState, useEffect } from "react"
 import Image from "next/image"
 import ProductSectionWrapper from "@/components/ProductAndFilterSection"
 import CountrySelector from "@/components/CountrySelector"
-import type { Product, BNPLProvider, ESIMProvider } from "../lib/types"
+//import type { Product, BNPLProvider, ESIMProvider } from "../lib/types"
 
-interface Props {
-  products: Product[]
-  bnpl: BNPLProvider[]
-  esim: ESIMProvider[]
-}
 
-export default function HomePageClient({ products, bnpl, esim }: Props) {
-  const [country, setCountry] = useState("IN")
+export default function HomePageClient() {
+ 
+  const [country, setCountry] = useState("AE")
 
   // Load initial country from localStorage
   useEffect(() => {
@@ -35,9 +31,7 @@ export default function HomePageClient({ products, bnpl, esim }: Props) {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
         <ProductSectionWrapper
           country={country}
-          product={products}
-          esimProviders={esim}
-          BNPLProvider={bnpl}
+        
           
         />
       </div>

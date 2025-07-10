@@ -217,8 +217,8 @@ function applyFiltersAndSort(products: Product[], esimProviders: ESIMProvider[],
     const brands = urlSearchParams.getAll("brand")
   
     filtered = filtered.filter((item) => {
-      if (view === "products" && "brand" in item) {
-        return brands.includes(item.brand)
+      if (view === "products" && "brand_name" in item) {
+        return brands.includes(item.brand_name)
       }
       if (view === "esim" && "provider" in item) {
         return brands.includes(item.provider)

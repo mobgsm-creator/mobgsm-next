@@ -1,6 +1,6 @@
 'use client'
-
-import { useState } from "react"
+import { getProducts, getBNPL, getESIM } from "../lib/supabase"
+import { useState, useEffect } from "react"
 import ProductListing from "./ProductListing"
 import FilterSidebar from "./FilterSidebar"
 import { Skeleton } from "../components/ui/skeleton"
@@ -9,15 +9,31 @@ import { Suspense } from "react"
 import { Filter } from "lucide-react"
 interface ProductListingProps {
     country: string
-    product: Product[]
-    esimProviders?: ESIMProvider[]
-    BNPLProvider?: BNPLProvider[]
+    
   }
-export default function ProductSectionWrapper({ country, product, esimProviders, BNPLProvider } : ProductListingProps) {
+  
+export default function ProductSectionWrapper({ country } : ProductListingProps) {
   const [view, setView] = useState<'products' | 'esim' | 'bnpl'>('products')
-  const priorityCountries = ["BD", "CN", "IN", "MW", "NG", "PH", "RW", "KR", "LK", "ZM"]
+  const priorityCountries = ["BD", "CN", "IN", "MW", "NG", "PH", "RW", "KR", "LK", "ZM","AE"]
   const [isOpen, setIsOpen] = useState(false)
+  
+  const [product, setProduct] = useState<Product[]>([]);
+  const [BNPLProvider, setBNPLProvider] = useState<BNPLProvider[]>([]);
+  const [esimProviders, setEsimProviders] = useState<ESIMProvider[]>([]);
 
+  useEffect(() => {
+    const fetchData = async () => {
+      const products = await getProducts(country);
+      const bnpl = await getBNPL();
+      const esim = await getESIM();
+
+      setProduct(products);
+      setBNPLProvider(bnpl);
+      setEsimProviders(esim);
+    };
+
+    fetchData();
+  }, [country]);
 
   const filteredProducts = product.filter((item) => {
     return priorityCountries.includes(country)

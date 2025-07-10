@@ -15,6 +15,7 @@ interface ProductListingProps {
   view: 'products' | 'esim' | 'bnpl'
 }
 export default function FilterSidebar( { product, esimProviders, BNPLProvider,view }: ProductListingProps ) {
+  console.log("here")
   const router = useRouter()
   const searchParams = useSearchParams()
   const [selectedBrands, setSelectedBrands] = useState<string[]>([])
@@ -22,7 +23,7 @@ export default function FilterSidebar( { product, esimProviders, BNPLProvider,vi
   const [searchQuery, setSearchQuery] = useState("")
   let allBrands: string[] = []
   if (view === 'products') {
-    allBrands = Array.from(new Set(product.map((p) => p.brand)))
+    allBrands = Array.from(new Set(product.map((p) => p.brand_name)))
   } else if (view === 'esim') {
     allBrands = Array.from(new Set(esimProviders?.map((p) => p.provider) || []))
   } else if (view ==='bnpl') {

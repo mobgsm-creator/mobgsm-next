@@ -21,6 +21,7 @@ const CountrySelector = ({ country, setCountry }: Props) => {
     { code: "KR", name: "South Korea", flag: "🇰🇷" },
     { code: "LK", name: "Sri Lanka", flag: "🇱🇰" },
     { code: "ZM", name: "Zambia", flag: "🇿🇲" },
+    { code: "AE", name: "UAE", flag: "UAE" }
   ]
   
 

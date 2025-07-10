@@ -1,6 +1,5 @@
 import Image from "next/image"
 import Link from "next/link"
-import { Star } from "lucide-react"
 import type { Product, ESIMProvider, BNPLProvider } from "../lib/types"
 import { Button } from "../components/ui/button"
 import { Badge } from "../components/ui/badge"
@@ -14,6 +13,8 @@ export default function ProductCard({ product }: ProductCardProps) {
 
   const [currentIndex, setCurrentIndex] = useState(0);
   const [showCompare, setShowCompare] = useState(false)
+
+  
 
   const handleNext = () => {
     setCurrentIndex((prevIndex) => (prevIndex + 1) % product.length);
@@ -29,6 +30,7 @@ export default function ProductCard({ product }: ProductCardProps) {
   }
 
   const currentProduct = product[currentIndex];
+  
   function isProduct(item: Product | ESIMProvider | BNPLProvider): item is Product {
     const flag = "product_name" in item && typeof item.product_name === "string";
     //console.log("isProduct", flag, item);
@@ -60,9 +62,10 @@ export default function ProductCard({ product }: ProductCardProps) {
           height={200}
           className="w-full h-48 object-cover"
         />
+        {currentProduct.discount ? 
         <Badge className="absolute top-2 right-2 bg-red-500 hover:bg-red-600">
           {currentProduct.discount}
-        </Badge>
+        </Badge> : null}
       </div>
 
       <div className="p-4">
@@ -86,10 +89,7 @@ export default function ProductCard({ product }: ProductCardProps) {
         </div>
 
         <div className="flex items-center gap-2 mb-3">
-          <div className="flex items-center">
-            <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
-            <span className="text-sm font-medium ml-1">{currentProduct.rating}</span>
-          </div>
+          
           <span className="text-xs text-gray-500">•</span>
           <Badge
   variant="outline"
@@ -99,7 +99,7 @@ export default function ProductCard({ product }: ProductCardProps) {
     style={{
       display: "inline-block",
       whiteSpace: "nowrap",
-      animation: "scroll-continuous 7s linear infinite",
+      animation: `scroll-continuous ${Math.max(5, currentProduct.status.length / 7)}s linear infinite`,
     }}
   >
     {currentProduct.status}

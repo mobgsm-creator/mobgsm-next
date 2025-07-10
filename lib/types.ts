@@ -1,7 +1,7 @@
 export interface Product {
   product_links: string
   product_name: string
-  brand: string
+  brand_name: string
   price: string
   mrp: string
   discount: string
