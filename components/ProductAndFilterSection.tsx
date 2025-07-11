@@ -26,7 +26,7 @@ export default function ProductSectionWrapper({ country } : ProductListingProps)
       const products = await getProducts(country);
       const bnpl = await getBNPL();
       const esim = await getESIM();
-
+      //console.log(esim,bnpl)
       setProduct(products);
       setBNPLProvider(bnpl);
       setEsimProviders(esim);
@@ -52,7 +52,7 @@ export default function ProductSectionWrapper({ country } : ProductListingProps)
       ? item.country === country
       : true;
   });
-  
+  //console.log(filteredBNPL)
  
   return (
     <div className="flex flex-col lg:flex-row gap-6">

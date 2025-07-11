@@ -16,7 +16,7 @@ export function createClient() {
       const response = await fetch(`${process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"}/listings/api/products?country=${country}`, {
       cache: "force-cache", 
     })
-    console.log(response)
+    //console.log(response)
 
     if (!response.ok) {
       throw new Error("Failed to fetch products")
@@ -27,7 +27,7 @@ export function createClient() {
     console.error("Error fetching products:", error)
     return []
   }
-}
+} 
 
 // Server-side function to get products
 export async function getBNPL(): Promise<BNPLProvider[]> {
@@ -55,11 +55,12 @@ export async function getESIM(): Promise<ESIMProvider[]> {
     const response = await fetch(`${process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"}/listings/api/ESIM`, {
       cache: "force-cache", // Disable caching for real-time data
     })
+    //console.log(response)
 
     if (!response.ok) {
       throw new Error("Failed to fetch products")
     }
-
+    
     return await response.json()
   } catch (error) {
     console.error("Error fetching products:", error)

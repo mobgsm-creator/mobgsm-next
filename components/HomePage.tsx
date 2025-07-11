@@ -8,7 +8,7 @@ import CountrySelector from "@/components/CountrySelector"
 
 
 export default function HomePageClient({ country_code }: { country_code: string }) {
-  console.log(country_code)
+  //console.log(country_code)
   const [country, setCountry] = useState(country_code)
 
   // Load initial country from localStorage
