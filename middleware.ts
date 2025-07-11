@@ -20,6 +20,7 @@ export function middleware(request: NextRequest) {
   response.headers.set('x-geo-country', country)
   response.headers.set('x-geo-region', region)
   response.headers.set('x-geo-city', city)
+ 
 
   return response
 }
