@@ -7,9 +7,9 @@ import CountrySelector from "@/components/CountrySelector"
 //import type { Product, BNPLProvider, ESIMProvider } from "../lib/types"
 
 
-export default function HomePageClient() {
- 
-  const [country, setCountry] = useState("AE")
+export default function HomePageClient({ country_code }: { country_code: string }) {
+  console.log(country_code)
+  const [country, setCountry] = useState(country_code)
 
   // Load initial country from localStorage
   useEffect(() => {
