@@ -71,7 +71,7 @@ export default function ProductCard({ product }: ProductCardProps) {
       <div className="p-4">
         <div className="flex items-center gap-2 mb-2">
           <Image
-            src="/shopclues.svg?height=20&width=60"
+            src={currentProduct.store_logo}
             alt="Store logo"
             width={60}
             height={20}

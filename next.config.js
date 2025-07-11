@@ -6,7 +6,7 @@ const nextConfig = {
     ignoreBuildErrors: false,
   },
   images: {
-    domains: ["cdn.shopclues.com", "via.placeholder.com"],
+    domains: ["ibb.co", "via.placeholder.com"],
     remotePatterns: [
       {
         protocol: "https",

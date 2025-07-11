@@ -21,7 +21,7 @@ export default function HomePageClient() {
     <div className="min-h-screen bg-gray-50">
       <header className="bg-white shadow-sm border-b">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 relative">
-          <Image src="/MOB GSM svg vector.svg" alt="" width={40} height={40} />
+          <Image src="/listings/MOB GSM svg vector.svg" alt="" width={40} height={40} />
           <div className="absolute top-3 right-0">
             <CountrySelector country={country} setCountry={setCountry} />
           </div>

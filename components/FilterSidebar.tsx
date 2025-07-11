@@ -15,7 +15,7 @@ interface ProductListingProps {
   view: 'products' | 'esim' | 'bnpl'
 }
 export default function FilterSidebar( { product, esimProviders, BNPLProvider,view }: ProductListingProps ) {
-  console.log("here")
+  //console.log("here")
   const router = useRouter()
   const searchParams = useSearchParams()
   const [selectedBrands, setSelectedBrands] = useState<string[]>([])

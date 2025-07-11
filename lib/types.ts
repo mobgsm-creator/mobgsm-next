@@ -12,6 +12,7 @@ export interface Product {
   img_link: string
   flag: number
   country: string
+  store_logo: string
 }
 
 export interface ESIMPlan {

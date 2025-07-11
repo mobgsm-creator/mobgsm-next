@@ -15,7 +15,7 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: "Country parameter is required" }, { status: 400 })
     }
     
-    console.log("Fetching products for country:", country)
+    //console.log("Fetching products for country:", country)
     
     const supabase = createClient()
     const { data: products, error } = await supabase
@@ -31,11 +31,11 @@ export async function GET(request: NextRequest) {
         payment_options,
         img_link,
         flag,
-        country
+        country, store_logo
       `)
       .eq("country", country)
     
-    console.log("Products found:", products?.length || 0)
+    //console.log("Products found:", products?.length || 0)
    
     if (error) {
       console.error("Supabase error:", error)

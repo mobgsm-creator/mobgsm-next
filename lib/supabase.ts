@@ -10,13 +10,13 @@ export function createClient() {
 
 // Server-side function to get products
   export async function getProducts(country: string): Promise<Product[]> {
-    console.log("Fetching products from Supabase...")
+    //console.log("Fetching products from Supabase...")
 
     try {
       const response = await fetch(`${process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"}/listings/api/products?country=${country}`, {
       cache: "force-cache", 
     })
-    console.log(response)
+    //console.log(response)
 
     if (!response.ok) {
       throw new Error("Failed to fetch products")
