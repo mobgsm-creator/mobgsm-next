@@ -13,7 +13,7 @@ export function createClient() {
     console.log("Fetching products from Supabase...")
 
     try {
-      const response = await fetch(`http://localhost:3000/listings/api/products?country=${country}`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"}/listings/api/products?country=${country}`, {
       cache: "force-cache", 
     })
     console.log(response)
