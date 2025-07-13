@@ -13,7 +13,7 @@ export function createClient() {
     console.log("Fetching products from Supabase...")
 
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"}/listings/api/products?country=${country}`, {
+      const response = await fetch(`/listings/api/products?country=${country}`, {
       cache: "force-cache", 
     })
     //console.log(response)
@@ -33,7 +33,7 @@ export function createClient() {
 export async function getBNPL(): Promise<BNPLProvider[]> {
 
   try {
-    const response = await fetch(`${process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"}/listings/api/BNPL`, {
+    const response = await fetch(`/listings/api/BNPL`, {
       cache: "force-cache", // Disable caching for real-time data
     })
 
@@ -52,7 +52,7 @@ export async function getBNPL(): Promise<BNPLProvider[]> {
 export async function getESIM(): Promise<ESIMProvider[]> {
 
   try {
-    const response = await fetch(`${process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"}/listings/api/ESIM`, {
+    const response = await fetch(`/listings/api/ESIM`, {
       cache: "force-cache", // Disable caching for real-time data
     })
     //console.log(response)
