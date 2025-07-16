@@ -11,18 +11,19 @@ interface Props {
 
 const CountrySelector = ({ country, setCountry }: Props) => {
   const countries = [
-    { code: "BD", name: "Bangladesh", flag: "🇧🇩" },
-    { code: "CN", name: "China", flag: "🇨🇳" },
+ 
+    { code: "US", name: "USA", flag: "🇺🇸"},
+    { code: "NL", name: "Netherlands", flag: "🇳🇱"},
+    { code: "FR", name: "France", flag: "🇫🇷"},
+    { code: "IL", name: "Israel", flag: "🇮🇱"},
+    { code: "IT", name: "Italy", flag: "🇮🇹"},
     { code: "IN", name: "India", flag: "🇮🇳" },
-    { code: "MW", name: "Malawi", flag: "🇲🇼" },
     { code: "NG", name: "Nigeria", flag: "🇳🇬" },
-    { code: "PH", name: "Philippines", flag: "🇵🇭" },
-    { code: "RW", name: "Rwanda", flag: "🇷🇼" },
-    { code: "KR", name: "South Korea", flag: "🇰🇷" },
-    { code: "LK", name: "Sri Lanka", flag: "🇱🇰" },
-    { code: "ZM", name: "Zambia", flag: "🇿🇲" },
-    { code: "AE", name: "UAE", flag: "UAE" }
-  ]
+    { code: "AE", name: "UAE", flag: "🇦🇪"},
+    { code: "NO", name: "Norway", flag: "🇳🇴"},
+    { code: "DE", name: "Germany", flag: "🇩🇪"}
+  ];
+  
   
 
   useEffect(() => {

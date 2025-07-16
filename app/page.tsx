@@ -1,5 +1,6 @@
 import HomePageClient from "@/components/HomePage"
 import { headers } from 'next/headers'
+
 export const runtime = 'edge'
 export const dynamic = 'force-dynamic'
 
@@ -15,6 +16,8 @@ export default async function HomePage() {
     'unknown'
 
   return (
+  
     <HomePageClient country_code={country} />
+ 
   )
 }

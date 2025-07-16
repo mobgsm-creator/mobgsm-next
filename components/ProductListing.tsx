@@ -7,6 +7,7 @@ import { useEffect, useState } from 'react'
 import ProductCard from './ProductCard'
 import SortOptions from './SortOptions'
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { Skeleton } from '@/components/ui/skeleton'
 type GroupedProduct = {
   flag: number
   items: Product[]
@@ -126,9 +127,10 @@ export default function ProductListing({ product, esimProviders, BNPLProvider, v
 
   return (
     <div>
+      { totalProducts > 0 ? (<>
       <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4 mb-6">
   <ToggleTabs currentView={view} onChange={setView} />
-
+  
   <h2 className="hidden lg:block text-xl font-semibold text-gray-900">
     {totalProducts} Products Found
   </h2>
@@ -184,8 +186,24 @@ export default function ProductListing({ product, esimProviders, BNPLProvider, v
         >
           Next
         </button>
+      </div></>) : <div className="flex items-center space-x-2 text-gray-600 animate-pulse">
+    
+    <div className="max-w-screen-lg mx-auto px-4">
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      <span>Coming Soon...</span>
+        {Array.from({ length: 6 }).map((_, i) => (
+          <div key={i} className="bg-white rounded-lg shadow-md p-4 min-w-[200px]">
+            
+            <Skeleton className="h-48 w-full mb-4" />
+            <Skeleton className="h-4 w-3/4 mb-2" />
+            <Skeleton className="h-4 w-1/2 mb-2" />
+            <Skeleton className="h-6 w-1/3" />
+          </div>
+        ))}</div>
       </div>
+  </div>}
     </div>
+    
   )
 }
 
