@@ -12,7 +12,7 @@ interface ProductListingProps {
   product: Product[]
   esimProviders?: ESIMProvider[]
   BNPLProvider?: BNPLProvider[]
-  view: 'products' | 'esim' | 'bnpl'
+  view: 'products' | 'esim' | 'bnpl'| 'reloadly-airtime' | 'reloadly-gifts'
 }
 export default function FilterSidebar( { product, esimProviders, BNPLProvider,view }: ProductListingProps ) {
   //console.log("here")

@@ -1,7 +1,7 @@
 
 'use client'
 
-import type { Product, ESIMProvider,BNPLProvider } from "../lib/types"
+import type { Product, ESIMProvider,BNPLProvider,reloadly } from "../lib/types"
 import { useSearchParams, useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import ProductCard from './ProductCard'
@@ -12,35 +12,45 @@ type GroupedProduct = {
   flag: number
   items: Product[]
 }
+type GroupedReloadlyProduct = {
+  flag: string
+  items: reloadly[]
+}
 interface ProductListingProps {
   product: Product[]
   esimProviders?: ESIMProvider[]
   BNPLProvider?: BNPLProvider[]
-  view: 'products' | 'esim' | 'bnpl'
-  setView: (view: 'products' | 'esim' | 'bnpl') => void
+  airtime: reloadly[],
+  gifts: reloadly[],
+  view: 'products' | 'esim' | 'bnpl' | 'reloadly-airtime' | 'reloadly-gifts'
+  setView: (view: 'products' | 'esim' | 'bnpl' | 'reloadly-airtime' | 'reloadly-gifts') => void
 }
 interface ToggleTabsProps {
-  onChange: (value: 'products' | 'esim' | 'bnpl') => void
-  currentView: 'products' | 'esim' | 'bnpl'
+  onChange: (value: 'products' | 'esim' | 'bnpl'| 'reloadly-airtime' | 'reloadly-gifts') => void
+  currentView: 'products' | 'esim' | 'bnpl'| 'reloadly-airtime' | 'reloadly-gifts'
 }
 function ToggleTabs({ onChange, currentView }: ToggleTabsProps) {
+
   return (
-    <Tabs value={currentView} onValueChange={(val: string) => onChange(val as 'products' | 'esim' | 'bnpl')}>
+    <Tabs value={currentView} onValueChange={(val: string) => onChange(val as 'products' | 'esim' | 'bnpl'| 'reloadly-airtime' | 'reloadly-gifts')}>
       <TabsList>
         <TabsTrigger value="products">Mobiles</TabsTrigger>
         <TabsTrigger value="esim">eSIM Offers</TabsTrigger>
         <TabsTrigger value="bnpl">BNPL Offers</TabsTrigger>
+        <TabsTrigger value="reloadly-airtime">Airtime Topup</TabsTrigger>
+        <TabsTrigger value="reloadly-gifts">Giftcards</TabsTrigger>
       </TabsList>
     </Tabs>
   )
 }
-export default function ProductListing({ product, esimProviders, BNPLProvider, view, setView }: ProductListingProps) {  
+export default function ProductListing({ product, esimProviders, BNPLProvider, airtime, gifts, view, setView }: ProductListingProps) {  
   const router = useRouter()
   const urlSearchParams = useSearchParams()
-
   const [filteredProducts, setFilteredProducts] = useState<GroupedProduct[]>([])
   const [BNPLitems, setBNPLitems] = useState<BNPLProvider[]>([])
   const [ESIMitems, setESIMitems] = useState<ESIMProvider[]>([])
+  const [Airtime, setAirtime] = useState<GroupedReloadlyProduct[]>([])
+  const [Gifts, setGifts] = useState<GroupedReloadlyProduct[]>([])
   
   const currentPage = parseInt(urlSearchParams.get('page') || '1')
  
@@ -60,13 +70,23 @@ export default function ProductListing({ product, esimProviders, BNPLProvider, v
     else if (view === 'bnpl') {
       const filteredBNPL = applyFiltersAndSort(product, esimProviders!, BNPLProvider!, view, urlSearchParams)
       setBNPLitems(filteredBNPL as BNPLProvider[]) }
-  }, [view, product, urlSearchParams, BNPLProvider, esimProviders])
+    else if (view === 'reloadly-airtime') {
+      const filteredReloadly = reloadly_group( airtime)
+      setAirtime(filteredReloadly)
+    } else if (view === 'reloadly-gifts') {
+      const filteredReloadly = reloadly_group( gifts)
+      setGifts(filteredReloadly)
+    }
+
+  }, [view, product, urlSearchParams, BNPLProvider, esimProviders, airtime, gifts])
 
   const [totalProducts, setTotalProducts] = useState<number>(0)
   const [totalPages, setTotalPages] = useState<number>(0)
   const [paginatedProducts, setPaginatedProducts] = useState<GroupedProduct[]>([])
   const [paginatedBNPL, setPaginatedBNPL] = useState<BNPLProvider[]>([])
   const [paginatedESIM, setPaginatedESIM] = useState<ESIMProvider[]>([])
+  const [paginatedGifts, setPaginatedGifts] = useState<GroupedReloadlyProduct[]>([])
+  const [paginatedAirtime, setPaginatedAirtime] = useState<GroupedReloadlyProduct[]>([])
   useEffect(() => {
 
     if (view === 'products') {
@@ -109,8 +129,35 @@ export default function ProductListing({ product, esimProviders, BNPLProvider, v
         currentPage * itemsPerPage
       )
       setPaginatedBNPL(paginated)
+    
     }
-  }, [filteredProducts, currentPage, view, BNPLitems, ESIMitems])
+    else if (view === 'reloadly-airtime') {
+      const total = Airtime.length
+      setTotalProducts(total)
+      
+      const pages = Math.ceil(total / itemsPerPage)
+      setTotalPages(pages)
+
+      const paginated = Airtime.slice(
+        (currentPage - 1) * itemsPerPage,
+        currentPage * itemsPerPage
+      )
+      setPaginatedAirtime(paginated)
+    }
+    else if (view === 'reloadly-gifts') {
+      const total = Gifts.length
+      setTotalProducts(total)
+      
+      const pages = Math.ceil(total / itemsPerPage)
+      setTotalPages(pages)
+
+      const paginated = Gifts.slice(
+        (currentPage - 1) * itemsPerPage,
+        currentPage * itemsPerPage
+      )
+      setPaginatedGifts(paginated)
+    }
+  }, [filteredProducts, currentPage, view, BNPLitems, ESIMitems, Airtime,Gifts])
 
   const handlePageChange = (newPage: number) => {
     const params = new URLSearchParams(urlSearchParams.toString())
@@ -122,7 +169,11 @@ export default function ProductListing({ product, esimProviders, BNPLProvider, v
     ? paginatedProducts
     : view === 'esim'
     ? paginatedESIM
-    : paginatedBNPL
+    : view == 'bnpl'
+    ? paginatedBNPL
+    : view == 'reloadly-airtime'
+    ? paginatedAirtime
+    : paginatedGifts
 
 
   return (
@@ -165,6 +216,18 @@ export default function ProductListing({ product, esimProviders, BNPLProvider, v
   
         return (
         <ProductCard key={index} product={[provider as BNPLProvider]} />)
+      })}
+    {view === 'reloadly-airtime' &&
+      data.map((provider, index) => {
+  
+        return (
+        <ProductCard key={index} product={(provider as GroupedReloadlyProduct).items} />)
+      })}
+    {view === 'reloadly-gifts' &&
+      data.map((provider, index) => {
+  
+        return (
+        <ProductCard key={index} product={(provider as GroupedReloadlyProduct).items} />)
       })}
   </div>
 )}
@@ -310,4 +373,25 @@ function applyFiltersAndSort(products: Product[], esimProviders: ESIMProvider[],
   
 
   return filtered as ESIMProvider[] | BNPLProvider[];
+}
+function reloadly_group(item_list : reloadly[]): GroupedReloadlyProduct[] {
+  const groupedMap = new Map<string, reloadly[]>()
+
+  for (const product of item_list) {
+    const flag = product.flag
+    if (!groupedMap.has(flag)) {
+      groupedMap.set(flag, [])
+    }
+    groupedMap.get(flag)!.push(product)
+  }
+  
+
+  const grouped: GroupedReloadlyProduct[] = Array.from(groupedMap.entries()).map(
+    ([flag, items]) => ({
+      flag,
+      items,
+    })
+  )
+  console.log(grouped)
+  return grouped
 }

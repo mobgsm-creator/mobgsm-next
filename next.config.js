@@ -6,7 +6,7 @@ const nextConfig = {
     ignoreBuildErrors: false,
   },
   images: {
-    domains: ["ibb.co", "via.placeholder.com"],
+    domains: ["ibb.co", "via.placeholder.com","s3.amazonaws.com","cdn.reloadly.com"],
     remotePatterns: [
       {
         protocol: "https",

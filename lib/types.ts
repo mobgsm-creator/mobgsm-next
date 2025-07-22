@@ -49,3 +49,15 @@ export interface BNPLProvider {
   Image_URL: string
   country: string
 }
+
+export interface reloadly {
+  id : number, 
+  operator : string, 
+  sendable_values : string, 
+  discount : string, 
+  fx : string, 
+  code : string, 
+  flag : string,
+  img_link : string
+
+}

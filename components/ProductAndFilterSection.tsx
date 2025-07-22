@@ -1,10 +1,10 @@
 'use client'
-import { getProducts, getBNPL, getESIM } from "../lib/supabase"
+import { getProducts, getBNPL, getESIM, getReloadlyAirtime, getReloadlyGifts } from "../lib/supabase"
 import { useState, useEffect } from "react"
 import ProductListing from "./ProductListing"
 import FilterSidebar from "./FilterSidebar"
 import { Skeleton } from "../components/ui/skeleton"
-import type { Product, ESIMProvider,BNPLProvider } from "../lib/types"
+import type { Product, ESIMProvider,BNPLProvider, reloadly } from "../lib/types"
 import { Suspense } from "react"
 import { Filter } from "lucide-react"
 interface ProductListingProps {
@@ -13,23 +13,30 @@ interface ProductListingProps {
   }
   
 export default function ProductSectionWrapper({ country } : ProductListingProps) {
-  const [view, setView] = useState<'products' | 'esim' | 'bnpl'>('products')
-  const priorityCountries = ["BD", "CN", "IN", "MW", "NG", "PH", "RW", "KR", "LK", "ZM","AE"]
+  const [view, setView] = useState<'products' | 'esim' | 'bnpl' | 'reloadly-airtime' | 'reloadly-gifts'>('reloadly-airtime')
+  const priorityCountries = ['AE', 'AF', 'AG', 'AI', 'AL', 'AM', 'AO', 'AR', 'AS', 'AT', 'AU', 'AW', 'AZ', 'BB', 'BD', 'BE', 'BF', 'BG', 'BH', 'BI', 'BJ', 'BM', 'BO', 'BR', 'BS', 'BW', 'BY', 'BZ', 'CA', 'CD', 'CF', 'CG', 'CH', 'CI', 'CL', 'CM', 'CN', 'CO', 'CR', 'CU', 'CY', 'CZ', 'DE', 'DJ', 'DK', 'DM', 'DO', 'DZ', 'EC', 'EE', 'EG', 'ER', 'ES', 'ET', 'FI', 'FJ', 'FR', 'GA', 'GB', 'GD', 'GE', 'GH', 'GM', 'GN', 'GQ', 'GR', 'GT', 'GW', 'GY', 'HN', 'HT', 'ID', 'IE', 'IL', 'IN', 'IQ', 'IR', 'IS', 'IT', 'JM', 'JO', 'JP', 'KE', 'KG', 'KH', 'KM', 'KN', 'KR', 'KW', 'KY', 'KZ', 'LA', 'LB', 'LK', 'LR', 'LS', 'LT', 'LU', 'LV', 'LY', 'MA', 'MD', 'MG', 'ML', 'MM', 'MN', 'MR', 'MS', 'MT', 'MU', 'MV', 'MW', 'MX', 'MY', 'MZ', 'NA', 'NE', 'NG', 'NI', 'NL', 'NO', 'NP', 'NZ', 'OM', 'PA', 'PE', 'PH', 'PK', 'PL', 'PR', 'PT', 'PY', 'QA', 'RO', 'RS', 'RU', 'RW', 'SA', 'SC', 'SD', 'SE', 'SG', 'SI', 'SK', 'SL', 'SN', 'SO', 'SR', 'SV', 'SZ', 'TC', 'TD', 'TG', 'TH', 'TJ', 'TL', 'TN', 'TR', 'TT', 'TZ', 'UA', 'UG', 'US', 'UY', 'UZ', 'VC', 'VE', 'VG', 'VN', 'WS', 'YE', 'ZA', 'ZM', 'ZW']
+
   const [isOpen, setIsOpen] = useState(false)
   
   const [product, setProduct] = useState<Product[]>([]);
   const [BNPLProvider, setBNPLProvider] = useState<BNPLProvider[]>([]);
   const [esimProviders, setEsimProviders] = useState<ESIMProvider[]>([]);
-
+  const [r_airtime,setAirtime] = useState<reloadly[]>([])
+  const [r_gifts,setGifts] = useState<reloadly[]>([])
   useEffect(() => {
     const fetchData = async () => {
       const products = await getProducts(country);
       const bnpl = await getBNPL();
       const esim = await getESIM();
-      //console.log(esim,bnpl)
+      const airtime = await getReloadlyAirtime()
+      const giftcards = await getReloadlyGifts()
+      console.log("Airtime",airtime)
+      console.log("Gifts",giftcards)
       setProduct(products);
       setBNPLProvider(bnpl);
       setEsimProviders(esim);
+      setAirtime(airtime);
+      setGifts(giftcards);
     };
 
     fetchData();
@@ -50,6 +57,17 @@ export default function ProductSectionWrapper({ country } : ProductListingProps)
   const filteredBNPL = (BNPLProvider ?? []).filter((item) => {
     return priorityCountries.includes(country)
       ? item.country === country
+      : true;
+  });
+
+  const fitleredAirtime = (r_airtime ?? []).filter((item) => {
+    return priorityCountries.includes(country)
+      ? item.code === country
+      : true;
+  });
+  const fitleredGifts = (r_gifts ?? []).filter((item) => {
+    return priorityCountries.includes(country)
+      ? item.code === country
       : true;
   });
   //console.log(filteredBNPL)
@@ -93,6 +111,8 @@ export default function ProductSectionWrapper({ country } : ProductListingProps)
           product={filteredProducts}
           esimProviders={filteredESIM} 
           BNPLProvider={filteredBNPL} 
+          airtime={fitleredAirtime}
+          gifts={fitleredGifts}
           view={view}
           setView={setView}
         />
