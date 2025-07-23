@@ -192,9 +192,10 @@ export default function ProductListing({ product, esimProviders, BNPLProvider, a
 
   return (
     <div>
-      { totalProducts > 0 ? (<>
+      <>
       <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4 mb-6">
   <ToggleTabs currentView={view} onChange={setView} />
+  
   
   <h2 className="hidden lg:block text-xl font-semibold text-gray-900">
     {totalProducts} Products Found
@@ -203,8 +204,8 @@ export default function ProductListing({ product, esimProviders, BNPLProvider, a
   {view === 'products' && <SortOptions />}
 </div>
 
-
-      {data.length === 0 ? (
+    
+      {totalProducts > 0 && data.length === 0 ? (
   <div className="text-center py-12">
     <p className="text-gray-500 text-lg">
       No {view === 'products' ? 'products' : view === 'esim' ? 'eSIM offers' : 'BNPL offers'} found matching your criteria.
@@ -247,7 +248,9 @@ export default function ProductListing({ product, esimProviders, BNPLProvider, a
 )}
 
 
-      <div className="flex justify-center mt-8 space-x-4">
+
+<div className={`${totalProducts > 0 ? '' : 'hidden'} flex justify-center mt-8 space-x-4`}>
+
         <button
           disabled={currentPage === 1}
           onClick={() => handlePageChange(currentPage - 1)}
@@ -263,7 +266,7 @@ export default function ProductListing({ product, esimProviders, BNPLProvider, a
         >
           Next
         </button>
-      </div></>) : <div className="flex items-center space-x-2 text-gray-600 animate-pulse">
+      </div></> <div className="flex items-center space-x-2 text-gray-600 animate-pulse">
     
     <div className="max-w-screen-lg mx-auto px-4">
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -278,7 +281,7 @@ export default function ProductListing({ product, esimProviders, BNPLProvider, a
           </div>
         ))}</div>
       </div>
-  </div>}
+  </div>
     </div>
     
   )
