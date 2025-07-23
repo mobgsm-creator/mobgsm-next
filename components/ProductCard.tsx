@@ -10,10 +10,10 @@ type ProductCardProps = {
 };
 
 export default function ProductCard({ product }: ProductCardProps) {
-
+  console.log(product.length)
   const [currentIndex, setCurrentIndex] = useState(0);
   const [showCompare, setShowCompare] = useState(false)
-  console.log(product)
+  
   
 
   const handleNext = () => {
@@ -281,9 +281,7 @@ export default function ProductCard({ product }: ProductCardProps) {
         { <img
           src={currentProduct.img_link}
           alt={currentProduct.operator}
-          width={300}
-          height={200}
-          className="w-full h-48 object-cover"
+          className="w-full"
         /> }
         {currentProduct.discount ? 
         <Badge className="absolute top-2 right-2 bg-red-500 hover:bg-red-600">
@@ -334,22 +332,20 @@ export default function ProductCard({ product }: ProductCardProps) {
 
         
 
-        <div className="flex justify-between mt-4">
+        {product.length > 1 && <div className="flex justify-between mt-4">
           <Button variant="outline" onClick={handlePrev}>
             Previous
           </Button>
           <Button variant="outline" onClick={handleNext}>
             Next
           </Button>
-        </div>
+        </div>}
       </div></>)}
-      {isReloadly(currentProduct) && currentProduct.img_link.includes("cdn.reloadly") &&( <><div className="relative">
+      {isReloadly(currentProduct) && currentProduct.img_link.includes("cdn.reloadly") &&( <><div className=" relative">
         { <img
           src={currentProduct.img_link}
           alt={currentProduct.operator}
-          width={300}
-          height={200}
-          className="w-full h-48 object-cover"
+          className="w-full h-48 object-contain"
         /> }
         {currentProduct.discount ? 
         <Badge className="absolute top-2 right-2 bg-red-500 hover:bg-red-600">
@@ -391,14 +387,14 @@ export default function ProductCard({ product }: ProductCardProps) {
 
         
 
-        <div className="flex justify-between mt-4">
+        {product.length > 1 && <div className="flex justify-between mt-4">
           <Button variant="outline" onClick={handlePrev}>
             Previous
           </Button>
           <Button variant="outline" onClick={handleNext}>
             Next
           </Button>
-        </div>
+        </div>}
       </div></>)}
     
     </div>

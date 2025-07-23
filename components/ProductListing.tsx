@@ -34,11 +34,25 @@ function ToggleTabs({ onChange, currentView }: ToggleTabsProps) {
   return (
     <Tabs value={currentView} onValueChange={(val: string) => onChange(val as 'products' | 'esim' | 'bnpl'| 'reloadly-airtime' | 'reloadly-gifts')}>
       <TabsList>
-        <TabsTrigger value="products">Mobiles</TabsTrigger>
-        <TabsTrigger value="esim">eSIM Offers</TabsTrigger>
-        <TabsTrigger value="bnpl">BNPL Offers</TabsTrigger>
+        
         <TabsTrigger value="reloadly-airtime">Airtime Topup</TabsTrigger>
         <TabsTrigger value="reloadly-gifts">Giftcards</TabsTrigger>
+        <TabsTrigger value="products"><span className="flex items-center gap-2">Mobiles<span className="text-xs font-semibold text-white bg-yellow-500 px-2 py-0.5 rounded">
+      BETA
+    </span>
+  </span></TabsTrigger>
+        <TabsTrigger value="esim"><span className="flex items-center gap-2">eSIM Offers<span className="text-xs font-semibold text-white bg-yellow-500 px-2 py-0.5 rounded">
+      BETA
+    </span>
+  </span></TabsTrigger>
+        <TabsTrigger value="bnpl">
+  <span className="flex items-center gap-2">
+    BNPL Offers
+    <span className="text-xs font-semibold text-white bg-yellow-500 px-2 py-0.5 rounded">
+      BETA
+    </span>
+  </span>
+</TabsTrigger>
       </TabsList>
     </Tabs>
   )
