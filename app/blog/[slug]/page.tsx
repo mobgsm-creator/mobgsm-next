@@ -49,21 +49,23 @@ interface Params {
   params: Promise<{ slug: string }>
 }
 
-// Pre-generate all device pages at build time
-export async function generateStaticParams() {
-  const supabase = createClient()
+// // Pre-generate all device pages at build time
+// export async function generateStaticParams() {
+//   const supabase = createClient()
 
-  const { data: devices } = await supabase.from("devices").select("name_url") // Adjust based on your needs
+//   const { data: devices } = await supabase.from("devices").select("name_url") // Adjust based on your needs
 
-  if (!devices) return []
+//   if (!devices) return []
 
-  return devices.map((device) => ({
-    slug: device.name_url,
-  }))
-}
+//   return devices.map((device) => ({
+//     slug: device.name_url,
+//   }))
+// }
 
-// Static generation enabled, but allow fallback for new devices
+
+export const revalidate = 86400 // 24 hours
 export const dynamicParams = true
+
 
 // Static metadata generation
 export async function generateMetadata(props: { params: Promise<{ slug: string }> }) {
