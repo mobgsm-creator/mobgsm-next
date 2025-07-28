@@ -53,43 +53,47 @@ export default function BlogListPage() {
   }
 
   return (
-    <div className='flex justify-center items-center'>
-    <div className="min-h-screen max-w-4xl bg-white">
-      {/* Header */}
-      <header className="bg-[#4CAF50] text-white px-4 py-3">
-        <div className="flex items-center justify-between max-w-4xl mx-auto">
-          <Menu className="h-6 w-6" />
-          <h1 className="text-2xl font-bold">MobGsm</h1>
-          <Search className="h-6 w-6" />
-        </div>
-      </header></div>
-    <div className="p-6 max-w-3xl mx-auto">
-      <h1 className="text-2xl font-bold mb-4">Device Brands</h1>
-      <ul className="space-y-4">
-        {Object.entries(brandMap).map(([brand, devices]) => (
-          <li key={brand} className="border-b pb-2">
-            <button
-              onClick={() => toggleBrand(brand)}
-              className="flex items-center text-left w-full text-lg font-semibold text-green-700 hover:text-green-900"
-            >
-              {expandedBrands[brand] ? <ChevronUp className="h-4 w-4 mr-1" /> : <ChevronDown className="h-4 w-4 mr-1" />}
-              {brand}
-            </button>
+    <div className='flex flex-col justify-center items-center'>
 
-            {expandedBrands[brand] && (
-              <ul className="ml-6 mt-2 space-y-1 text-sm text-blue-600">
-                {devices.map((device) => (
-                  <li key={device.id}>
-                    <Link href={`/blog/${device.name_url}`} className="hover:underline">
-                      {device.name}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            )}
-          </li>
-        ))}
-      </ul>
-    </div></div>
+  {/* Header */}
+  <header className="bg-[#4CAF50] text-white px-4 py-3 w-full">
+    <div className="flex items-center justify-between max-w-4xl mx-auto">
+      <Menu className="h-6 w-6" />
+      <h1 className="text-2xl font-bold">MobGsm</h1>
+      <Search className="h-6 w-6" />
+    </div>
+  </header>
+
+  {/* Main content */}
+  <div className="p-6 max-w-6xl w-full">
+    <h1 className="text-2xl font-bold mb-4">Device Brands</h1>
+    <ul className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+      {Object.entries(brandMap).map(([brand, devices]) => (
+        <li key={brand} className="border p-3 rounded shadow-sm">
+          <button
+            onClick={() => toggleBrand(brand)}
+            className="flex items-center text-left w-full text-lg font-semibold text-green-700 hover:text-green-900"
+          >
+            {expandedBrands[brand] ? <ChevronUp className="h-4 w-4 mr-1" /> : <ChevronDown className="h-4 w-4 mr-1" />}
+            {brand}
+          </button>
+
+          {expandedBrands[brand] && (
+            <ul className="mt-2 space-y-1 text-sm text-blue-600">
+              {devices.map((device) => (
+                <li key={device.id}>
+                  <Link href={`/blog/${device.name_url}`} className="hover:underline">
+                    {device.name}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          )}
+        </li>
+      ))}
+    </ul>
+  </div>
+</div>
+
   );
 }
