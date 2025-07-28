@@ -24,6 +24,23 @@ interface Setting {
   descriptiondevices: string
   keywordsdevices: string
 }
+interface ImgSpecs {
+  display?: {
+    size?: string;
+    resolution?: string;
+  };
+  camera?: {
+    main?: string;
+    video?: string;
+  };
+  performance?: {
+    ram?: string;
+    chipset?: string;
+  };
+  battery?: {
+    capacity?: string;
+  };
+}
 
 type SettingsMap = Record<string, Setting>
 const settings = is as SettingsMap
@@ -96,7 +113,18 @@ async function StaticDeviceContent({ slug }: { slug: string }) {
   const json = device.json
   const specs = json?.data || {}
   const brandName = device.brand_name
-  const img_specs = JSON.parse(device.specs?.replace('" inches', "inches"))
+  let img_specs : ImgSpecs = {};
+
+if (device?.specs) {
+  try {
+    // Optionally clean up common invalid string patterns first
+    const safeSpecs = device.specs.replace('" inches', 'inches');
+    img_specs = JSON.parse(safeSpecs);
+  } catch (e) {
+    console.error('Invalid JSON in device.specs:', e);
+  }
+}
+
 
   const { data: moreFromBrand } = await supabase
     .from("devices")
@@ -198,7 +226,7 @@ export default async function BlogPage({ params }: Params) {
                   <div className="flex items-center space-x-3 w-[150px]">
                     <span>📱</span>
                     <span>
-                      <strong>{img_specs.display.size}</strong>
+                      <strong>{img_specs.display?.size}</strong>
                       <br />
                       {img_specs.display?.resolution}
                     </span>
