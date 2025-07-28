@@ -96,7 +96,7 @@ async function StaticDeviceContent({ slug }: { slug: string }) {
   const json = device.json
   const specs = json?.data || {}
   const brandName = device.brand_name
-  const img_specs = JSON.parse(device.specs.replace('" inches', "inches"))
+  const img_specs = JSON.parse(device.specs?.replace('" inches', "inches"))
 
   const { data: moreFromBrand } = await supabase
     .from("devices")
