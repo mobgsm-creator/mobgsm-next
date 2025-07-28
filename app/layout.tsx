@@ -6,10 +6,11 @@ import "./globals.css"
 const inter = Inter({ subsets: ["latin"] })
 
 export const metadata: Metadata = {
-  title: "ShopClues Deals - Best Products with 75% Off",
-  description: "Discover amazing deals with up to 75% off on top products. Shop now and save big!",
-  keywords: "deals, discounts, shopping, 75% off, best prices",
+  title: "MobGSM - Latest Mobile Phones, Full Specs & Comparisons",
+  description: "Explore detailed specifications, reviews, and comparisons of the latest smartphones. Stay updated with mobile news and find the best device for your needs.",
+  keywords: "mobile phones, smartphone specs, phone comparisons, latest mobiles, tech reviews, MobGSM",
 }
+
 
 export default function RootLayout({
   children,
