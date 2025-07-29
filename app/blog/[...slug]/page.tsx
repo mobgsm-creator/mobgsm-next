@@ -6,7 +6,23 @@ import Image from "next/image"
 import { settings as is } from "@/public/combined_settings"
 import { headers } from "next/headers"
 import { Suspense } from "react"
+function parseSlug(slugArray: string) {
+  const fullSlug = slugArray[0] || ''
+  
+  // Check if it's in the format: something-price-in-country
+  const match = fullSlug.match(/^(.*)-price-in-([a-z-]+)$/i)
 
+  if (match) {
+    const pureSlug = match[1]      // e.g., infinix-note-50-4g
+    const country = match[2]       // e.g., angola
+    return { pureSlug, country }
+  }
+
+  return {
+    pureSlug: fullSlug,
+    country: null
+  }
+}
 // Types remain the same
 interface Setting {
   titleindex: string
@@ -69,13 +85,14 @@ export const dynamicParams = true
 
 // Static metadata generation
 export async function generateMetadata(props: { params: Promise<{ slug: string }> }) {
-  const { slug } = await props.params
+  const { slug } = await props.params;
+  const { pureSlug, country } = parseSlug(slug);
   const supabase = createClient()
 
   const { data: device } = await supabase
     .from("devices")
     .select("name, description, keywords, image")
-    .eq("name_url", slug)
+    .eq("name_url", pureSlug)
     .single()
 
   if (!device) {
@@ -86,9 +103,9 @@ export async function generateMetadata(props: { params: Promise<{ slug: string }
   }
 
   return {
-    title: `${device.name} | MobGsm`,
-    description: device.description || "Find full specifications and pricing for " + device.name,
-    keywords: device.keywords?.split(",") || [],
+    title: `${device.name} ${country ? `Price in ${country}` : '| MobGsm'}`,
+    description: device.description,
+    keywords: [...(device.keywords?.split(",") || []), ...(country ? [`price in ${country}`] : [])],
     openGraph: {
       title: device.name,
       description: device.description,
@@ -106,9 +123,11 @@ export async function generateMetadata(props: { params: Promise<{ slug: string }
 
 // Static component for the main device content
 async function StaticDeviceContent({ slug }: { slug: string }) {
+  const { pureSlug, country } = parseSlug(slug);
+  console.log("country:",country)
   const supabase = createClient()
 
-  const { data: device, error } = await supabase.from("devices").select("*").eq("name_url", slug).single()
+  const { data: device, error } = await supabase.from("devices").select("*").eq("name_url", pureSlug).single()
 
   if (!device || error) return notFound()
 
@@ -143,11 +162,18 @@ if (device?.specs) {
 }
 
 // Dynamic component for country-specific content
-function DynamicCountryContent({ device }: { device: any }) {//eslint-disable-line
+function DynamicCountryContent({ device, slugcountry }: { device: any, slugcountry:string|null }) {//eslint-disable-line
   const headersList = headers()
   const subdomain = headersList.get("x-subdomain") || "us"
-  const setting = settings[subdomain] ?? settings["us"]
-  const country = setting.country
+  
+  const country = slugcountry
+  const entry = Object.entries(settings).find(
+    ([, value]) => value.country.toLowerCase() === country?.toLowerCase()
+  )
+  const setting =  (entry ? settings[entry[0]] : undefined) 
+  ?? settings[subdomain]
+  ?? settings["us"]
+  
   const currency = setting.currency
   const rate = Number.parseFloat(setting.exchangerates) || 1
 
@@ -164,7 +190,7 @@ function DynamicCountryContent({ device }: { device: any }) {//eslint-disable-li
 }
 
 // Dynamic component for country links
-function DynamicCountryLinks({ deviceSlug }: { deviceSlug: string }) {
+function DynamicCountryLinks({ deviceSlug, country }: { deviceSlug: string, country: string | null }) {
   return (
     <div className="bg-white mt-6">
       <div className="bg-gray-300 px-4 py-2 flex items-center justify-between">
@@ -175,10 +201,10 @@ function DynamicCountryLinks({ deviceSlug }: { deviceSlug: string }) {
         {Object.entries(settings).map(([code, cfg]) => (
           <a
             key={code}
-            href={`https://${code}.mobgsm.com/listings/blog/${deviceSlug}`}
+            href={`https://mobgsm.com/listings/blog/${deviceSlug}-price-in-${cfg.country}`}
             className="flex items-center justify-between px-4 py-3 border-b border-gray-100 hover:bg-gray-50 cursor-pointer"
           >
-            <span className="text-gray-900 font-medium">{cfg.country}</span>
+            <span className="text-gray-900 font-medium">{cfg.country || country}</span>
             <ChevronRight className="h-4 w-4 text-green-500" />
           </a>
         ))}
@@ -189,7 +215,8 @@ function DynamicCountryLinks({ deviceSlug }: { deviceSlug: string }) {
 
 export default async function BlogPage({ params }: Params) {
   const { slug } = await params
-
+  const { pureSlug, country } = parseSlug(slug);
+  console.log("pureSlug",pureSlug)
   // Get static content (this is cached/pre-rendered)
   const staticContent = await StaticDeviceContent({ slug })
   const { device, specs, img_specs, moreFromBrand, uniqueBrands } = staticContent
@@ -262,7 +289,7 @@ export default async function BlogPage({ params }: Params) {
                 {device.name} FULL SPECIFICATIONS
                 {/* Dynamic pricing component */}
                 <Suspense fallback={<div>Loading price...</div>}>
-                  <DynamicCountryContent device={device} />
+                  <DynamicCountryContent device={device} slugcountry={country} />
                 </Suspense>
               </h1>
             </div>
@@ -352,7 +379,7 @@ export default async function BlogPage({ params }: Params) {
 
             {/* Dynamic Countries Section */}
             <Suspense fallback={<div>Loading countries...</div>}>
-              <DynamicCountryLinks deviceSlug={slug} />
+              <DynamicCountryLinks deviceSlug={pureSlug} country={country} />
             </Suspense>
           </div>
         </div>

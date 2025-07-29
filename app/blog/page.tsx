@@ -16,7 +16,7 @@ export default function BlogListPage() {
   const [devices, setDevices] = useState<Device[]>([]);
   const [loading, setLoading] = useState(true);
   const [expandedBrands, setExpandedBrands] = useState<Record<string, boolean>>({});
-
+  //Fix this security issue
   useEffect(() => {
     const fetchDevices = async () => {
       const supabase = createClient();
