@@ -47,7 +47,7 @@ export default function ProductCard({ product }: ProductCardProps) {
         <>
           <DialogDescription className="text-sm font-semibold mb-2">Select Amount</DialogDescription>
           <div className="flex flex-wrap gap-2 mb-4">
-            {values.map((val, i) => {
+            {values.length > 1 ? (values.map((val, i) => {
               const local = (Number(val.trim()) * Number(product.fx)).toFixed(2)
               return (
                 <Button
@@ -61,7 +61,10 @@ export default function ProductCard({ product }: ProductCardProps) {
                   {local}
                 </Button>
               )
-            })}
+            })): ( <p>
+              Enter a value between Min value: {values[0]} and Max value: {values[1]}
+            </p>)
+          }
           </div>
           <input
             type="number"
@@ -73,10 +76,41 @@ export default function ProductCard({ product }: ProductCardProps) {
         </>
       )
     } else if (product.img_link.includes("cdn.reloadly")) {
+      const values = product.sendable_values.includes("~")
+        ? product.sendable_values.split("~")
+        : product.sendable_values.includes(",")
+        ? product.sendable_values.split(",")
+        : [product.sendable_values]
       return (
         <>
-          <DialogDescription className="text-sm font-semibold mb-2">Giftcard Amounts</DialogDescription>
-          <p className="text-green-600 text-sm mb-4">{product.sendable_values}</p>
+          <DialogDescription className="text-sm font-semibold mb-2">Select Amount</DialogDescription>
+          <div className="flex flex-wrap gap-2 mb-4">
+            {values.length > 1 ? (values.map((val, i) => {
+              const local = (Number(val.trim()) * Number(product.fx)).toFixed(2)
+              return (
+                <Button
+                  key={i}
+                  variant="outline"
+                  onClick={() => {
+                    setSelectedValue(local)
+                    setInputValue(local)
+                  }}
+                >
+                  {local}
+                </Button>
+              )
+            })): ( <p>
+              Enter a value between Min value: {values[0]} and Max value: {values[1]}
+            </p>)
+          }
+          </div>
+          <input
+            type="number"
+            value={inputValue}
+            onChange={(e) => setInputValue(e.target.value)}
+            className="w-full border rounded p-2 mb-4"
+            placeholder="Enter amount"
+          />
         </>
       )
     }
