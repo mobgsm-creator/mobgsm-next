@@ -88,6 +88,8 @@ export default function ProductSectionWrapper({ country } : ProductListingProps)
               product={filteredProducts}
               esimProviders={filteredESIM}
               BNPLProvider={filteredBNPL}
+              airtime={fitleredAirtime}
+              gifts={fitleredGifts}
               view={view}
             />
           </Suspense>

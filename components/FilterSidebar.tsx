@@ -7,14 +7,16 @@ import { Checkbox } from "../components/ui/checkbox"
 import { Button } from "../components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "../components/ui/card"
 import { Separator } from "../components/ui/separator"
-import type { Product, ESIMProvider, BNPLProvider } from "../lib/types"
+import type { Product, ESIMProvider, BNPLProvider, reloadly } from "../lib/types"
 interface ProductListingProps {
   product: Product[]
   esimProviders?: ESIMProvider[]
   BNPLProvider?: BNPLProvider[]
+  airtime?: reloadly[]
+  gifts?: reloadly[]
   view: 'products' | 'esim' | 'bnpl'| 'reloadly-airtime' | 'reloadly-gifts'
 }
-export default function FilterSidebar( { product, esimProviders, BNPLProvider,view }: ProductListingProps ) {
+export default function FilterSidebar( { product, esimProviders, BNPLProvider,airtime,gifts,view }: ProductListingProps ) {
   //console.log("here")
   const router = useRouter()
   const searchParams = useSearchParams()
@@ -28,6 +30,10 @@ export default function FilterSidebar( { product, esimProviders, BNPLProvider,vi
     allBrands = Array.from(new Set(esimProviders?.map((p) => p.provider) || []))
   } else if (view ==='bnpl') {
     allBrands = Array.from(new Set(BNPLProvider?.map((p) => p.Name) || []))
+  } else if (view === 'reloadly-airtime' ) {
+    allBrands = Array.from(new Set(airtime?.map((p) => p.operator) || []))
+  } else if (view === 'reloadly-gifts') {
+    allBrands = Array.from(new Set(gifts?.map((p) => p.operator) || []))
   }
   
   useEffect(() => {

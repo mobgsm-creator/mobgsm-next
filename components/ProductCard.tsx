@@ -5,6 +5,14 @@ import { Button } from "../components/ui/button"
 import { Badge } from "../components/ui/badge"
 import { useState } from "react";
 import ComparePopup from "./comparePopup";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogFooter
+} from "@/components/ui/dialog"
 type ProductCardProps = {
   product: Product[] | ESIMProvider[] | BNPLProvider[] | reloadly[];
 };
@@ -13,8 +21,66 @@ export default function ProductCard({ product }: ProductCardProps) {
   console.log(product.length)
   const [currentIndex, setCurrentIndex] = useState(0);
   const [showCompare, setShowCompare] = useState(false)
-  
-  
+  const [isOpen, setIsOpen] = useState(false)
+  const [, setSelectedValue] = useState("")
+  const [inputValue, setInputValue] = useState("")
+
+  const handleReloadlySubmit = async () => {
+    const response = await fetch("/api/reloadly_api", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ value: inputValue, product: currentProduct })
+    })
+    const data = await response.json()
+    console.log(data)
+  }
+
+  const renderValues = (product : reloadly) => {
+    if (product.img_link.includes("s3.amazonaws")) {
+      const values = product.sendable_values.includes("~")
+        ? product.sendable_values.split("~")
+        : product.sendable_values.includes(",")
+        ? product.sendable_values.split(",")
+        : [product.sendable_values]
+
+      return (
+        <>
+          <DialogDescription className="text-sm font-semibold mb-2">Select Amount</DialogDescription>
+          <div className="flex flex-wrap gap-2 mb-4">
+            {values.map((val, i) => {
+              const local = (Number(val.trim()) * Number(product.fx)).toFixed(2)
+              return (
+                <Button
+                  key={i}
+                  variant="outline"
+                  onClick={() => {
+                    setSelectedValue(local)
+                    setInputValue(local)
+                  }}
+                >
+                  {local}
+                </Button>
+              )
+            })}
+          </div>
+          <input
+            type="number"
+            value={inputValue}
+            onChange={(e) => setInputValue(e.target.value)}
+            className="w-full border rounded p-2 mb-4"
+            placeholder="Enter amount"
+          />
+        </>
+      )
+    } else if (product.img_link.includes("cdn.reloadly")) {
+      return (
+        <>
+          <DialogDescription className="text-sm font-semibold mb-2">Giftcard Amounts</DialogDescription>
+          <p className="text-green-600 text-sm mb-4">{product.sendable_values}</p>
+        </>
+      )
+    }
+  }
 
   const handleNext = () => {
     setCurrentIndex((prevIndex) => (prevIndex + 1) % product.length);
@@ -277,125 +343,38 @@ export default function ProductCard({ product }: ProductCardProps) {
       
       </>)
 
-      }{isReloadly(currentProduct) && currentProduct.img_link.includes("s3.amazonaws") &&( <><div className="relative">
-        { <img
-          src={currentProduct.img_link}
-          alt={currentProduct.operator}
-          className="w-full"
-        /> }
-        {currentProduct.discount ? 
-        <Badge className="absolute top-2 right-2 bg-red-500 hover:bg-red-600">
-          {currentProduct.discount}
-        </Badge> : null}
-      </div>
+      }{isReloadly(currentProduct) && (
+        <>
+          <div className="relative cursor-pointer" onClick={() => setIsOpen(true)}>
+            <img
+              src={currentProduct.img_link}
+              alt={currentProduct.operator}
+              className="w-full h-48 object-contain"
+            />
+            {currentProduct.discount && (
+              <Badge className="absolute top-2 right-2 bg-red-500 hover:bg-red-600">
+                {currentProduct.discount}
+              </Badge>
+            )}
+          </div>
 
-      <div className="p-4">
-        
+          <Dialog open={isOpen} onOpenChange={setIsOpen}>
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>{currentProduct.operator}</DialogTitle>
+              </DialogHeader>
 
-        <h3 className="font-semibold text-gray-900 mb-2 line-clamp-2 min-h-[3rem]">
-          {currentProduct.operator}
-        </h3>
+              {renderValues(currentProduct)}
 
-        <div className="flex items-center gap-2 mb-2">
-          <div className='flex flex-col'>
-        <span className="text-md font-bold">Topup Amounts in Local Currency:</span>
-        <span className="text-xs font-bold text-green-600">
-  {
-    currentProduct.sendable_values.includes('~') ? (
-      currentProduct.sendable_values.split("~").map(value => (Number(value.trim()) * Number(currentProduct.fx)).toFixed(2)).join(" ~ ")
-    ) : currentProduct.sendable_values.includes(',') ? (
-      currentProduct.sendable_values
-        .split(',')
-        .map(value => (Number(value.trim()) * Number(currentProduct.fx)).toFixed(2))
-        .join(', ')
-    ) : (
-      (Number(currentProduct.sendable_values) * Number(currentProduct.fx)).toFixed(2)
-    )
-  }
-</span></div>
-
-       
-        </div>
-
-        <div className="flex items-center gap-2 mb-3">
-          
-          <span className="text-xs text-gray-500">•</span>
-          <Badge
-  variant="outline"
-  className="text-xs max-w-[12rem] overflow-hidden whitespace-nowrap p-0 relative"
->
-  
-</Badge>
-
-
-        </div>
-
-        
-
-        {product.length > 1 && <div className="flex justify-between mt-4">
-          <Button variant="outline" onClick={handlePrev}>
-            Previous
-          </Button>
-          <Button variant="outline" onClick={handleNext}>
-            Next
-          </Button>
-        </div>}
-      </div></>)}
-      {isReloadly(currentProduct) && currentProduct.img_link.includes("cdn.reloadly") &&( <><div className=" relative">
-        { <img
-          src={currentProduct.img_link}
-          alt={currentProduct.operator}
-          className="w-full h-48 object-contain"
-        /> }
-        {currentProduct.discount ? 
-        <Badge className="absolute top-2 right-2 bg-red-500 hover:bg-red-600">
-          {currentProduct.discount}
-        </Badge> : null}
-      </div>
-
-      <div className="p-4">
-        
-
-        <h3 className="font-semibold text-gray-900 mb-2 line-clamp-2 min-h-[3rem]">
-          {currentProduct.operator}
-        </h3>
-
-        <div className="flex items-center gap-2 mb-2">
-          <div className='flex flex-col'>
-        <span className="text-md font-bold">Giftcard Amounts in Local Currency:</span>
-        <span className="text-xs font-bold text-green-600">
-  {
-    currentProduct.sendable_values
-  }
-</span></div>
-
-       
-        </div>
-
-        <div className="flex items-center gap-2 mb-3">
-          
-          <span className="text-xs text-gray-500">•</span>
-          <Badge
-  variant="outline"
-  className="text-xs max-w-[12rem] overflow-hidden whitespace-nowrap p-0 relative"
->
-  
-</Badge>
-
-
-        </div>
-
-        
-
-        {product.length > 1 && <div className="flex justify-between mt-4">
-          <Button variant="outline" onClick={handlePrev}>
-            Previous
-          </Button>
-          <Button variant="outline" onClick={handleNext}>
-            Next
-          </Button>
-        </div>}
-      </div></>)}
+              <DialogFooter>
+                {currentProduct.img_link.includes("s3.amazonaws") && (
+                  <Button onClick={handleReloadlySubmit}>Submit</Button>
+                )}
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
+        </>
+      )}
     
     </div>
     
