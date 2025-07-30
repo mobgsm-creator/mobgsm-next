@@ -201,7 +201,7 @@ function DynamicCountryLinks({ deviceSlug, country }: { deviceSlug: string, coun
         {Object.entries(settings).map(([code, cfg]) => (
           <a
             key={code}
-            href={`https://mobgsm.com/listings/blog/${deviceSlug}-price-in-${cfg.country.replace(" ","-")}`}
+            href={`https://${code}.mobgsm.com/listings/blog/${deviceSlug}-price-in-${cfg.country.replace(" ","-")}`}
             className="flex items-center justify-between px-4 py-3 border-b border-gray-100 hover:bg-gray-50 cursor-pointer"
           >
             <span className="text-gray-900 font-medium">{cfg.country || country}</span>
