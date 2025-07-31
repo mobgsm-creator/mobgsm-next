@@ -3,8 +3,8 @@
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { createClient } from '@/lib/supabase';
-import { Menu, Search,ChevronDown, ChevronUp } from 'lucide-react';
-
+import { ChevronDown, ChevronUp } from 'lucide-react';
+import Image from 'next/image';
 type Device = {
   id: number;
   name: string;
@@ -53,26 +53,27 @@ export default function BlogListPage() {
   }
 
   return (
+    <>
+    <header className="bg-white shadow-sm border-b">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+          <Image src="/listings/MOB GSM svg vector.svg" alt="" width={40} height={40} />
+          
+        </div>
+      </header>
     <div className='flex flex-col justify-center items-center'>
 
   {/* Header */}
-  <header className="bg-[#4CAF50] text-white px-4 py-3 w-full">
-    <div className="flex items-center justify-between max-w-4xl mx-auto">
-      <Menu className="h-6 w-6" />
-      <h1 className="text-2xl font-bold">MobGsm</h1>
-      <Search className="h-6 w-6" />
-    </div>
-  </header>
+  
 
   {/* Main content */}
-  <div className="p-6 max-w-6xl w-full">
+  <div className="p-6 max-w-4xl w-full">
     <h1 className="text-2xl font-bold mb-4">Device Brands</h1>
     <ul className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
       {Object.entries(brandMap).map(([brand, devices]) => (
         <li key={brand} className="border p-3 rounded shadow-sm">
           <button
             onClick={() => toggleBrand(brand)}
-            className="flex items-center text-left w-full text-lg font-semibold text-green-700 hover:text-green-900"
+            className="flex items-center text-left w-full text-lg font-semibold text-gray-800 hover:text-green-900"
           >
             {expandedBrands[brand] ? <ChevronUp className="h-4 w-4 mr-1" /> : <ChevronDown className="h-4 w-4 mr-1" />}
             {brand}
@@ -93,7 +94,7 @@ export default function BlogListPage() {
       ))}
     </ul>
   </div>
-</div>
+</div></>
 
   );
 }

@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation"
 import { createClient } from "@/lib/supabase"
-import { Menu, Search, ChevronDown, ChevronRight } from "lucide-react"
+import { ChevronDown, ChevronRight } from "lucide-react"
 import Link from "next/link"
 import Image from "next/image"
 import { settings as is } from "@/public/combined_settings"
@@ -193,7 +193,7 @@ function DynamicCountryContent({ device, slugcountry }: { device: any, slugcount
 function DynamicCountryLinks({ deviceSlug, country }: { deviceSlug: string, country: string | null }) {
   return (
     <div className="bg-white mt-6">
-      <div className="bg-gray-300 px-4 py-2 flex items-center justify-between">
+      <div className="bg-white px-4 py-2 flex items-center justify-between">
         <h3 className="font-bold text-black">COUNTRIES</h3>
         <ChevronRight className="h-4 w-4 text-black" />
       </div>
@@ -224,14 +224,12 @@ export default async function BlogPage({ params }: Params) {
   return (
     <div className="flex justify-center items-center">
       <div className="min-h-screen max-w-4xl bg-white">
-        {/* Header */}
-        <header className="bg-[#4CAF50] text-white px-4 py-3">
-          <div className="flex items-center justify-between max-w-4xl mx-auto">
-            <Menu className="h-6 w-6" />
-            <h1 className="text-2xl font-bold">MobGsm</h1>
-            <Search className="h-6 w-6" />
-          </div>
-        </header>
+      <header className="bg-white shadow-sm border-b">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 relative">
+          <Image src="/listings/MOB GSM svg vector.svg" alt="" width={40} height={40} />
+          
+        </div>
+      </header>
 
         <div className="max-w-7xl mx-auto flex">
           {/* Main Content */}
@@ -296,7 +294,7 @@ export default async function BlogPage({ params }: Params) {
 
             {/* Launch Section */}
             <div className="bg-white mb-1">
-              <div className="bg-[#81C784] px-4 py-2 flex items-center justify-between cursor-pointer">
+              <div className="bg-gray-100 px-4 py-2 flex items-center justify-between cursor-pointer">
                 <h2 className="font-bold text-black">LAUNCH</h2>
                 <ChevronDown className="h-4 w-4 text-black" />
               </div>
@@ -314,7 +312,7 @@ export default async function BlogPage({ params }: Params) {
 
             {/* Network Section */}
             <div className="bg-white mb-1">
-              <div className="bg-[#81C784] px-4 py-2 flex items-center justify-between cursor-pointer">
+              <div className="bg-gray-100 px-4 py-2 flex items-center justify-between cursor-pointer">
                 <h2 className="font-bold text-black">NETWORK SUPPORT & CONNECTIVITY</h2>
                 <ChevronDown className="h-4 w-4 text-black" />
               </div>
@@ -329,7 +327,7 @@ export default async function BlogPage({ params }: Params) {
             {/* Specifications Sections */}
             {Object.entries(specs).map(([category, details]) => (
               <div key={category} className="bg-white mb-1">
-                <div className="bg-[#81C784] px-4 py-2 flex items-center justify-between cursor-pointer">
+                <div className="bg-gray-100 px-4 py-2 flex items-center justify-between cursor-pointer">
                   <h2 className="font-bold text-black uppercase">{category.replace(/_/g, " & ")}</h2>
                   <ChevronDown className="h-4 w-4 text-black" />
                 </div>
