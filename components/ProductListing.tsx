@@ -59,6 +59,7 @@ function ToggleTabs({ onChange, currentView }: ToggleTabsProps) {
   )
 }
 export default function ProductListing({ product, esimProviders, BNPLProvider, airtime, gifts, view, setView }: ProductListingProps) {  
+  console.log(esimProviders)
   const router = useRouter()
   const urlSearchParams = useSearchParams()
   const [filteredProducts, setFilteredProducts] = useState<GroupedProduct[]>([])
