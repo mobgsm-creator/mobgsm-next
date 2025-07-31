@@ -27,11 +27,13 @@ export default function ProductSectionWrapper({ country } : ProductListingProps)
     const fetchData = async () => {
       const products = await getProducts(country);
       const bnpl = await getBNPL();
+      //console.log(bnpl)
       const esim = await getESIM();
+      console.log("ESIM",esim)
       const airtime = await getReloadlyAirtime()
       const giftcards = await getReloadlyGifts()
-      console.log("Airtime",airtime)
-      console.log("Gifts",giftcards)
+      //console.log("Airtime",airtime)
+      //console.log("Gifts",giftcards)
       setProduct(products);
       setBNPLProvider(bnpl);
       setEsimProviders(esim);

@@ -400,6 +400,6 @@ function reloadly_group(item_list : reloadly[]): GroupedReloadlyProduct[] {
       items,
     })
   )
-  console.log(grouped)
+  //console.log(grouped)
   return grouped
 }

@@ -30,8 +30,8 @@ export async function GET() {
     const response = NextResponse.json(products || [])
 
     // ✅ Set HTTP cache headers
-    response.headers.set("Cache-Control", "public, s-maxage=3600, stale-while-revalidate=60")
-    //response.headers.set("Cache-Control", "no-cache, no-store, must-revalidate")
+    //response.headers.set("Cache-Control", "public, s-maxage=3600, stale-while-revalidate=60")
+    response.headers.set("Cache-Control", "no-cache, no-store, must-revalidate")
     return response
   } catch (error) {
     console.error("API error:", error)

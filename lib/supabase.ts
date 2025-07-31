@@ -52,10 +52,11 @@ export async function getBNPL(): Promise<BNPLProvider[]> {
 export async function getESIM(): Promise<ESIMProvider[]> {
 
   try {
+
     const response = await fetch(`/listings/api/ESIM`, {
       cache: "force-cache", // Disable caching for real-time data
     })
-    //console.log(response)
+    console.log(response)
 
     if (!response.ok) {
       throw new Error("Failed to fetch products")
