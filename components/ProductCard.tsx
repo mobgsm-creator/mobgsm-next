@@ -18,7 +18,7 @@ type ProductCardProps = {
 };
 
 export default function ProductCard({ product }: ProductCardProps) {
-  console.log(product.length)
+  //console.log(product.length)
   const [currentIndex, setCurrentIndex] = useState(0);
   const [showCompare, setShowCompare] = useState(false)
   const [isOpen, setIsOpen] = useState(false)

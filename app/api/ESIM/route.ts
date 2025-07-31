@@ -2,7 +2,7 @@ import { NextResponse } from "next/server"
 import { createClient } from "@/lib/supabase"
 import type { ESIMPlan, ESIMProvider } from "@/lib/types"
 export const runtime = 'edge';
-//export const revalidate = 3600 // cache for 1 hour (optional for static rendering in RSC)
+export const revalidate = 3600 // cache for 1 hour (optional for static rendering in RSC)
 function sanitizeESIM(raw: {
   provider: string;
   img_link: string;
