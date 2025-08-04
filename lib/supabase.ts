@@ -50,7 +50,7 @@ export async function getBNPL(): Promise<BNPLProvider[]> {
 
 // Server-side function to get products
 export async function getESIM(): Promise<ESIMProvider[]> {
-
+  console.log("cache")
   try {
 
     const response = await fetch(`/listings/api/ESIM}`, {
