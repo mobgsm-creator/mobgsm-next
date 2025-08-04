@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { createClient } from '@/lib/supabase';
 import { ChevronDown, ChevronUp } from 'lucide-react';
 import Image from 'next/image';
+export const runtime = 'edge';
 type Device = {
   id: number;
   name: string;
