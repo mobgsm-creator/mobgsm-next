@@ -9,7 +9,7 @@ import { Suspense } from "react"
 export const runtime = 'edge';
 //redeploy
 function parseSlug(slugArray: string) {
-  console.log("parsing")
+  
   const fullSlug = slugArray[0] || ''
   
   // Check if it's in the format: something-price-in-country
