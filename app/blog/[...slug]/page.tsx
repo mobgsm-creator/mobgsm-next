@@ -6,6 +6,7 @@ import Image from "next/image"
 import { settings as is } from "@/public/combined_settings"
 import { headers } from "next/headers"
 import { Suspense } from "react"
+export const runtime = 'edge';
 function parseSlug(slugArray: string) {
   const fullSlug = slugArray[0] || ''
   
