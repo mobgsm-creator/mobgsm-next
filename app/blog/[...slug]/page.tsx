@@ -6,6 +6,7 @@ import Image from "next/image"
 import { settings as is } from "@/public/combined_settings"
 import { headers } from "next/headers"
 import { Suspense } from "react"
+import  DynamicCountryLinks  from "@/components/countryDropdownDevicePage"
 export const runtime = 'edge';
 //redeploy
 function parseSlug(slugArray: string) {
@@ -192,29 +193,7 @@ function DynamicCountryContent({ device, slugcountry }: { device: any, slugcount
   )
 }
 
-// Dynamic component for country links
-function DynamicCountryLinks({ deviceSlug, country }: { deviceSlug: string, country: string | null }) {
-  return (
-    <div className="bg-white mt-6">
-      <div className="bg-white px-4 py-2 flex items-center justify-between">
-        <h3 className="font-bold text-black">COUNTRIES</h3>
-        <ChevronRight className="h-4 w-4 text-black" />
-      </div>
-      <div>
-        {Object.entries(settings).map(([code, cfg]) => (
-          <a
-            key={code}
-            href={`https://mobgsm.com/listings/blog/${deviceSlug}-price-in-${cfg.country.replace(" ","-")}?subdomain=${code}`}
-            className="flex items-center justify-between px-4 py-3 border-b border-gray-100 hover:bg-gray-50 cursor-pointer"
-          >
-            <span className="text-gray-900 font-medium">{cfg.country || country}</span>
-            <ChevronRight className="h-4 w-4 text-green-500" />
-          </a>
-        ))}
-      </div>
-    </div>
-  )
-}
+
 
 export default async function BlogPage({ params }: Params) {
   const { slug } = await params
@@ -229,12 +208,12 @@ export default async function BlogPage({ params }: Params) {
       <div className="min-h-screen max-w-4xl bg-white">
       <header className="bg-white shadow-sm border-b">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 relative">
-          <Image src="/listings/MOB GSM svg vector.svg" alt="" width={40} height={40} />
+          <Image src="/listings/MOBGSM-svg-vector.svg" alt="" width={40} height={40} />
           
         </div>
       </header>
 
-        <div className="max-w-7xl mx-auto flex">
+        <div className="max-w-7xl mx-auto flex flex-col md:flex-row">
           {/* Main Content */}
           <div className="flex-1 bg-gray-100">
             <div className="bg-white p-4 border-b">
@@ -347,8 +326,12 @@ export default async function BlogPage({ params }: Params) {
           </div>
 
           {/* Sidebar */}
-          <div className="w-80 bg-gray-200 p-4">
+          <div className="bg-gray-200 p-4">
             {/* Related Devices */}
+            <div className="bg-gray-300 px-4 py-2 flex items-center justify-between">
+                <h3 className="font-bold text-black">Similar Devices</h3>
+                <ChevronRight className="h-4 w-4 text-black" />
+              </div>
             <div className="mb-6">
               {moreFromBrand?.slice(0, 7).map((item) => (
                 <Link key={item.name_url} href={`/blog/${item.name_url}`}>
@@ -380,7 +363,7 @@ export default async function BlogPage({ params }: Params) {
 
             {/* Dynamic Countries Section */}
             <Suspense fallback={<div>Loading countries...</div>}>
-              <DynamicCountryLinks deviceSlug={pureSlug} country={country} />
+              <DynamicCountryLinks deviceSlug={pureSlug} country={country} settings={settings} />
             </Suspense>
           </div>
         </div>

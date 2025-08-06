@@ -57,7 +57,7 @@ export default function BlogListPage() {
     <>
     <header className="bg-white shadow-sm border-b">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-          <Image src="/listings/MOB GSM svg vector.svg" alt="" width={40} height={40} />
+          <Image src="/listings/MOBGSM-svg-vector.svg" alt="" width={40} height={40} />
           
         </div>
       </header>

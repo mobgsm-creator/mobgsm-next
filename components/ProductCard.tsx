@@ -164,9 +164,7 @@ export default function ProductCard({ product }: ProductCardProps) {
         <img
           src={currentProduct.img_link}
           alt={currentProduct.product_name}
-          width={300}
-          height={200}
-          className="w-full h-48 object-cover"
+          className="w-full h-48 object-contain"
         />
         {currentProduct.discount ? 
         <Badge className="absolute top-2 right-2 bg-red-500 hover:bg-red-600">
@@ -276,9 +274,7 @@ export default function ProductCard({ product }: ProductCardProps) {
                 <img
                   src={currentProduct.Image_URL}
                   alt={currentProduct.Name}
-                  width={300}
-                  height={200}
-                  className="ml-20 w-1/2 object-contain"
+                  className="w-full h-48 object-contain"
                 />
                 <Badge className="absolute top-2 right-2 bg-blue-500 hover:bg-blue-600">
                   BNPL
@@ -326,9 +322,7 @@ export default function ProductCard({ product }: ProductCardProps) {
                 <img
                   src={currentProduct.img_link}
                   alt={currentProduct.provider}
-                  width={300}
-                  height={200}
-                  className="ml-20 w-1/2"
+                  className="w-full h-48 object-contain"
                 />
                 <Badge className="absolute top-2 right-2 bg-green-500 hover:bg-green-600">
                   eSIM
