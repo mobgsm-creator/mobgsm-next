@@ -107,20 +107,21 @@ export async function generateMetadata(props: { params: Promise<{ slug: string }
   }
 
   return {
-    title: `${device.name} ${country ? `Price in ${country}` : '| MobGsm'}`,
-    description: device.description,
-    keywords: [...(device.keywords?.split(",") || []), ...(country ? [`price in ${country}`] : [])],
+    title: `${device.name} ${country ? `Price in ${country} ${new Date().toLocaleDateString("en-US", { month: "long", year: "numeric" })} & Specifications | MobGsm` : '| MobGsm'}`,
+    description: device.description ? `View detailed full specifications, mobile price and reviews about ${device.name}.` : "",
+    keywords: [...(device.keywords?.split(",") || [device.name?.split(" ")]), ...( `",mobile,price,specifications,specs,information,info,reviews"`.split(","))].join(","),
     openGraph: {
-      title: device.name,
-      description: device.description,
+      title: `${device.name} ${country ? `Price in ${country} ${new Date().toLocaleDateString("en-US", { month: "long", year: "numeric" })} & Specifications | MobGsm` : '| MobGsm'}`,
+      description: device.description ? `View detailed full specifications, mobile price and reviews about ${device.name}.` : "",
       images: [device.image || "/opengraph-image.png"],
-      type: "article",
+      type: "Product",
     },
     twitter: {
       card: "summary_large_image",
-      title: device.name,
-      description: device.description,
+      title: `${device.name} ${country ? `Price in ${country} ${new Date().toLocaleDateString("en-US", { month: "long", year: "numeric" })} & Specifications | MobGsm` : '| MobGsm'}`,
+      description: device.description ? `View detailed full specifications, mobile price and reviews about ${device.name}.` : "",
       images: [device.image || "/opengraph-image.png"],
+      url: `https://mobgsm.com/listings/blog/${pureSlug}`,
     },
   }
 }
