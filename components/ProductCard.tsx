@@ -308,23 +308,19 @@ export default function ProductCard({ product }: ProductCardProps) {
                 </h3>
 
                 <div className="space-y-1 text-sm text-gray-700">
-  <div className="flex justify-between">
-    <span className="font-medium text-gray-800">Limit</span>
-    <span>{currentProduct.Credit_Limit}</span>
-  </div>
-  <div className="flex justify-between">
-    <span className="font-medium text-gray-800 whitespace-nowrap">Rate</span>
-    <span>{currentProduct.Interest_Rate}</span>
-  </div>
-  <div className="flex justify-between">
-    <span className="font-medium text-gray-800">KYC</span>
-    <span>{currentProduct.KYC ? "Yes" : "No"}</span>
-  </div>
-  <div className="flex justify-between">
-    <span className="font-medium text-gray-800">Partner</span>
-    <span>{currentProduct.NBFC_Partner}</span>
-  </div>
+  {[
+    { label: "Limit", value: currentProduct.Credit_Limit },
+    { label: "Rate", value: currentProduct.Interest_Rate },
+    { label: "KYC", value: currentProduct.KYC ? "Yes" : "No" },
+    { label: "Partner", value: currentProduct.NBFC_Partner },
+  ].map((item) => (
+    <div key={item.label} className="grid grid-cols-3 gap-2">
+      <span className="font-medium text-gray-800 col-span-1">{item.label}</span>
+      <span className="col-span-2">{item.value}</span>
+    </div>
+  ))}
 </div>
+
 
 
                 <Button asChild className="w-full mt-4">
