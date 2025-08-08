@@ -164,18 +164,35 @@ export default function ProductCard({ product }: ProductCardProps) {
     
     <div className="bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300 overflow-hidden">
       {isProduct(currentProduct) && ( <><div className="relative">
-        <img
-          src={currentProduct.img_link}
-          alt={currentProduct.product_name}
-          className="w-full h-48 object-contain"
-        />
+        
+        {currentProduct.product_links?.startsWith('https') ? (
+  
+  <div className="flex items-center justify-center h-32 w-full bg-white rounded-md shadow-inner p-2">
+  <img
+    src={currentProduct.img_link}
+    alt={currentProduct.product_name}
+    className="h-20 w-20 object-contain p-1 drop-shadow-sm"
+  />
+</div>
+  
+) : (
+  <Link href={`/blog/${currentProduct.product_links}`}>
+  <div className="flex items-center justify-center h-32 w-full bg-white rounded-md shadow-inner p-2">
+  <img
+    src={currentProduct.img_link}
+    alt={currentProduct.product_name}
+    className="h-20 w-20 object-contain p-1 drop-shadow-sm"
+  />
+</div></Link>
+)}
         {currentProduct.discount ? 
         <Badge className="absolute top-2 right-2 bg-red-500 hover:bg-red-600">
           {currentProduct.discount}
         </Badge> : null}
       </div>
-
+      
       <div className="p-4">
+      {currentProduct.store_logo && (
         <div className="flex items-center gap-2 mb-2">
           <Image
             src={currentProduct.store_logo}
@@ -184,17 +201,17 @@ export default function ProductCard({ product }: ProductCardProps) {
             height={20}
             className="h-5 w-auto"
           />
-        </div>
+        </div>)}
 
         <h3 className="font-semibold text-gray-900 mb-2 line-clamp-2 min-h-[3rem]">
           {currentProduct.product_name}
         </h3>
-
+        {currentProduct.mrp && (<>
         <div className="flex items-center gap-2 mb-2">
           <span className="text-lg font-bold text-green-600">{currentProduct.price}</span>
           <span className="text-sm text-gray-500 line-through">{currentProduct.mrp}</span>
         </div>
-
+        
         <div className="flex items-center gap-2 mb-3">
           
           <span className="text-xs text-gray-500">•</span>
@@ -268,7 +285,7 @@ export default function ProductCard({ product }: ProductCardProps) {
           <Button variant="outline" onClick={handleNext}>
             Next
           </Button>
-        </div>
+        </div></>)}
       </div></>)}
       {isBNPL(currentProduct)
               && (<>

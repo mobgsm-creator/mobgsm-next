@@ -2,15 +2,17 @@
 
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { createClient } from '@/lib/supabase';
+
 import { ChevronDown, ChevronUp } from 'lucide-react';
 import Image from 'next/image';
+import { getDevices } from '@/lib/supabase';
 export const runtime = 'edge';
 type Device = {
   id: number;
   name: string;
   name_url: string;
   brand_name: string;
+  image: string;
 };
 
 export default function BlogListPage() {
@@ -20,14 +22,9 @@ export default function BlogListPage() {
   //Fix this security issue
   useEffect(() => {
     const fetchDevices = async () => {
-      const supabase = createClient();
-      const { data, error } = await supabase
-        .from('devices')
-        .select('id, name_url, name, brand_name');
-      //console.log(data)
-      if (!error && data) {
-        setDevices(data);
-      }
+      const deviceData = await getDevices()
+      
+      setDevices(deviceData);
 
       setLoading(false);
     };

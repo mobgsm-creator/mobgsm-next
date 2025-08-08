@@ -59,7 +59,7 @@ function ToggleTabs({ onChange, currentView }: ToggleTabsProps) {
   )
 }
 export default function ProductListing({ product, esimProviders, BNPLProvider, airtime, gifts, view, setView }: ProductListingProps) {  
-  console.log(esimProviders)
+
   const router = useRouter()
   const urlSearchParams = useSearchParams()
   const [filteredProducts, setFilteredProducts] = useState<GroupedProduct[]>([])
@@ -199,7 +199,7 @@ export default function ProductListing({ product, esimProviders, BNPLProvider, a
   <ToggleTabs currentView={view} onChange={setView} />
   
   
-  <h2 className="hidden lg:block text-xl font-semibold text-gray-900">
+  <h2 className="hidden lg:block text-xs font-semibold text-gray-900">
     {totalProducts} Products Found
   </h2>
 

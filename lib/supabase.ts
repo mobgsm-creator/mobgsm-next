@@ -3,7 +3,13 @@ import type { Product, BNPLProvider, ESIMProvider, reloadly } from "./types"
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!
 const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-
+type Device = {
+  id: number;
+  name: string;
+  name_url: string;
+  brand_name: string;
+  image: string;
+};
 export function createClient() {
   return createSupabaseClient(supabaseUrl, supabaseAnonKey)
 }
@@ -93,6 +99,25 @@ export async function getReloadlyGifts(): Promise<reloadly[]> {
 
   try {
     const response = await fetch(`/listings/api/reloadly_giftcards`, {
+      cache: "force-cache", // Disable caching for real-time data
+    })
+    //console.log(response)
+
+    if (!response.ok) {
+      throw new Error("Failed to fetch products")
+    }
+    
+    return await response.json()
+  } catch (error) {
+    console.error("Error fetching products:", error)
+    return []
+  }
+}
+
+export async function getDevices(): Promise<Device[]> {
+
+  try {
+    const response = await fetch(`/listings/api/devices`, {
       cache: "force-cache", // Disable caching for real-time data
     })
     //console.log(response)

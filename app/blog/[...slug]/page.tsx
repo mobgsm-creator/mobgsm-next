@@ -221,15 +221,17 @@ export default async function BlogPage({ params }: Params) {
               <div className="flex flex-row gap-4 bg-white p-4 rounded-2xl shadow-2xl">
                 {/* Left: Image */}
                 <div className="w-[150px]">
-                  <Image
+                  <img
                     src={device.image || "/placeholder.svg"}
                     alt={device.name}
-                    height={400}
-                    width={150}
-                    className="object-cover rounded-xl"
-                    priority
+                    srcSet={`${device.image} 2x`}
+                   
+              
+                  
+                   
                   />
                 </div>
+                
 
                 {/* Right: Specs Grid */}
                 <div className="grid grid-cols-2 gap-4 text-sm text-gray-800">
