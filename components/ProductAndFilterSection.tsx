@@ -22,7 +22,7 @@ type Device = {
 export default function ProductSectionWrapper({ country } : ProductListingProps) {
   const [view, setView] = useState<'products' | 'esim' | 'bnpl' | 'reloadly-airtime' | 'reloadly-gifts'>('reloadly-airtime')
   const priorityCountries = ['AE', 'AF', 'AG', 'AI', 'AL', 'AM', 'AO', 'AR', 'AS', 'AT', 'AU', 'AW', 'AZ', 'BB', 'BD', 'BE', 'BF', 'BG', 'BH', 'BI', 'BJ', 'BM', 'BO', 'BR', 'BS', 'BW', 'BY', 'BZ', 'CA', 'CD', 'CF', 'CG', 'CH', 'CI', 'CL', 'CM', 'CN', 'CO', 'CR', 'CU', 'CY', 'CZ', 'DE', 'DJ', 'DK', 'DM', 'DO', 'DZ', 'EC', 'EE', 'EG', 'ER', 'ES', 'ET', 'FI', 'FJ', 'FR', 'GA', 'GB', 'GD', 'GE', 'GH', 'GM', 'GN', 'GQ', 'GR', 'GT', 'GW', 'GY', 'HN', 'HT', 'ID', 'IE', 'IL', 'IN', 'IQ', 'IR', 'IS', 'IT', 'JM', 'JO', 'JP', 'KE', 'KG', 'KH', 'KM', 'KN', 'KR', 'KW', 'KY', 'KZ', 'LA', 'LB', 'LK', 'LR', 'LS', 'LT', 'LU', 'LV', 'LY', 'MA', 'MD', 'MG', 'ML', 'MM', 'MN', 'MR', 'MS', 'MT', 'MU', 'MV', 'MW', 'MX', 'MY', 'MZ', 'NA', 'NE', 'NG', 'NI', 'NL', 'NO', 'NP', 'NZ', 'OM', 'PA', 'PE', 'PH', 'PK', 'PL', 'PR', 'PT', 'PY', 'QA', 'RO', 'RS', 'RU', 'RW', 'SA', 'SC', 'SD', 'SE', 'SG', 'SI', 'SK', 'SL', 'SN', 'SO', 'SR', 'SV', 'SZ', 'TC', 'TD', 'TG', 'TH', 'TJ', 'TL', 'TN', 'TR', 'TT', 'TZ', 'UA', 'UG', 'US', 'UY', 'UZ', 'VC', 'VE', 'VG', 'VN', 'WS', 'YE', 'ZA', 'ZM', 'ZW']
-
+  const [loading, setLoading] = useState(true);
   const [isOpen, setIsOpen] = useState(false)
   const [devices, setDevices] = useState<Device[]>([])
   const [product, setProduct] = useState<Product[]>([]);
@@ -33,6 +33,7 @@ export default function ProductSectionWrapper({ country } : ProductListingProps)
   useEffect(() => {
     const fetchData = async () => {
       try {
+        setLoading(true);
         const [products, bnpl, esim, airtime, giftcards, device_list] = await Promise.all([
           getProducts(country),
           getBNPL(),
@@ -48,6 +49,7 @@ export default function ProductSectionWrapper({ country } : ProductListingProps)
         setAirtime(airtime);
         setGifts(giftcards);
         setDevices(device_list);
+        setLoading(false);
       } catch (error) {
         console.error("Error fetching data:", error);
       }
@@ -140,18 +142,20 @@ export default function ProductSectionWrapper({ country } : ProductListingProps)
         )}
       </button>
       <div className="flex-1 min-w-0">
-      <Suspense fallback={<ProductListingSkeleton />}>
-        <ProductListing 
-          product={filteredProducts}
-          esimProviders={filteredESIM} 
-          BNPLProvider={filteredBNPL} 
-          airtime={fitleredAirtime}
-          gifts={fitleredGifts}
-          view={view}
-          setView={setView}
-        />
-        </Suspense>
-      </div>
+    {loading ? (
+      <ProductListingSkeleton />
+    ) : (
+      <ProductListing
+        product={filteredProducts}
+        esimProviders={filteredESIM}
+        BNPLProvider={filteredBNPL}
+        airtime={fitleredAirtime}
+        gifts={fitleredGifts}
+        view={view}
+        setView={setView}
+      />
+    )}
+  </div>
     </div>
   )
 }
