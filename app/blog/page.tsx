@@ -24,7 +24,7 @@ export default function BlogListPage() {
       const { data, error } = await supabase
         .from('devices')
         .select('id, name_url, name, brand_name');
-      console.log(data)
+      //console.log(data)
       if (!error && data) {
         setDevices(data);
       }
@@ -48,7 +48,7 @@ export default function BlogListPage() {
     acc[device.brand_name].push(device);
     return acc;
   }, {} as Record<string, Device[]>);
- console.log(brandMap)
+ //console.log(brandMap)
   if (loading) {
     return <div className="p-6">Loading devices...</div>;
   }

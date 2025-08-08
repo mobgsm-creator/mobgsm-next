@@ -81,12 +81,13 @@ export default function ProductCard({ product }: ProductCardProps) {
         : product.sendable_values.includes(",")
         ? product.sendable_values.split(",")
         : [product.sendable_values]
+        console.log(product.operator, values)
       return (
         <>
           <DialogDescription className="text-sm font-semibold mb-2">Select Amount</DialogDescription>
           <div className="flex flex-wrap gap-2 mb-4">
-            {values.length > 1 ? (values.map((val, i) => {
-              const local = (Number(val.trim()) * Number(product.fx)).toFixed(2)
+            {values.length > 2 ? (values.map((val, i) => {
+              const local = (Number(val.trim())).toFixed(2)
               return (
                 <Button
                   key={i}
@@ -99,7 +100,9 @@ export default function ProductCard({ product }: ProductCardProps) {
                   {local}
                 </Button>
               )
-            })): ( <p>
+            })): values.length === 1 ?( <p>
+              Value: {values[0]} 
+            </p>) : ( <p>
               Enter a value between Min value: {values[0]} and Max value: {values[1]}
             </p>)
           }
@@ -271,11 +274,13 @@ export default function ProductCard({ product }: ProductCardProps) {
               && (<>
               
               <div className="relative">
+              <div className="flex items-center justify-center h-32 w-full bg-white rounded-md shadow-inner p-2">
                 <img
                   src={currentProduct.Image_URL}
                   alt={currentProduct.Name}
-                  className="w-full h-48 object-contain"
+                  className="h-20 w-20 object-contain p-1 drop-shadow-sm"
                 />
+              </div>
                 <Badge className="absolute top-2 right-2 bg-blue-500 hover:bg-blue-600">
                   BNPL
                 </Badge>
@@ -286,23 +291,23 @@ export default function ProductCard({ product }: ProductCardProps) {
                 </h3>
 
                 <div className="space-y-1 text-sm text-gray-700">
-          <div className="flex justify-between">
-            <span className="font-medium text-gray-800">Credit Limit:</span>
-            <span>{currentProduct.Credit_Limit}</span>
-          </div>
-          <div className="flex justify-between">
-            <span className="font-medium text-gray-800  whitespace-nowrap">Interest Rate:</span>
-            <span>{currentProduct.Interest_Rate}</span>
-          </div>
-          <div className="flex justify-between">
-            <span className="font-medium text-gray-800">KYC Required:</span>
-            <span>{currentProduct.KYC ? "Yes" : "No"}</span>
-          </div>
-          <div className="flex justify-between">
-            <span className="font-medium text-gray-800">NBFC Partner:</span>
-            <span>{currentProduct.NBFC_Partner}</span>
-          </div>
-        </div>
+  <div className="flex justify-between">
+    <span className="font-medium text-gray-800">Limit</span>
+    <span>{currentProduct.Credit_Limit}</span>
+  </div>
+  <div className="flex justify-between">
+    <span className="font-medium text-gray-800 whitespace-nowrap">Rate</span>
+    <span>{currentProduct.Interest_Rate}</span>
+  </div>
+  <div className="flex justify-between">
+    <span className="font-medium text-gray-800">KYC</span>
+    <span>{currentProduct.KYC ? "Yes" : "No"}</span>
+  </div>
+  <div className="flex justify-between">
+    <span className="font-medium text-gray-800">Partner</span>
+    <span>{currentProduct.NBFC_Partner}</span>
+  </div>
+</div>
 
 
                 <Button asChild className="w-full mt-4">
@@ -319,11 +324,13 @@ export default function ProductCard({ product }: ProductCardProps) {
               </>)}
               {isESIM(currentProduct) && (<>
               <div className="relative">
+              <div className="flex items-center justify-center h-32 w-full bg-white rounded-md shadow-inner p-2">
                 <img
                   src={currentProduct.img_link}
                   alt={currentProduct.provider}
-                  className="w-full h-48 object-contain"
+                  className="h-20 w-20 object-contain p-1 drop-shadow-sm"
                 />
+              </div>
                 <Badge className="absolute top-2 right-2 bg-green-500 hover:bg-green-600">
                   eSIM
                 </Badge>
@@ -335,34 +342,50 @@ export default function ProductCard({ product }: ProductCardProps) {
 
                 <div className="space-y-3 text-sm text-gray-700 mt-2">
           {/* Type Label */}
-          <div className="flex">
-            <span className="font-medium text-gray-800 mr-1">Type:</span>
-            <span>{currentProduct.type.join(", ")}</span>
-          </div>
+    
+<div className="flex items-center flex-wrap gap-2 mt-2">
+ 
+  {currentProduct.type.map((t, idx) => (
+    <span
+      key={idx}
+      className="px-2 py-0.5 bg-blue-50 text-blue-700 text-sm rounded-full border border-blue-200"
+    >
+      {t}
+    </span>
+  ))}
+</div>
+
 
           {/* Plan List */}
-          <div>
+          <table className="w-full border-collapse mt-2">
+  <thead>
+    <tr className="bg-gray-100">
+      <th className="p-2 text-left">Plan</th>
+      <th className="p-2 text-left">Price</th>
+      <th className="p-2 text-left">Validity</th>
+    </tr>
+  </thead>
+  <tbody>
+    {currentProduct.plans.map((plan, index) => (
+      <tr key={index} className="border-b">
+        <td className="p-2">
+          <Link
+            href={plan.link}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-blue-600 hover:underline font-medium"
+          >
+            {plan.name}
+          </Link>
+        </td>
+        <td className="p-2">{plan.price || plan.price_range}</td>
+        <td className="p-2">{plan.validity || "—"}</td>
+      </tr>
+    ))}
+  </tbody>
+</table>
 
-            <ul className="list-disc pl-5 mt-1 space-y-2">
-              {currentProduct.plans.map((plan, index) => (
-                <li key={index} className="text-gray-700 leading-snug">
-                  <Link
-                    href={plan.link}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-blue-600 hover:underline font-medium"
-                    title={plan.name}
-                  >
-                    {plan.name}
-                  </Link>
-                  <span className="ml-1 text-gray-600">
-                    – {plan.price || plan.price_range}
-                    {plan.validity ? ` • ${plan.validity}` : ""}
-                  </span>
-                </li>
-              ))}
-            </ul>
-          </div>
+
         </div>
 
 
@@ -373,18 +396,50 @@ export default function ProductCard({ product }: ProductCardProps) {
 
       }{isReloadly(currentProduct) && (
         <>
-          <div className="relative cursor-pointer" onClick={() => setIsOpen(true)}>
-            <img
-              src={currentProduct.img_link}
-              alt={currentProduct.operator}
-              className="w-full h-48 object-contain"
-            />
-            {currentProduct.discount && (
-              <Badge className="absolute top-2 right-2 bg-red-500 hover:bg-red-600">
-                {currentProduct.discount}
-              </Badge>
-            )}
-          </div>
+          <div
+  className="relative cursor-pointer p-4 bg-gradient-to-b from-gray-50 to-white rounded-lg shadow-sm hover:shadow-lg transition-transform transform hover:scale-105"
+  onClick={() => setIsOpen(true)}
+>
+  {/* Product Type Tag */}
+  <span className="absolute top-2 left-2 bg-blue-100 text-blue-700 text-xs font-semibold px-2 py-1 rounded">
+    {currentProduct.code} {/* e.g., "Data PIN", "eSIM" */}
+  </span>
+
+  {/* Discount Badge */}
+  {currentProduct.discount && (
+    <Badge className="absolute top-2 right-2 bg-red-500 hover:bg-red-600 text-white">
+      {currentProduct.discount}
+    </Badge>
+  )}
+
+ 
+
+  {/* Logo */}
+  <div className="flex items-center justify-center h-32 w-full bg-white rounded-md shadow-inner p-2">
+    <img
+      src={currentProduct.img_link}
+      alt={currentProduct.operator}
+      className="h-20 w-20 object-contain p-1 drop-shadow-sm"
+    />
+  </div>
+
+  {/* Brand/Operator Name */}
+  <p className="mt-3 text-center text-sm font-semibold text-gray-800 truncate">
+    {currentProduct.operator}
+  </p>
+
+  {/* Min/Max Values */}
+  {currentProduct.sendable_values && (
+    <p className="text-xs text-gray-500 text-center">
+      {currentProduct.sendable_values.includes("~")
+        ? `Min: ${currentProduct.sendable_values.split("~")[0]} / Max: ${currentProduct.sendable_values.split("~")[1]}`
+        : currentProduct.sendable_values.includes(",") ? `Min: ${currentProduct.sendable_values.split(",")[0]} / Max: ${currentProduct.sendable_values.split(",").slice(-1)[0]}` : `Value: ${currentProduct.sendable_values}`}
+    </p>
+  )}
+
+  
+</div>
+
 
           <Dialog open={isOpen} onOpenChange={setIsOpen}>
             <DialogContent>

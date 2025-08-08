@@ -53,7 +53,7 @@ export async function getESIM(): Promise<ESIMProvider[]> {
   console.log("cache")
   try {
 
-    const response = await fetch(`/listings/api/ESIM}`, {
+    const response = await fetch(`/listings/api/ESIM`, {
       cache: "force-cache", // Disable caching for real-time data
     })
     console.log(response)

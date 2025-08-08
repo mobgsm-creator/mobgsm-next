@@ -199,7 +199,7 @@ function DynamicCountryContent({ device, slugcountry }: { device: any, slugcount
 export default async function BlogPage({ params }: Params) {
   const { slug } = await params
   const { pureSlug, country } = parseSlug(slug);
-  console.log("pureSlug",pureSlug)
+  //console.log("pureSlug",pureSlug)
   // Get static content (this is cached/pre-rendered)
   const staticContent = await StaticDeviceContent({ slug })
   const { device, specs, img_specs, moreFromBrand, uniqueBrands } = staticContent
