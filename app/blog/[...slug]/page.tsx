@@ -88,9 +88,34 @@ export const dynamicParams = true
 
 
 // Static metadata generation
-export async function generateMetadata(props: { params: Promise<{ slug: string }> }) {
+export async function generateMetadata( props: { params: Promise<{ slug: string }> }) {
+  type SettingsMap = Record<string, Setting>
+  const settings = is as SettingsMap
   const { slug } = await props.params;
   const { pureSlug, country } = parseSlug(slug);
+
+  const entry = Object.entries(settings).find(
+    ([, value]) => value.country.toLowerCase() === country?.toLowerCase()
+  )
+  let canonical: string;
+  let alternatesLanguages: Record<string, string> = {};
+
+  if (entry) {
+    // Match found → single canonical
+    const [key] = entry;
+    canonical = `https://${key}.mobgsm.com/listings/blog/${pureSlug}`;
+  } else {
+    // No match → fallback to a default canonical
+    canonical = `https://mobgsm.com/listings/blog/${pureSlug}`;
+
+    // And add alternates for all countries
+    alternatesLanguages = Object.fromEntries(
+      Object.keys(settings).map(key => [
+        key,
+        `https://${key}.mobgsm.com/listings/blog/${pureSlug}`
+      ])
+    );
+  }
   const supabase = createClient()
 
   const { data: device } = await supabase
@@ -110,13 +135,22 @@ export async function generateMetadata(props: { params: Promise<{ slug: string }
     title: `${device.name} ${country ? `Price in ${country} ${new Date().toLocaleDateString("en-US", { month: "long", year: "numeric" })} & Specifications | MobGsm` : '| MobGsm'}`,
     description: device.description ? device.description : `View detailed full specifications, mobile price and reviews about ${device.name}.`,
     keywords: [...(device.keywords?.split(",") || [device.name?.split(" ")]), ...( `",mobile,price,specifications,specs,information,info,reviews"`.split(","))].join(","),
-    canonical: `https://${country}.mobgsm.com/listings/blog/${pureSlug}`,
-    robotsProps: {
-      nosnippet: false,
-      noarchive: false,
-      maxSnippet: -1,
-      maxImagePreview: 'large',
-      maxVideoPreview: -1,
+    alternates: {
+      canonical,
+      languages: alternatesLanguages,
+    
+    },
+    robots: {
+      index: true,
+      follow: true,
+      nocache: false,
+      googleBot: {
+        index: true,
+        follow: true,
+        maxSnippet: -1,
+        maxImagePreview: "large",
+        maxVideoPreview: -1,
+      }
     },
     openGraph: {
       title: `${device.name} ${country ? `Price in ${country} ${new Date().toLocaleDateString("en-US", { month: "long", year: "numeric" })} & Specifications | MobGsm` : '| MobGsm'}`,
@@ -175,7 +209,7 @@ if (device?.specs) {
 }
 
 // Dynamic component for country-specific content
-function DynamicCountryContent({ device, slugcountry }: { device: any, slugcountry:string|null }) {//eslint-disable-line
+function DynamicCountryContent({ device, slugcountry}: { device: any, slugcountry:string|null }) {//eslint-disable-line
   const headersList = headers()
   const subdomain = headersList.get("x-subdomain") || "us"
   
