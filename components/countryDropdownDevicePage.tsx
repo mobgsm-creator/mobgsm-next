@@ -28,33 +28,39 @@ export default function DynamicCountryLinks({ deviceSlug, country, settings }: D
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <div className="bg-white mt-6">
+    <div className="max-h-[160rem] bg-white mt-6">
       {/* Header acting as toggle */}
       <div
         className="bg-white px-4 py-2 flex items-center justify-between cursor-pointer"
         onClick={() => setIsOpen(!isOpen)}
       >
-        <h3 className="font-bold text-black">COUNTRIES</h3>
+        <div className="mt-2 font-bold text-black">COUNTRIES</div>
         <ChevronRight
           className={`h-4 w-4 text-black transition-transform ${isOpen ? "rotate-90" : ""}`}
         />
       </div>
-
+  
       {/* Dropdown list */}
       {isOpen && (
-        <div>
-          {Object.entries(settings).map(([code, cfg]) => (
-            <a
-              key={code}
-              href={`https://mobgsm.com/listings/blog/${deviceSlug}-price-in-${cfg.country.replace(" ", "-")}`}
-              className="flex items-center justify-between px-4 py-3 border-b border-gray-100 hover:bg-gray-50 cursor-pointer"
-            >
-              <span className="text-gray-900 font-medium">{cfg.country || country}</span>
-              <ChevronRight className="h-4 w-4 text-green-500" />
-            </a>
-          ))}
+        <div className="max-h-[154rem] overflow-y-auto"> {/* scrollable container */}
+          {Object.entries(settings)
+             // limit to 15 countries
+       
+            .map(([code, cfg]) => (
+              <a
+                key={code}
+                href={`https://mobgsm.com/listings/blog/${deviceSlug}-price-in-${cfg.country.replace(" ", "-")}`}
+                className="flex items-center justify-between px-4 py-3 border-b border-gray-100 hover:bg-gray-50 cursor-pointer"
+              >
+                <span className="text-gray-900 font-medium">
+                  {cfg.country || country}
+                </span>
+                <ChevronRight className="h-4 w-4 text-green-500" />
+              </a>
+            ))}
         </div>
       )}
     </div>
   );
+  
 }

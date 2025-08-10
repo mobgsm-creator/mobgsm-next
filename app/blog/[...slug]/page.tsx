@@ -250,8 +250,9 @@ export default async function BlogPage({ params }: Params) {
   const { device, specs, img_specs, moreFromBrand, uniqueBrands } = staticContent
 
   return (
+    <>
     <div className="flex justify-center items-center">
-      <div className="min-h-screen max-w-4xl bg-white">
+      <div className="min-h-screen max-w-7xl bg-white">
       <header className="bg-white shadow-sm border-b">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 relative">
           <Image src="/listings/MOBGSM-svg-vector.svg" alt="" width={40} height={40} />
@@ -261,21 +262,19 @@ export default async function BlogPage({ params }: Params) {
 
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row">
           {/* Main Content */}
-          <div className="flex-1 bg-gray-100">
+          <div className="flex-1 bg-gray-50">
             <div className="bg-white p-4 border-b">
-              <div className="flex flex-row gap-4 bg-white p-4 rounded-2xl shadow-2xl">
+              <div className="flex flex-row gap-4 bg-white p-4 rounded-2xl ">
                 {/* Left: Image */}
-                <div className="w-[150px]">
-                  <img
-                    src={device.image || "/placeholder.svg"}
-                    alt={device.name}
-                    srcSet={`${device.image} 2x`}
-                   
-              
-                  
-                   
-                  />
-                </div>
+                <div className="w-[200px] h-[250px]">
+  <img
+    className="w-full h-auto"
+    src={device.image || "/placeholder.svg"}
+    alt={device.name}
+    srcSet={`${device.image} 2x`}
+  />
+</div>
+
                 
 
                 {/* Right: Specs Grid */}
@@ -324,8 +323,8 @@ export default async function BlogPage({ params }: Params) {
 
             {/* Launch Section */}
             <div className="bg-white mb-1">
-              <div className="bg-gray-100 px-4 py-2 flex items-center justify-between cursor-pointer">
-                <h2 className="font-bold text-black">LAUNCH</h2>
+              <div className="bg-gray-50 px-4 py-2 flex items-center justify-between cursor-pointer">
+                <div className="font-bold text-black">LAUNCH</div>
                 <ChevronDown className="h-4 w-4 text-black" />
               </div>
               <div className="px-4">
@@ -342,8 +341,8 @@ export default async function BlogPage({ params }: Params) {
 
             {/* Network Section */}
             <div className="bg-white mb-1">
-              <div className="bg-gray-100 px-4 py-2 flex items-center justify-between cursor-pointer">
-                <h2 className="font-bold text-black">NETWORK SUPPORT & CONNECTIVITY</h2>
+              <div className="bg-gray-50 px-4 py-2 flex items-center justify-between cursor-pointer">
+                <div className="font-bold text-black">NETWORK SUPPORT & CONNECTIVITY</div>
                 <ChevronDown className="h-4 w-4 text-black" />
               </div>
               <div className="px-4">
@@ -357,8 +356,8 @@ export default async function BlogPage({ params }: Params) {
             {/* Specifications Sections */}
             {Object.entries(specs).map(([category, details]) => (
               <div key={category} className="bg-white mb-1">
-                <div className="bg-gray-100 px-4 py-2 flex items-center justify-between cursor-pointer">
-                  <h2 className="font-bold text-black uppercase">{category.replace(/_/g, " & ")}</h2>
+                <div className="bg-gray-50 px-4 py-2 flex items-center justify-between cursor-pointer">
+                  <div className="font-bold text-black uppercase">{category.replace(/_/g, " & ")}</div>
                   <ChevronDown className="h-4 w-4 text-black" />
                 </div>
                 <div className="px-4">
@@ -374,16 +373,16 @@ export default async function BlogPage({ params }: Params) {
           </div>
 
           {/* Sidebar */}
-          <div className="bg-gray-200 p-4">
+          <div className="bg-gray-50 p-4">
             {/* Related Devices */}
-            <div className="bg-gray-300 px-4 py-2 flex items-center justify-between">
-                <h3 className="font-bold text-black">Similar Devices</h3>
+            <div className="bg-gray-50 px-4 py-2 flex items-center justify-between">
+                <h2 className="font-bold text-black">{`More from ${device.brand_name}`}</h2>
                 <ChevronRight className="h-4 w-4 text-black" />
               </div>
             <div className="mb-6">
               {moreFromBrand?.slice(0, 7).map((item) => (
                 <Link key={item.name_url} href={`/blog/${item.name_url}`}>
-                  <div className="bg-white mb-1 px-4 py-3 hover:bg-gray-50 cursor-pointer border-b border-gray-100">
+                  <div className="bg-white mb-1 px-4 py-3 hover:bg-gray-50 cursor-pointer border-b border-gray-50">
                     <div className="text-sm font-medium text-gray-900">{item.name}</div>
                   </div>
                 </Link>
@@ -392,8 +391,8 @@ export default async function BlogPage({ params }: Params) {
 
             {/* Brands Section */}
             <div className="bg-white">
-              <div className="bg-gray-300 px-4 py-2 flex items-center justify-between">
-                <h3 className="font-bold text-black">BRANDS</h3>
+              <div className="bg-gray-50 px-4 py-2 flex items-center justify-between">
+                <h2 className="font-bold text-black">BRANDS</h2>
                 <ChevronRight className="h-4 w-4 text-black" />
               </div>
               <div>
@@ -415,7 +414,29 @@ export default async function BlogPage({ params }: Params) {
             </Suspense>
           </div>
         </div>
+        <div className='max-w-7xl bg-white'>
+        <div className='ml-20 flex flex-col max-w-4xl justify-center items-center bg-white'>
+         <h3 className='mt-4 text-center'> 
+     <strong>Disclaimer: </strong>  
+     We do not guarantee that the information on this page is 100% accurate and up to date.  
+   <br></br> <br></br> 
+     The pricing published on this page is meant for general information purposes only. While we monitor prices regularly, the ones listed above might be outdated. We also cannot guarantee these are the lowest prices available, so shopping around is always a good idea.
+   </h3>
+
+     
+     <div>
+     <footer className="bg-white border-t mt-8">
+       <div className="max-w-7xl mx-auto px-4 py-6 text-center text-gray-600">
+         © {new Date().getFullYear()} MobGsm. All rights reserved.
+       </div>
+     </footer>
+   </div></div>
       </div>
-    </div>
+     
+    </div></div>
+     
+   </>
+
+    
   )
 }
