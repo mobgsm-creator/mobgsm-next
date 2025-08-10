@@ -76,22 +76,27 @@ export default function ProductListing({ product, esimProviders, BNPLProvider, a
   useEffect(() => {
  
     if (view === 'products') {
-    const filtered = applyFiltersAndSort(product, esimProviders!, BNPLProvider!, view, urlSearchParams)
+    const filtered = applyFiltersAndSort(product, esimProviders!, BNPLProvider!,airtime!,
+      gifts!, view, urlSearchParams)
     setFilteredProducts(filtered as GroupedProduct[]) }
     else if (view === 'esim') {
   
-      const filteredESIM = applyFiltersAndSort(product, esimProviders!, BNPLProvider!, view, urlSearchParams)
+      const filteredESIM = applyFiltersAndSort(product, esimProviders!, BNPLProvider!,airtime!,
+        gifts!, view, urlSearchParams)
       setESIMitems(filteredESIM as ESIMProvider[])
     }
     else if (view === 'bnpl') {
-      const filteredBNPL = applyFiltersAndSort(product, esimProviders!, BNPLProvider!, view, urlSearchParams)
+      const filteredBNPL = applyFiltersAndSort(product, esimProviders!, BNPLProvider!,airtime!,
+        gifts!, view, urlSearchParams)
       setBNPLitems(filteredBNPL as BNPLProvider[]) }
     else if (view === 'reloadly-airtime') {
-      const filteredReloadly = reloadly_group( airtime)
-      setAirtime(filteredReloadly)
+      const filteredAirtime = applyFiltersAndSort(product, esimProviders!, BNPLProvider!,airtime!,
+        gifts!, view, urlSearchParams)
+      setAirtime(filteredAirtime as GroupedReloadlyProduct[])
     } else if (view === 'reloadly-gifts') {
-      const filteredReloadly = reloadly_group( gifts)
-      setGifts(filteredReloadly)
+      const filteredGifts = applyFiltersAndSort(product, esimProviders!, BNPLProvider!,airtime!,
+        gifts!, view, urlSearchParams)
+      setGifts(filteredGifts as GroupedReloadlyProduct[])
     }
 
   }, [view, product, urlSearchParams, BNPLProvider, esimProviders, airtime, gifts])
@@ -279,14 +284,19 @@ export default function ProductListing({ product, esimProviders, BNPLProvider, a
   )
 }
 
-function applyFiltersAndSort(products: Product[], esimProviders: ESIMProvider[], BNPLProvider: BNPLProvider[], view:string, urlSearchParams: URLSearchParams): GroupedProduct[] |  ESIMProvider[] | BNPLProvider[] {
-  let filtered: (Product | ESIMProvider | BNPLProvider)[] = []
+function applyFiltersAndSort(products: Product[], esimProviders: ESIMProvider[], BNPLProvider: BNPLProvider[],airtime: reloadly[],
+  gifts: reloadly[], view:string, urlSearchParams: URLSearchParams): GroupedProduct[] |  ESIMProvider[] | BNPLProvider[] | GroupedReloadlyProduct[]  {
+  let filtered: (Product | ESIMProvider | BNPLProvider | reloadly)[] = []
   if (view === "products") {
     filtered = [...products]
   } else if (view === "esim") {
     filtered = [...esimProviders]
   } else if (view === "bnpl") {
     filtered = [...BNPLProvider]
+  } else if (view === "reloadly-airtime") {
+    filtered = [...airtime]
+  } else if (view === "reloadly-gifts") {
+    filtered = [...gifts]
   }
   const searchQuery = urlSearchParams.get("search")?.toLowerCase() || ""
   if (searchQuery) {
@@ -298,6 +308,9 @@ function applyFiltersAndSort(products: Product[], esimProviders: ESIMProvider[],
         return true
       }
       if ("Name" in item && item.Name?.toLowerCase().includes(searchQuery)) {
+        return true
+      }
+      if ("operator" in item && item.operator?.toLowerCase().includes(searchQuery)) {
         return true
       }
       return false
@@ -316,11 +329,18 @@ function applyFiltersAndSort(products: Product[], esimProviders: ESIMProvider[],
       if (view === "bnpl" && "Name" in item) {
         return brands.includes(item.Name)
       }
+      if (view === "reloadly-airtime" && "operator" in item) {
+        return brands.includes(item.operator)
+      }
+      if (view === "reloadly-gifts" && "operator" in item) {
+        return brands.includes(item.operator)
+      }
       return false
     })
   }
   
   if (view === 'products') {
+
     let productList = filtered as Product[]
 
     if ((urlSearchParams.getAll("minPrice") || urlSearchParams.getAll("maxPrice")).length > 0) {
@@ -377,11 +397,17 @@ function applyFiltersAndSort(products: Product[], esimProviders: ESIMProvider[],
     )
     return grouped
   }
+  if (view === 'reloadly-airtime' || view === 'reloadly-gifts') {
+
+  // 5. Group by `flag`
+    const grouped = reloadly_group(filtered as reloadly[])
   
+  return grouped
+  }
     
   
 
-  return filtered as ESIMProvider[] | BNPLProvider[];
+  return filtered as ESIMProvider[] | BNPLProvider[] | GroupedReloadlyProduct[] ;
 }
 function reloadly_group(item_list : reloadly[]): GroupedReloadlyProduct[] {
   const groupedMap = new Map<string, reloadly[]>()

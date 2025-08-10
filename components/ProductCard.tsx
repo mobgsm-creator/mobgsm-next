@@ -242,25 +242,25 @@ export default function ProductCard({ product }: ProductCardProps) {
 </Badge>
 
 
-        </div>
-
-        <div className="space-y-2">
-          <Button asChild className="w-1/3">
+        </div></>)}
+        
+        <div className="flex justify-center gap-3">
+          <Button className="w-28 text-xs">
             <Link
-              href={currentProduct.product_links}
+              href={`/blog/${currentProduct.product_links}`}
               target="_blank"
               rel="noopener noreferrer"
-              className='ml-6 flex items-center justify-center gap-2 text-white'
+        
             >
-              Buy Now
+              Request a Quote
               
             </Link>
           </Button>
-          <Button asChild onClick={handleCompare} className="w-1/3">
+          <Button onClick={handleCompare} className="w-28">
           
             
          
-              <span className = 'ml-12'>Compare</span>
+              <span className = 'text-center'>Detail</span>
               
        
           </Button>
@@ -270,14 +270,14 @@ export default function ProductCard({ product }: ProductCardProps) {
           onClose={() => setShowCompare(false)}
         />
       )}
-
+        
           {currentProduct.payment_options && (
             <p className="text-xs text-gray-500 text-center">
               {currentProduct.payment_options}
             </p>
           )}
         </div>
-
+        {currentProduct.mrp && (<>
         <div className="flex justify-between mt-4">
           <Button variant="outline" onClick={handlePrev}>
             Previous
@@ -330,12 +330,13 @@ export default function ProductCard({ product }: ProductCardProps) {
                     rel="noopener noreferrer"
                     className='flex items-center justify-center gap-2 text-white'
                   >
-                    Visit Website
+                    Request a Quote
                   </Link>
                 </Button>
               </div>
               </>)}
               {isESIM(currentProduct) && (<>
+                <div className="flex flex-col h-full border rounded-lg overflow-hidden">
               <div className="relative">
               <div className="flex items-center justify-center h-32 w-full bg-white rounded-md shadow-inner p-2">
                 <img
@@ -358,7 +359,7 @@ export default function ProductCard({ product }: ProductCardProps) {
     
 <div className="flex items-center flex-wrap gap-2 mt-2">
  
-  {currentProduct.type.map((t, idx) => (
+  {currentProduct.type.slice(0,3).map((t, idx) => (
     <span
       key={idx}
       className="px-2 py-0.5 bg-blue-50 text-blue-700 text-sm rounded-full border border-blue-200"
@@ -379,7 +380,7 @@ export default function ProductCard({ product }: ProductCardProps) {
     </tr>
   </thead>
   <tbody>
-    {currentProduct.plans.map((plan, index) => (
+    {currentProduct.plans.slice(0,3).map((plan, index) => (
       <tr key={index} className="border-b">
         <td className="p-2">
           <Link
@@ -404,6 +405,14 @@ export default function ProductCard({ product }: ProductCardProps) {
 
       
       </div>
+     
+  
+      <div className="mt-auto flex justify-center pt-4">
+      <Button className="mb-8 w-28">
+        <span className="text-xs">Request Quote</span>
+      </Button>
+    </div>
+</div>
       
       </>)
 
@@ -449,6 +458,16 @@ export default function ProductCard({ product }: ProductCardProps) {
         : currentProduct.sendable_values.includes(",") ? `Min: ${currentProduct.sendable_values.split(",")[0]} / Max: ${currentProduct.sendable_values.split(",").slice(-1)[0]}` : `Value: ${currentProduct.sendable_values}`}
     </p>
   )}
+
+<div className="flex justify-center gap-3 mt-2">
+  <Button onClick={() => setIsOpen(true)} className="w-28">
+    Buy Now
+  </Button>
+  <Button className="w-28">
+    <span className="text-xs">Request Quote</span>
+  </Button>
+</div>
+
 
   
 </div>

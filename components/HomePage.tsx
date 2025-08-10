@@ -22,7 +22,7 @@ export default function HomePageClient({ country_code }: { country_code: string 
       <header className="bg-white shadow-sm border-b">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 relative">
           <Image src="/listings/MOBGSM-svg-vector.svg" alt="" width={40} height={40} />
-          <div className="absolute top-3 right-0">
+          <div className="absolute top-3 right-4">
             <CountrySelector country={country} setCountry={setCountry} />
           </div>
         </div>

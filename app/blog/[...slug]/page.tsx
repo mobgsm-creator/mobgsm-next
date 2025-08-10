@@ -18,13 +18,13 @@ function parseSlug(slugArray: string) {
 
   if (match) {
     const pureSlug = match[1]      // e.g., infinix-note-50-4g
-    const country = match[2]       // e.g., angola
-    return { pureSlug, country }
+    const rawCountry = match[2]       // e.g., angola
+    return { pureSlug, rawCountry }
   }
 
   return {
     pureSlug: fullSlug,
-    country: null
+    rawCountry: null
   }
 }
 // Types remain the same
@@ -92,7 +92,8 @@ export async function generateMetadata( props: { params: Promise<{ slug: string 
   type SettingsMap = Record<string, Setting>
   const settings = is as SettingsMap
   const { slug } = await props.params;
-  const { pureSlug, country } = parseSlug(slug);
+  const { pureSlug, rawCountry } = parseSlug(slug);
+  const country = rawCountry === "korea-south" ? "Korea (South)" : rawCountry;
 
   const entry = Object.entries(settings).find(
     ([, value]) => value.country.toLowerCase() === country?.toLowerCase()
@@ -103,7 +104,7 @@ export async function generateMetadata( props: { params: Promise<{ slug: string 
   if (entry) {
     // Match found → single canonical
     const [key] = entry;
-    canonical = `https://${key}.mobgsm.com/listings/blog/${pureSlug}`;
+    canonical = `https://${key}.mobgsm.com/listings/blog/${pureSlug}-price-in-${rawCountry}`;
   } else {
     // No match → fallback to a default canonical
     canonical = `https://mobgsm.com/listings/blog/${pureSlug}`;
@@ -112,7 +113,7 @@ export async function generateMetadata( props: { params: Promise<{ slug: string 
     alternatesLanguages = Object.fromEntries(
       Object.keys(settings).map(key => [
         key,
-        `https://${key}.mobgsm.com/listings/blog/${pureSlug}`
+        `https://${key}.mobgsm.com/listings/blog/${pureSlug}-price-in-${settings[key].country.toLowerCase()}`
       ])
     );
   }
@@ -170,8 +171,9 @@ export async function generateMetadata( props: { params: Promise<{ slug: string 
 
 // Static component for the main device content
 async function StaticDeviceContent({ slug }: { slug: string }) {
-  const { pureSlug, country } = parseSlug(slug);
-  console.log("country:",country)
+  const { pureSlug, rawCountry } = parseSlug(slug);
+  console.log("country:",rawCountry)
+
   const supabase = createClient()
 
   const { data: device, error } = await supabase.from("devices").select("*").eq("name_url", pureSlug).single()
@@ -240,7 +242,8 @@ function DynamicCountryContent({ device, slugcountry}: { device: any, slugcountr
 
 export default async function BlogPage({ params }: Params) {
   const { slug } = await params
-  const { pureSlug, country } = parseSlug(slug);
+  const { pureSlug, rawCountry } = parseSlug(slug);
+  const country = rawCountry === "korea-south" ? "Korea (South)" : rawCountry;
   //console.log("pureSlug",pureSlug)
   // Get static content (this is cached/pre-rendered)
   const staticContent = await StaticDeviceContent({ slug })

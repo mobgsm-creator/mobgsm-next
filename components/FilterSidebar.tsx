@@ -23,18 +23,26 @@ export default function FilterSidebar( { product, esimProviders, BNPLProvider,ai
   const [selectedBrands, setSelectedBrands] = useState<string[]>([])
   const [priceRange, setPriceRange] = useState([0, 50000])
   const [searchQuery, setSearchQuery] = useState("")
-  let allBrands: string[] = []
+  const [allBrands, setAllBrands] = useState<string[]>([]);
+
+useEffect(() => {
+  let brands: string[] = [];
+
   if (view === 'products') {
-    allBrands = Array.from(new Set(product.map((p) => p.brand_name)))
+    brands = Array.from(new Set(product.map((p) => p.brand_name)));
   } else if (view === 'esim') {
-    allBrands = Array.from(new Set(esimProviders?.map((p) => p.provider) || []))
-  } else if (view ==='bnpl') {
-    allBrands = Array.from(new Set(BNPLProvider?.map((p) => p.Name) || []))
-  } else if (view === 'reloadly-airtime' ) {
-    allBrands = Array.from(new Set(airtime?.map((p) => p.operator) || []))
+    brands = Array.from(new Set(esimProviders?.map((p) => p.provider) || []));
+  } else if (view === 'bnpl') {
+    brands = Array.from(new Set(BNPLProvider?.map((p) => p.Name) || []));
+  } else if (view === 'reloadly-airtime') {
+    brands = Array.from(new Set(airtime?.map((p) => p.operator) || []));
   } else if (view === 'reloadly-gifts') {
-    allBrands = Array.from(new Set(gifts?.map((p) => p.operator) || []))
+    brands = Array.from(new Set(gifts?.map((p) => p.operator) || []));
   }
+
+  setAllBrands(brands);
+}, [view, product, esimProviders, BNPLProvider, airtime, gifts]);
+
   
   useEffect(() => {
     
