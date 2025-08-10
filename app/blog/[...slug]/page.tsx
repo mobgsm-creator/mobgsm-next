@@ -108,8 +108,16 @@ export async function generateMetadata(props: { params: Promise<{ slug: string }
 
   return {
     title: `${device.name} ${country ? `Price in ${country} ${new Date().toLocaleDateString("en-US", { month: "long", year: "numeric" })} & Specifications | MobGsm` : '| MobGsm'}`,
-    description: device.description ? `View detailed full specifications, mobile price and reviews about ${device.name}.` : "",
+    description: device.description ? device.description : `View detailed full specifications, mobile price and reviews about ${device.name}.`,
     keywords: [...(device.keywords?.split(",") || [device.name?.split(" ")]), ...( `",mobile,price,specifications,specs,information,info,reviews"`.split(","))].join(","),
+    canonical: `https://${country}.mobgsm.com/listings/blog/${pureSlug}`,
+    robotsProps: {
+      nosnippet: false,
+      noarchive: false,
+      maxSnippet: -1,
+      maxImagePreview: 'large',
+      maxVideoPreview: -1,
+    },
     openGraph: {
       title: `${device.name} ${country ? `Price in ${country} ${new Date().toLocaleDateString("en-US", { month: "long", year: "numeric" })} & Specifications | MobGsm` : '| MobGsm'}`,
       description: device.description ? `View detailed full specifications, mobile price and reviews about ${device.name}.` : "",
@@ -119,7 +127,7 @@ export async function generateMetadata(props: { params: Promise<{ slug: string }
     twitter: {
       card: "summary_large_image",
       title: `${device.name} ${country ? `Price in ${country} ${new Date().toLocaleDateString("en-US", { month: "long", year: "numeric" })} & Specifications | MobGsm` : '| MobGsm'}`,
-      description: device.description ? `View detailed full specifications, mobile price and reviews about ${device.name}.` : "",
+      description: device.description ? device.description : `View detailed full specifications, mobile price and reviews about ${device.name}.`,
       images: [device.image || "/opengraph-image.png"],
       url: `https://mobgsm.com/listings/blog/${pureSlug}`,
     },
