@@ -135,7 +135,7 @@ export async function generateMetadata( props: { params: Promise<{ slug: string 
   return {
     title: `${device.name} ${country ? `Price in ${country} ${new Date().toLocaleDateString("en-US", { month: "long", year: "numeric" })} & Specifications | MobGsm` : '| MobGsm'}`,
     description: device.description ? device.description : `View detailed full specifications, mobile price and reviews about ${device.name}.`,
-    keywords: [...(device.keywords?.split(",") || [device.name?.split(" ")]), ...( `",mobile,price,specifications,specs,information,info,reviews"`.split(","))].join(","),
+    keywords: [...(device.keywords?.split(",") || [device.name?.split(" ")]), ...( `mobile,price,specifications,specs,information,info,reviews"`.split(","))].join(","),
     alternates: {
       canonical,
       languages: alternatesLanguages,
@@ -158,9 +158,11 @@ export async function generateMetadata( props: { params: Promise<{ slug: string 
       description: device.description ? `View detailed full specifications, mobile price and reviews about ${device.name}.` : "",
       images: [device.image || "/opengraph-image.png"],
       type: "article",
+      sitename: "MobGsm",
     },
     twitter: {
       card: "summary_large_image",
+      site: "@mobgsm",
       title: `${device.name} ${country ? `Price in ${country} ${new Date().toLocaleDateString("en-US", { month: "long", year: "numeric" })} & Specifications | MobGsm` : '| MobGsm'}`,
       description: device.description ? device.description : `View detailed full specifications, mobile price and reviews about ${device.name}.`,
       images: [device.image || "/opengraph-image.png"],
@@ -251,29 +253,30 @@ export default async function BlogPage({ params }: Params) {
 
   return (
     <>
-    <div className="flex justify-center items-center">
-      <div className="min-h-screen max-w-7xl bg-white">
-      <header className="bg-white shadow-sm border-b">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 relative">
+    <div className="flex justify-center max-w-7xl items-center">
+      <div className="min-h-screen  bg-white">
+        <header className="bg-white shadow-sm border-b">
+        <div className=" mx-auto px-4 sm:px-6 lg:px-8 py-4 relative">
           <Image src="/listings/MOBGSM-svg-vector.svg" alt="" width={40} height={40} />
           
         </div>
-      </header>
+        </header>
 
-        <div className="max-w-7xl mx-auto flex flex-col md:flex-row">
+        <div className=" mx-auto flex max-w-7xl flex-col md:flex-row">
           {/* Main Content */}
           <div className="flex-1 bg-gray-50">
             <div className="bg-white p-4 border-b">
               <div className="flex flex-row gap-4 bg-white p-4 rounded-2xl ">
                 {/* Left: Image */}
-                <div className="w-[200px] h-[250px]">
-  <img
-    className="w-full h-auto"
-    src={device.image || "/placeholder.svg"}
-    alt={device.name}
-    srcSet={`${device.image} 2x`}
-  />
-</div>
+                <div className="w-[150px] h-[150px] flex items-center justify-center bg-white">
+                  <img
+                    src={device.image || "/placeholder.svg"}
+                    alt={device.name}
+                    className="object-contain max-w-full max-h-full"
+                    loading="lazy"
+                  />
+                </div>
+
 
                 
 
@@ -364,7 +367,7 @@ export default async function BlogPage({ params }: Params) {
                   {Object.entries(details as Record<string, string>).map(([key, value], index, array) => (
                     <div key={key} className={`flex ${index < array.length - 1 ? "border-b border-gray-200" : ""}`}>
                       <div className="w-32 py-3 text-gray-700 font-medium capitalize">{key.replace(/_/g, " ")}</div>
-                      <div className="flex-1 py-3 text-gray-900">{value}</div>
+                      <div className="w-64 py-3 text-gray-900 text-wrap">{value}</div>
                     </div>
                   ))}
                 </div>
@@ -414,24 +417,24 @@ export default async function BlogPage({ params }: Params) {
             </Suspense>
           </div>
         </div>
-        <div className='max-w-7xl bg-white'>
+        <div className='bg-white'>
         <div className='ml-20 flex flex-col max-w-4xl justify-center items-center bg-white'>
          <h3 className='mt-4 text-center'> 
-     <strong>Disclaimer: </strong>  
-     We do not guarantee that the information on this page is 100% accurate and up to date.  
-   <br></br> <br></br> 
-     The pricing published on this page is meant for general information purposes only. While we monitor prices regularly, the ones listed above might be outdated. We also cannot guarantee these are the lowest prices available, so shopping around is always a good idea.
-   </h3>
+          <strong>Disclaimer: </strong>  
+          We do not guarantee that the information on this page is 100% accurate and up to date.  
+        <br></br> <br></br> 
+          The pricing published on this page is meant for general information purposes only. While we monitor prices regularly, the ones listed above might be outdated. We also cannot guarantee these are the lowest prices available, so shopping around is always a good idea.
+        </h3>
 
      
      <div>
      <footer className="bg-white border-t mt-8">
-       <div className="max-w-7xl mx-auto px-4 py-6 text-center text-gray-600">
+       <div className=" mx-auto px-4 py-6 text-center text-gray-600">
          © {new Date().getFullYear()} MobGsm. All rights reserved.
        </div>
      </footer>
-   </div></div>
-      </div>
+    </div></div>
+        </div>  
      
     </div></div>
      
