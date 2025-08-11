@@ -1,5 +1,5 @@
 export const runtime = 'edge';
-export const revalidate = 3600 // cache for 1 hour (optional for static rendering in RSC)
+export const revalidate = 72000 // cache for 1 hour (optional for static rendering in RSC)
 
 // API Route: app/listings/api/products/route.ts
 import { NextRequest, NextResponse } from 'next/server'
@@ -43,8 +43,8 @@ export async function GET(request: NextRequest) {
     }
     
     const response = NextResponse.json(products || [])
-    response.headers.set("Cache-Control", "no-cache, no-store, must-revalidate")
-    
+    //response.headers.set("Cache-Control", "no-cache, no-store, must-revalidate")
+    response.headers.set("Cache-Control", "public, s-maxage=76000, stale-while-revalidate=60")
     return response
   } catch (error) {
     console.error("API error:", error)

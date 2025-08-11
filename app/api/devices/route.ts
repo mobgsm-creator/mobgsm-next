@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server"
 import { createClient } from "@/lib/supabase"
 export const runtime = 'edge';
-export const revalidate = 3600 // cache for 1 hour (optional for static rendering in RSC)
+export const revalidate = 72000 // cache for 1 hour (optional for static rendering in RSC)
 
 export async function GET() {
   try {
@@ -9,7 +9,8 @@ export async function GET() {
     const supabase = createClient();
     const { data, error } = await supabase
       .from('devices')
-      .select('id, name_url,image, name, brand_name');
+      .select('id, name_url,image, name, brand_name').range(0,1999)
+  
     
     
     if (error) {
@@ -20,8 +21,8 @@ export async function GET() {
     const response = NextResponse.json(data || [])
 
     // ✅ Set HTTP cache headers
-    //response.headers.set("Cache-Control", "public, s-maxage=3600, stale-while-revalidate=60")
-    response.headers.set("Cache-Control", "no-cache, no-store, must-revalidate")
+    response.headers.set("Cache-Control", "public, s-maxage=76000, stale-while-revalidate=60")
+    //response.headers.set("Cache-Control", "no-cache, no-store, must-revalidate")
     return response
   } catch (error) {
     console.error("API error:", error)
