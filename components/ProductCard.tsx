@@ -13,6 +13,7 @@ import {
   DialogDescription,
   DialogFooter
 } from "@/components/ui/dialog"
+import FormPopup from "./formPopup"
 type ProductCardProps = {
   product: Product[] | ESIMProvider[] | BNPLProvider[] | reloadly[];
 };
@@ -21,6 +22,7 @@ export default function ProductCard({ product }: ProductCardProps) {
   //console.log(product.length)
   const [currentIndex, setCurrentIndex] = useState(0);
   const [showCompare, setShowCompare] = useState(false)
+  const [showForm, setShowForm] = useState(false)
   const [isOpen, setIsOpen] = useState(false)
   const [, setSelectedValue] = useState("")
   const [inputValue, setInputValue] = useState("")
@@ -132,6 +134,11 @@ export default function ProductCard({ product }: ProductCardProps) {
 
   }
 
+  const handleForm = () => {
+    setShowForm(true)
+
+  }
+
   const currentProduct = product[currentIndex];
   
   function isProduct(item: Product | ESIMProvider | BNPLProvider | reloadly): item is Product {
@@ -164,6 +171,12 @@ export default function ProductCard({ product }: ProductCardProps) {
     
     <div className="bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300 overflow-hidden">
       {isProduct(currentProduct) && ( <><div className="relative">
+        {showForm && (
+    <FormPopup
+      onClose={() => setShowForm(false)}
+     
+    />
+  )}
         
         {currentProduct.product_links?.startsWith('https') ? (
   
@@ -245,17 +258,13 @@ export default function ProductCard({ product }: ProductCardProps) {
         </div></>)}
         <div className="flex flex-col items-center gap-2">
   <div className="flex justify-center gap-8">
-    <Button asChild className="w-25 text-xs">
-      <Link
-        href={`/blog/${currentProduct.product_links}`}
-        target="_blank"
-        rel="noopener noreferrer"
-      >
-        Request Quote
-      </Link>
-    </Button>
+  
+      <Button onClick={handleForm} className="text-xs w-25">
+        <span className="text-xs">Request Quote</span>
+      </Button>
+  
 
-    <Button onClick={handleCompare} className="w-25">
+    <Button onClick={handleCompare} className="text-xs w-25">
       <span className="text-xs text-center">Detail</span>
     </Button>
   </div>
@@ -286,6 +295,12 @@ export default function ProductCard({ product }: ProductCardProps) {
       </div></>)}
       {isBNPL(currentProduct)
               && (<>
+              {showForm && (
+    <FormPopup
+      onClose={() => setShowForm(false)}
+     
+    />
+  )}
               
               <div className="relative">
               <div className="flex items-center justify-center h-32 w-full bg-white rounded-md shadow-inner p-2 hover:shadow-lg transition-transform transform hover:scale-105">
@@ -320,19 +335,20 @@ export default function ProductCard({ product }: ProductCardProps) {
 
 
 
-                <Button asChild className="w-full mt-4">
-                  <Link
-                    href={currentProduct.Website}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className='flex items-center justify-center gap-2 text-white text-xs '
-                  >
-                    Request Quote
-                  </Link>
-                </Button>
+<div className="mt-auto flex justify-center pt-4">
+      <Button onClick={handleForm} className="mb-8 mt-4 w-25">
+        <span className="text-xs">Request Quote</span>
+      </Button>
+    </div>
               </div>
               </>)}
               {isESIM(currentProduct) && (<>
+                {showForm && (
+    <FormPopup
+      onClose={() => setShowForm(false)}
+     
+    />
+  )}
                 <div className="flex flex-col h-full border rounded-lg overflow-hidden">
               <div className="relative">
               <div className="flex items-center justify-center h-32 w-full bg-white rounded-md shadow-inner p-2 hover:shadow-lg transition-transform transform hover:scale-105">
@@ -405,7 +421,7 @@ export default function ProductCard({ product }: ProductCardProps) {
      
   
       <div className="mt-auto flex justify-center pt-4">
-      <Button className="mb-8 w-25">
+      <Button onClick={handleForm} className="mb-8 mt-4 w-25">
         <span className="text-xs">Request Quote</span>
       </Button>
     </div>
@@ -415,9 +431,15 @@ export default function ProductCard({ product }: ProductCardProps) {
 
       }{isReloadly(currentProduct) && (
         <>
+        {showForm && (
+    <FormPopup
+      onClose={() => setShowForm(false)}
+     
+    />
+  )}
           <div
   className="relative cursor-pointer p-4 bg-gradient-to-b from-gray-50 to-white rounded-lg shadow-sm hover:shadow-lg transition-transform transform hover:scale-105"
-  onClick={() => setIsOpen(true)}
+
 >
   {/* Product Type Tag */}
   <span className="absolute top-2 left-2 bg-blue-100 text-blue-700 text-xs font-semibold px-2 py-1 rounded">
@@ -460,9 +482,11 @@ export default function ProductCard({ product }: ProductCardProps) {
   <Button onClick={() => setIsOpen(true)} className="text-xs  w-25">
     Buy Now
   </Button>
-  <Button className="w-25">
-    <span className="text-xs">Request Quote</span>
-  </Button>
+
+      <Button onClick={handleForm} className="text-xs w-25">
+        <span className="text-xs">Request Quote</span>
+      </Button>
+
 </div>
 
 
