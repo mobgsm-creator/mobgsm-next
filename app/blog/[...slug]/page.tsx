@@ -1,12 +1,14 @@
 import { notFound } from "next/navigation"
 import { createClient } from "@/lib/supabase"
-import { ChevronDown, ChevronRight } from "lucide-react"
-import Link from "next/link"
+import { ChevronDown } from "lucide-react"
+
 import Image from "next/image"
 import { settings as is } from "@/public/combined_settings"
 import { headers } from "next/headers"
 import { Suspense } from "react"
 import  DynamicCountryLinks  from "@/components/countryDropdownDevicePage"
+import DynamicBrandLinks from "@/components/brandsDropdownDevicePage"
+import DynamicMoreLinks from "@/components/moreDropdownDevicePage"
 export const runtime = 'edge';
 //redeploy
 function parseSlug(slugArray: string) {
@@ -82,8 +84,9 @@ interface Params {
 //   }))
 // }
 
+export const dynamic = 'force-dynamic'
 
-export const revalidate = 86400 // 24 hours
+//export const revalidate = 86400 // 24 hours
 export const dynamicParams = true
 
 
@@ -118,7 +121,8 @@ export async function generateMetadata( props: { params: Promise<{ slug: string 
     );
   }
   const supabase = createClient()
-
+  
+  
   const { data: device } = await supabase
     .from("devices")
     .select("name, description, keywords, image")
@@ -174,17 +178,20 @@ export async function generateMetadata( props: { params: Promise<{ slug: string 
 // Static component for the main device content
 async function StaticDeviceContent({ slug }: { slug: string }) {
   const { pureSlug, rawCountry } = parseSlug(slug);
-  console.log("country:",rawCountry)
+
+  console.log("pureSlug:", pureSlug)
+  console.log("country:", rawCountry)
 
   const supabase = createClient()
 
   const { data: device, error } = await supabase.from("devices").select("*").eq("name_url", pureSlug).single()
-
+  
   if (!device || error) return notFound()
 
   const json = device.json
   const specs = json?.data || {}
   const brandName = device.brand_name
+  console.log(brandName)
   let img_specs : ImgSpecs = {};
 
 if (device?.specs) {
@@ -203,11 +210,15 @@ if (device?.specs) {
     .select("name, name_url, image, main_price")
     .eq("brand_name", brandName)
     .neq("id", device.id)
-    .limit(8)
+  
+    
+  console.log(moreFromBrand)
+    const { data } = await supabase
+  .from("devices")
+  .select("brand_name");
 
-  const { data: allBrands } = await supabase.from("devices").select("brand_name").neq("brand_name", "").limit(50)
-
-  const uniqueBrands = [...new Set(allBrands?.map((b) => b.brand_name))].sort()
+  const uniqueBrands = [...new Set(data?.map(item => item.brand_name))];
+  
 
   return { device, specs, img_specs, moreFromBrand, uniqueBrands }
 }
@@ -347,38 +358,10 @@ export default async function BlogPage({ params }: Params) {
           {/* Sidebar */}
           <div className="bg-gray-50 p-4 rounded-2xl">
             {/* Related Devices */}
-            <div className="bg-gray-50 px-4 py-2 flex items-center justify-between">
-                <h2 className="text-sm font-bold text-black">{`More from ${device.brand_name}`}</h2>
-                <ChevronRight className="h-4 w-4 text-black" />
-              </div>
-            <div className=" mb-6 ">
-              {moreFromBrand?.map((item) => (
-                <Link key={item.name_url} href={`/blog/${item.name_url}`}>
-                  <div className="bg-white rounded-2xl mb-1 px-4 py-3 hover:bg-gray-50 cursor-pointer border-b border-gray-50">
-                    <div className="text-sm font-medium text-gray-900">{item.name}</div>
-                  </div>
-                </Link>
-              ))}
-            </div>
+            <DynamicMoreLinks more={moreFromBrand || []} brand={device.brand_name} />
 
             {/* Brands Section */}
-            <div className="bg-gray-50 rounded-2xl ">
-              <div className="bg-gray-50 px-4 py-2 flex items-center justify-between">
-                <h2 className="font-bold text-black">BRANDS</h2>
-                <ChevronRight className="h-4 w-4 text-black" />
-              </div>
-              <div>
-                {uniqueBrands.slice(0, 9).map((brand) => (
-                  <div
-                    key={brand}
-                    className="flex items-center justify-between mb-1 px-4 py-3 bg-white hover:bg-gray-50 cursor-pointer rounded-2xl"
-                  >
-                    <span className="text-gray-900 font-medium">{brand}</span>
-                    <ChevronRight className="h-4 w-4 text-red-500" />
-                  </div>
-                ))}
-              </div>
-            </div>
+            <DynamicBrandLinks uniqueBrands={uniqueBrands} />
 
             {/* Dynamic Countries Section */}
             <Suspense fallback={<div>Loading countries...</div>}>
@@ -389,11 +372,11 @@ export default async function BlogPage({ params }: Params) {
         <div className='bg-white'>
         <div className='text-[0.6rem] ml-4 flex flex-col max-w-4xl justify-center items-center bg-white'>
          <h3 className='mt-4 text-center'> 
-          <strong>Disclaimer: </strong>  
+          <strong>Disclaimer: </strong> </h3> <div>
           We do not guarantee that the information on this page is 100% accurate and up to date.  
         <br></br> <br></br> 
           The pricing published on this page is meant for general information purposes only. While we monitor prices regularly, the ones listed above might be outdated. We also cannot guarantee these are the lowest prices available, so shopping around is always a good idea.
-        </h3>
+        </div>
 
      
      <div>

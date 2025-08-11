@@ -41,7 +41,7 @@ export default function DynamicCountryLinks({ deviceSlug, country, settings }: D
       </div>
   
       {/* Dropdown list */}
-      {isOpen && (
+      {!isOpen && (
         <div className="max-h-[116rem] overflow-y-auto"> {/* scrollable container */}
           {Object.entries(settings)
              // limit to 15 countries
