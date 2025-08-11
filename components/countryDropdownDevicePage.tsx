@@ -28,10 +28,10 @@ export default function DynamicCountryLinks({ deviceSlug, country, settings }: D
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <div className="max-h-[160rem] bg-white mt-6">
+    <div className="max-h-[160rem] bg-gray-50 mt-6">
       {/* Header acting as toggle */}
       <div
-        className="bg-white px-4 py-2 flex items-center justify-between cursor-pointer"
+        className="bg-gray-50 px-4 py-2 flex items-center justify-between cursor-pointer"
         onClick={() => setIsOpen(!isOpen)}
       >
         <div className="mt-2 font-bold text-black">COUNTRIES</div>
@@ -42,7 +42,7 @@ export default function DynamicCountryLinks({ deviceSlug, country, settings }: D
   
       {/* Dropdown list */}
       {isOpen && (
-        <div className="max-h-[154rem] overflow-y-auto"> {/* scrollable container */}
+        <div className="max-h-[116rem] overflow-y-auto"> {/* scrollable container */}
           {Object.entries(settings)
              // limit to 15 countries
        
@@ -50,7 +50,7 @@ export default function DynamicCountryLinks({ deviceSlug, country, settings }: D
               <a
                 key={code}
                 href={`https://mobgsm.com/listings/blog/${deviceSlug}-price-in-${cfg.country.replace(" ", "-")}`}
-                className="flex items-center justify-between px-4 py-3 border-b border-gray-100 hover:bg-gray-50 cursor-pointer"
+                className="flex items-center justify-between mb-1 px-4 py-3 bg-white hover:bg-gray-50 cursor-pointer rounded-2xl"
               >
                 <span className="text-gray-900 font-medium">
                   {cfg.country || country}

@@ -38,18 +38,18 @@ function ToggleTabs({ onChange, currentView }: ToggleTabsProps) {
         
         <TabsTrigger value="reloadly-airtime">Airtime Topup</TabsTrigger>
         <TabsTrigger value="reloadly-gifts">Giftcards</TabsTrigger>
-        <TabsTrigger value="products"><span className="flex items-center gap-2">Mobiles<sup><span className="text-xs font-semibold text-white bg-purple-500 px-2 py-0.5 rounded">
+        <TabsTrigger value="products"><span className="flex items-center gap-2">Mobiles<sup className="text-[0.4rem] align-super"><span className="font-semibold text-white bg-purple-500 px-2 py-0.5 rounded">
       BETA
     </span></sup>
   </span></TabsTrigger>
-        <TabsTrigger value="esim"><span className="flex items-center gap-2">eSIM Offers<sup><span className="text-xs font-semibold text-white bg-purple-500 px-2 py-0.5 rounded">
+        <TabsTrigger value="esim"><span className="flex items-center gap-2">eSIM Offers<sup className="text-[0.4rem] align-super"><span className="font-semibold text-white bg-purple-500 px-2 py-0.5 rounded">
       BETA
     </span></sup>
   </span></TabsTrigger>
         <TabsTrigger value="bnpl">
   <span className="flex items-center gap-2">
     BNPL Offers
-    <sup><span className="text-xs font-semibold text-white bg-purple-500 px-2 py-0.5 rounded">
+    <sup className="text-[0.4rem] align-super"><span className="font-semibold text-white bg-purple-500 px-2 py-0.5 rounded">
       BETA
     </span></sup>
   </span>

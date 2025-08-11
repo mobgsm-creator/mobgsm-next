@@ -167,7 +167,7 @@ export default function ProductCard({ product }: ProductCardProps) {
         
         {currentProduct.product_links?.startsWith('https') ? (
   
-  <div className="flex items-center justify-center h-32 w-full bg-white rounded-md shadow-inner p-2">
+  <div className="flex items-center justify-center h-32 w-full bg-white rounded-md shadow-inner p-2 hover:shadow-lg transition-transform transform hover:scale-105">
   <img
     src={currentProduct.img_link}
     alt={currentProduct.product_name}
@@ -177,7 +177,7 @@ export default function ProductCard({ product }: ProductCardProps) {
   
 ) : (
   <Link href={`/blog/${currentProduct.product_links}`}>
-  <div className="flex items-center justify-center h-32 w-full bg-white rounded-md shadow-inner p-2">
+  <div className="flex items-center justify-center h-32 w-full bg-white rounded-md shadow-inner p-2 hover:shadow-lg transition-transform transform hover:scale-105">
   <img
     src={currentProduct.img_link}
     alt={currentProduct.product_name}
@@ -243,40 +243,37 @@ export default function ProductCard({ product }: ProductCardProps) {
 
 
         </div></>)}
-        
-        <div className="flex justify-center gap-3">
-          <Button className="w-28 text-xs">
-            <Link
-              href={`/blog/${currentProduct.product_links}`}
-              target="_blank"
-              rel="noopener noreferrer"
-        
-            >
-              Request a Quote
-              
-            </Link>
-          </Button>
-          <Button onClick={handleCompare} className="w-28">
-          
-            
-         
-              <span className = 'text-center'>Detail</span>
-              
-       
-          </Button>
-          {showCompare && (
-        <ComparePopup
-          products={product.filter(isProduct)}
-          onClose={() => setShowCompare(false)}
-        />
-      )}
-        
-          {currentProduct.payment_options && (
-            <p className="text-xs text-gray-500 text-center">
-              {currentProduct.payment_options}
-            </p>
-          )}
-        </div>
+        <div className="flex flex-col items-center gap-2">
+  <div className="flex justify-center gap-8">
+    <Button asChild className="w-25 text-xs">
+      <Link
+        href={`/blog/${currentProduct.product_links}`}
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        Request Quote
+      </Link>
+    </Button>
+
+    <Button onClick={handleCompare} className="w-25">
+      <span className="text-xs text-center">Detail</span>
+    </Button>
+  </div>
+
+  {currentProduct.payment_options && (
+    <p className="text-xs text-gray-500 text-center">
+      {currentProduct.payment_options}
+    </p>
+  )}
+
+  {showCompare && (
+    <ComparePopup
+      products={product.filter(isProduct)}
+      onClose={() => setShowCompare(false)}
+    />
+  )}
+</div>
+
         {currentProduct.mrp && (<>
         <div className="flex justify-between mt-4">
           <Button variant="outline" onClick={handlePrev}>
@@ -291,7 +288,7 @@ export default function ProductCard({ product }: ProductCardProps) {
               && (<>
               
               <div className="relative">
-              <div className="flex items-center justify-center h-32 w-full bg-white rounded-md shadow-inner p-2">
+              <div className="flex items-center justify-center h-32 w-full bg-white rounded-md shadow-inner p-2 hover:shadow-lg transition-transform transform hover:scale-105">
                 <img
                   src={currentProduct.Image_URL}
                   alt={currentProduct.Name}
@@ -328,9 +325,9 @@ export default function ProductCard({ product }: ProductCardProps) {
                     href={currentProduct.Website}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className='flex items-center justify-center gap-2 text-white'
+                    className='flex items-center justify-center gap-2 text-white text-xs '
                   >
-                    Request a Quote
+                    Request Quote
                   </Link>
                 </Button>
               </div>
@@ -338,7 +335,7 @@ export default function ProductCard({ product }: ProductCardProps) {
               {isESIM(currentProduct) && (<>
                 <div className="flex flex-col h-full border rounded-lg overflow-hidden">
               <div className="relative">
-              <div className="flex items-center justify-center h-32 w-full bg-white rounded-md shadow-inner p-2">
+              <div className="flex items-center justify-center h-32 w-full bg-white rounded-md shadow-inner p-2 hover:shadow-lg transition-transform transform hover:scale-105">
                 <img
                   src={currentProduct.img_link}
                   alt={currentProduct.provider}
@@ -408,7 +405,7 @@ export default function ProductCard({ product }: ProductCardProps) {
      
   
       <div className="mt-auto flex justify-center pt-4">
-      <Button className="mb-8 w-28">
+      <Button className="mb-8 w-25">
         <span className="text-xs">Request Quote</span>
       </Button>
     </div>
@@ -460,10 +457,10 @@ export default function ProductCard({ product }: ProductCardProps) {
   )}
 
 <div className="flex justify-center gap-3 mt-2">
-  <Button onClick={() => setIsOpen(true)} className="w-28">
+  <Button onClick={() => setIsOpen(true)} className="text-xs  w-25">
     Buy Now
   </Button>
-  <Button className="w-28">
+  <Button className="w-25">
     <span className="text-xs">Request Quote</span>
   </Button>
 </div>

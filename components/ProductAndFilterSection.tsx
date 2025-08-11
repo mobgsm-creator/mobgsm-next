@@ -116,7 +116,7 @@ export default function ProductSectionWrapper({ country } : ProductListingProps)
           lg:relative lg:translate-x-0 lg:w-80 lg:block
         `}
       >
-        <div className="h-full overflow-y-auto p-4 pt-20 lg:pt-0">
+        <div className="h-full mt-4 overflow-y-auto p-4 pt-20 lg:pt-0">
           <Suspense fallback={<Skeleton className="h-96 w-full" />}>
             <FilterSidebar
               product={filteredProducts}

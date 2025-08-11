@@ -3,10 +3,11 @@
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 
-import { ChevronDown, ChevronUp } from 'lucide-react';
 import Image from 'next/image';
 import { getDevices } from '@/lib/supabase';
+
 export const runtime = 'edge';
+
 type Device = {
   id: number;
   name: string;
@@ -18,26 +19,27 @@ type Device = {
 export default function BlogListPage() {
   const [devices, setDevices] = useState<Device[]>([]);
   const [loading, setLoading] = useState(true);
-  const [expandedBrands, setExpandedBrands] = useState<Record<string, boolean>>({});
-  //Fix this security issue
+  const [selectedBrand, setSelectedBrand] = useState<string | null>(null);
+
+  // Fetch devices once
   useEffect(() => {
     const fetchDevices = async () => {
-      const deviceData = await getDevices()
-      
+      const deviceData = await getDevices();
       setDevices(deviceData);
-
       setLoading(false);
+
+      // On load, check if URL has #brand hash and select it
+      const hashBrand = window.location.hash.replace('#', '');
+      if (hashBrand && deviceData.some(d => d.brand_name === hashBrand)) {
+        setSelectedBrand(hashBrand);
+      } else if (deviceData.length > 0) {
+        // default select first brand
+        setSelectedBrand(deviceData[0].brand_name);
+      }
     };
 
     fetchDevices();
   }, []);
-
-  const toggleBrand = (brand: string) => {
-    setExpandedBrands((prev) => ({
-      ...prev,
-      [brand]: !prev[brand],
-    }));
-  };
 
   // Group devices by brand
   const brandMap: Record<string, Device[]> = devices.reduce((acc, device) => {
@@ -45,54 +47,75 @@ export default function BlogListPage() {
     acc[device.brand_name].push(device);
     return acc;
   }, {} as Record<string, Device[]>);
- //console.log(brandMap)
+
+  // When user clicks brand, update state & URL hash
+  const handleBrandClick = (brand: string) => {
+    setSelectedBrand(brand);
+    window.history.replaceState(null, '', `#${brand}`);
+  };
+
   if (loading) {
     return <div className="p-6">Loading devices...</div>;
   }
 
   return (
-    <>
+   
+   <>
     <header className="bg-white shadow-sm border-b">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-          <Image src="/listings/MOBGSM-svg-vector.svg" alt="" width={40} height={40} />
-          
-        </div>
-      </header>
-    <div className='flex flex-col justify-center items-center'>
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 justify-center">
+      <Image src="/listings/MOBGSM-svg-vector.svg" alt="" width={40} height={40} />
+    </div>
+  </header>
+  <div className="max-w-7xl mx-auto flex min-h-screen bg-gray-50">
+  <nav className="w-48 bg-white border-r shadow-sm p-4 sticky top-0 h-screen overflow-auto">
+        <h2 className="text-xl font-semibold mb-4">Brands</h2>
+        <ul className="space-y-2">
+          {Object.keys(brandMap).map((brand) => (
+            <li key={brand}>
+              <button
+                onClick={() => handleBrandClick(brand)}
+                className={`block w-full text-left px-3 py-2 rounded ${
+                  selectedBrand === brand
+                    ? 'bg-gray-50 text-black font-bold'
+                    : 'hover:bg-gray-100 text-black'
+                }`}
+              >
+                {brand}
+              </button>
+            </li>
+          ))}
+        </ul>
+      </nav>
 
-  {/* Header */}
-  
-
-  {/* Main content */}
-  <div className="p-6 max-w-4xl w-full">
-    <h1 className="text-2xl font-bold mb-4">Device Brands</h1>
-    <ul className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-      {Object.entries(brandMap).map(([brand, devices]) => (
-        <li key={brand} className="border p-3 rounded shadow-sm">
-          <button
-            onClick={() => toggleBrand(brand)}
-            className="flex items-center text-left w-full text-lg font-semibold text-gray-800 hover:text-green-900"
-          >
-            {expandedBrands[brand] ? <ChevronUp className="h-4 w-4 mr-1" /> : <ChevronDown className="h-4 w-4 mr-1" />}
-            {brand}
-          </button>
-
-          {expandedBrands[brand] && (
-            <ul className="mt-2 space-y-1 text-sm text-blue-600">
-              {devices.map((device) => (
-                <li key={device.id}>
-                  <Link href={`/blog/${device.name_url}`} className="hover:underline">
-                    {device.name}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          )}
-        </li>
-      ))}
-    </ul>
-  </div>
-</div></>
-
+      {/* Main content area - show devices of selected brand */}
+      <main className="flex-1 p-6 overflow-auto">
+     
+        {selectedBrand && (
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-6">
+            {brandMap[selectedBrand].map((device) => (
+              <Link
+                key={device.id}
+                href={`/blog/${device.name_url}`}
+                className="group block bg-white rounded-lg shadow hover:shadow-lg overflow-hidden border border-gray-200"
+              >
+                <div className="relative w-full h-48 bg-gray-100 hover:shadow-lg transition-transform transform hover:scale-105">
+                  <Image
+                    src={device.image}
+                    alt={device.name}
+                    fill
+                    style={{ objectFit: 'contain' }}
+                    sizes="(max-width: 768px) 100vw, 300px"
+                    priority={true}
+                  />
+                </div>
+                <div className="p-3 text-center text-black font-semibold group-hover:text-black">
+                  {device.name}
+                </div>
+              </Link>
+            ))}
+          </div>
+        )}
+      </main>
+    </div></>
   );
 }

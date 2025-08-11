@@ -264,11 +264,11 @@ export default async function BlogPage({ params }: Params) {
 
         <div className=" mx-auto flex max-w-7xl flex-col md:flex-row">
           {/* Main Content */}
-          <div className="flex-1 bg-gray-50">
-            <div className="bg-white p-4 border-b">
+          <div className="flex-1 bg-gray-50 rounded-2xl">
+            <div className="bg-white p-4 border-b rounded-2xl">
               <div className="flex flex-row gap-4 bg-white p-4 rounded-2xl ">
                 {/* Left: Image */}
-                <div className="w-[150px] h-[150px] flex items-center justify-center bg-white">
+                <div className="w-[150px] h-[150px] flex items-center justify-center bg-white ">
                   <img
                     src={device.image || "/placeholder.svg"}
                     alt={device.name}
@@ -281,8 +281,8 @@ export default async function BlogPage({ params }: Params) {
                 
 
                 {/* Right: Specs Grid */}
-                <div className="grid grid-cols-2 gap-4 text-sm text-gray-800">
-                  <div className="flex items-center space-x-3 w-[150px]">
+                <div className="grid grid-cols-2 gap-4 text-sm text-gray-800 rounded-2xl">
+                  <div className="flex items-center space-x-3 w-[150px] rounded-2xl">
                     <span>📱</span>
                     <span>
                       <strong>{img_specs.display?.size}</strong>
@@ -290,7 +290,7 @@ export default async function BlogPage({ params }: Params) {
                       {img_specs.display?.resolution}
                     </span>
                   </div>
-                  <div className="flex items-center space-x-3 w-[150px]">
+                  <div className="flex items-center space-x-3 w-[150px] rounded-2xl">
                     <span>📷</span>
                     <span>
                       <strong>{img_specs.camera?.main}</strong>
@@ -298,7 +298,7 @@ export default async function BlogPage({ params }: Params) {
                       {img_specs.camera?.video}
                     </span>
                   </div>
-                  <div className="flex items-center space-x-3 w-[150px]">
+                  <div className="flex items-center space-x-3 w-[150px] rounded-2xl">
                     <span>💾</span>
                     <span>
                       <strong>{img_specs.performance?.ram}</strong>
@@ -306,7 +306,7 @@ export default async function BlogPage({ params }: Params) {
                       {img_specs.performance?.chipset}
                     </span>
                   </div>
-                  <div className="flex items-center space-x-3 w-[150px]">
+                  <div className="flex items-center space-x-3 w-[150px] rounded-2xl">
                     <span>🔋</span>
                     <span>
                       <strong>{img_specs.battery?.capacity}</strong>
@@ -315,7 +315,7 @@ export default async function BlogPage({ params }: Params) {
                 </div>
               </div>
 
-              <h1 className="text-lg font-bold uppercase mt-4">
+              <h1 className="text-md font-bold uppercase mt-4 ">
                 {device.name} FULL SPECIFICATIONS
                 {/* Dynamic pricing component */}
                 <Suspense fallback={<div>Loading price...</div>}>
@@ -324,50 +324,19 @@ export default async function BlogPage({ params }: Params) {
               </h1>
             </div>
 
-            {/* Launch Section */}
-            <div className="bg-white mb-1">
-              <div className="bg-gray-50 px-4 py-2 flex items-center justify-between cursor-pointer">
-                <div className="font-bold text-black">LAUNCH</div>
-                <ChevronDown className="h-4 w-4 text-black" />
-              </div>
-              <div className="px-4">
-                <div className="flex border-b border-gray-200">
-                  <div className="w-32 py-3 text-gray-700 font-medium">Announced</div>
-                  <div className="flex-1 py-3 text-gray-900">2025, March 04</div>
-                </div>
-                <div className="flex">
-                  <div className="w-32 py-3 text-gray-700 font-medium">Status</div>
-                  <div className="flex-1 py-3 text-gray-900">Available. Released 2025, March</div>
-                </div>
-              </div>
-            </div>
-
-            {/* Network Section */}
-            <div className="bg-white mb-1">
-              <div className="bg-gray-50 px-4 py-2 flex items-center justify-between cursor-pointer">
-                <div className="font-bold text-black">NETWORK SUPPORT & CONNECTIVITY</div>
-                <ChevronDown className="h-4 w-4 text-black" />
-              </div>
-              <div className="px-4">
-                <div className="flex">
-                  <div className="w-32 py-3 text-gray-700 font-medium">Technology</div>
-                  <div className="flex-1 py-3 text-gray-900">GSM / HSPA / LTE</div>
-                </div>
-              </div>
-            </div>
-
+            
             {/* Specifications Sections */}
             {Object.entries(specs).map(([category, details]) => (
-              <div key={category} className="bg-white mb-1">
-                <div className="bg-gray-50 px-4 py-2 flex items-center justify-between cursor-pointer">
-                  <div className="font-bold text-black uppercase">{category.replace(/_/g, " & ")}</div>
+              <div key={category} className="bg-white mb-1 rounded-2xl overflow-hidden">
+                <div className="bg-gray-50 px-4 py-2 flex items-center justify-between cursor-pointer rounded-2xl">
+                  <div className="text-md font-bold text-black uppercase">{category.replace(/_/g, " & ")}</div>
                   <ChevronDown className="h-4 w-4 text-black" />
                 </div>
                 <div className="px-4">
                   {Object.entries(details as Record<string, string>).map(([key, value], index, array) => (
                     <div key={key} className={`flex ${index < array.length - 1 ? "border-b border-gray-200" : ""}`}>
-                      <div className="w-32 py-3 text-gray-700 font-medium capitalize">{key.replace(/_/g, " ")}</div>
-                      <div className="w-64 py-3 text-gray-900 text-wrap">{value}</div>
+                      <div className="text-sm w-32 py-3 text-gray-700 font-medium capitalize">{key.replace(/_/g, " ")}</div>
+                      <div className="text-sm w-64 py-3 text-gray-900 text-wrap">{value}</div>
                     </div>
                   ))}
                 </div>
@@ -376,16 +345,16 @@ export default async function BlogPage({ params }: Params) {
           </div>
 
           {/* Sidebar */}
-          <div className="bg-gray-50 p-4">
+          <div className="bg-gray-50 p-4 rounded-2xl">
             {/* Related Devices */}
             <div className="bg-gray-50 px-4 py-2 flex items-center justify-between">
-                <h2 className="font-bold text-black">{`More from ${device.brand_name}`}</h2>
+                <h2 className="text-sm font-bold text-black">{`More from ${device.brand_name}`}</h2>
                 <ChevronRight className="h-4 w-4 text-black" />
               </div>
-            <div className="mb-6">
-              {moreFromBrand?.slice(0, 7).map((item) => (
+            <div className=" mb-6 ">
+              {moreFromBrand?.map((item) => (
                 <Link key={item.name_url} href={`/blog/${item.name_url}`}>
-                  <div className="bg-white mb-1 px-4 py-3 hover:bg-gray-50 cursor-pointer border-b border-gray-50">
+                  <div className="bg-white rounded-2xl mb-1 px-4 py-3 hover:bg-gray-50 cursor-pointer border-b border-gray-50">
                     <div className="text-sm font-medium text-gray-900">{item.name}</div>
                   </div>
                 </Link>
@@ -393,7 +362,7 @@ export default async function BlogPage({ params }: Params) {
             </div>
 
             {/* Brands Section */}
-            <div className="bg-white">
+            <div className="bg-gray-50 rounded-2xl ">
               <div className="bg-gray-50 px-4 py-2 flex items-center justify-between">
                 <h2 className="font-bold text-black">BRANDS</h2>
                 <ChevronRight className="h-4 w-4 text-black" />
@@ -402,7 +371,7 @@ export default async function BlogPage({ params }: Params) {
                 {uniqueBrands.slice(0, 9).map((brand) => (
                   <div
                     key={brand}
-                    className="flex items-center justify-between px-4 py-3 border-b border-gray-100 hover:bg-gray-50 cursor-pointer"
+                    className="flex items-center justify-between mb-1 px-4 py-3 bg-white hover:bg-gray-50 cursor-pointer rounded-2xl"
                   >
                     <span className="text-gray-900 font-medium">{brand}</span>
                     <ChevronRight className="h-4 w-4 text-red-500" />
@@ -418,7 +387,7 @@ export default async function BlogPage({ params }: Params) {
           </div>
         </div>
         <div className='bg-white'>
-        <div className='ml-20 flex flex-col max-w-4xl justify-center items-center bg-white'>
+        <div className='text-[0.6rem] ml-4 flex flex-col max-w-4xl justify-center items-center bg-white'>
          <h3 className='mt-4 text-center'> 
           <strong>Disclaimer: </strong>  
           We do not guarantee that the information on this page is 100% accurate and up to date.  
