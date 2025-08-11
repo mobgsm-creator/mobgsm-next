@@ -177,8 +177,8 @@ export async function generateMetadata( props: { params: Promise<{ slug: string 
 
 // Static component for the main device content
 async function StaticDeviceContent({ slug }: { slug: string }) {
-  const { pureSlug, rawCountry } = parseSlug(slug);
-  console.log(rawCountry)
+  const { pureSlug,  } = parseSlug(slug);
+ 
   const supabase = createClient()
 
   const { data: device, error } = await supabase.from("devices").select("*").eq("name_url", pureSlug).single()
