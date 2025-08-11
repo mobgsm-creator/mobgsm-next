@@ -19,7 +19,7 @@ export default function DynamicBrandLinks({ uniqueBrands}: DynamicCountryLinksPr
         className="bg-gray-50 px-4 py-2 flex items-center justify-between cursor-pointer"
         onClick={() => setIsOpen(!isOpen)}
       >
-        <div className="mt-2 font-bold text-black">BRANDS</div>
+        <h2 className="mt-2 font-bold text-black">BRANDS</h2>
         <ChevronRight
           className={`h-4 w-4 text-black transition-transform ${isOpen ? "rotate-90" : ""}`}
         />

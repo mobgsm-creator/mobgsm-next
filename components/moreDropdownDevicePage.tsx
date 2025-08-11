@@ -24,15 +24,15 @@ export default function DynamicMoreLinks({ more, brand}: DynamicCountryLinksProp
         className="bg-gray-50 px-4 py-2 flex items-center justify-between cursor-pointer"
         onClick={() => setIsOpen(!isOpen)}
       >
-        <div className="mt-2 font-bold text-black">MORE FROM {brand}</div>
+        <h2 className="mt-2 font-bold text-black">MORE FROM {brand.toUpperCase()}</h2>
         <ChevronRight
           className={`h-4 w-4 text-black transition-transform ${isOpen ? "rotate-90" : ""}`}
         />
       </div>
   
       {/* Dropdown list */}
-      {isOpen && (
-        <div className="max-h-[23rem] overflow-y-auto"> {/* scrollable container */}
+      {!isOpen && (
+        <div className="max-h-[22rem] overflow-y-auto"> {/* scrollable container */}
           {more.map((dev, index) => (
                   <div
                     key={index}

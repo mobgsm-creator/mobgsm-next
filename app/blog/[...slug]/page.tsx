@@ -179,9 +179,6 @@ export async function generateMetadata( props: { params: Promise<{ slug: string 
 async function StaticDeviceContent({ slug }: { slug: string }) {
   const { pureSlug, rawCountry } = parseSlug(slug);
 
-  console.log("pureSlug:", pureSlug)
-  console.log("country:", rawCountry)
-
   const supabase = createClient()
 
   const { data: device, error } = await supabase.from("devices").select("*").eq("name_url", pureSlug).single()
@@ -191,7 +188,7 @@ async function StaticDeviceContent({ slug }: { slug: string }) {
   const json = device.json
   const specs = json?.data || {}
   const brandName = device.brand_name
-  console.log(brandName)
+
   let img_specs : ImgSpecs = {};
 
 if (device?.specs) {
@@ -211,8 +208,7 @@ if (device?.specs) {
     .eq("brand_name", brandName)
     .neq("id", device.id)
   
-    
-  console.log(moreFromBrand)
+   
     const { data } = await supabase
   .from("devices")
   .select("brand_name");
@@ -277,6 +273,10 @@ export default async function BlogPage({ params }: Params) {
           {/* Main Content */}
           <div className="flex-1 bg-gray-50 rounded-2xl">
             <div className="bg-white p-4 border-b rounded-2xl">
+            <h1 className="text-2xl font-bold text-gray-900 mb-2">
+  {`${device.name} ${country ? `Price in ${country}` : ''}`}
+</h1>
+
               <div className="flex flex-row gap-4 bg-white p-4 rounded-2xl ">
                 {/* Left: Image */}
                 <div className="w-[150px] h-[150px] flex items-center justify-center bg-white ">
@@ -326,13 +326,13 @@ export default async function BlogPage({ params }: Params) {
                 </div>
               </div>
 
-              <h1 className="text-md font-bold uppercase mt-4 ">
+              <h2 className="text-md font-bold uppercase mt-4 ">
                 {device.name} FULL SPECIFICATIONS
                 {/* Dynamic pricing component */}
                 <Suspense fallback={<div>Loading price...</div>}>
                   <DynamicCountryContent device={device} slugcountry={country} />
                 </Suspense>
-              </h1>
+              </h2>
             </div>
 
             
