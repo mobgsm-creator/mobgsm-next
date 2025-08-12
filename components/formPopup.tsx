@@ -30,7 +30,7 @@ export default function FormPopup({ onClose }: ComparePopupProps) {
     setMessage("")
 
     try {
-      const res = await fetch("http://localhost:3000/listings/api/form", {
+      const res = await fetch("https://mobgsm.com/api/form", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData ),

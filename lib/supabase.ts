@@ -19,7 +19,7 @@ export function createClient() {
     console.log("Fetching products from Supabase...")
 
     try {
-      const response = await fetch(`/listings/api/products?country=${country}`, {
+      const response = await fetch(`/api/products?country=${country}`, {
       cache: "force-cache", 
     })
     //console.log(response)
@@ -39,7 +39,7 @@ export function createClient() {
 export async function getBNPL(): Promise<BNPLProvider[]> {
 
   try {
-    const response = await fetch(`/listings/api/BNPL`, {
+    const response = await fetch(`/api/BNPL`, {
       cache: "force-cache", // Disable caching for real-time data
     })
 
@@ -59,7 +59,7 @@ export async function getESIM(): Promise<ESIMProvider[]> {
   console.log("cache")
   try {
 
-    const response = await fetch(`/listings/api/ESIM`, {
+    const response = await fetch(`/api/ESIM`, {
       cache: "force-cache", // Disable caching for real-time data
     })
     console.log(response)
@@ -78,7 +78,7 @@ export async function getESIM(): Promise<ESIMProvider[]> {
 export async function getReloadlyAirtime(): Promise<reloadly[]> {
 
   try {
-    const response = await fetch(`/listings/api/reloadly_airtime`, {
+    const response = await fetch(`/api/reloadly_airtime`, {
       cache: "force-cache", // Disable caching for real-time data
     })
     //console.log(response)
@@ -98,7 +98,7 @@ export async function getReloadlyAirtime(): Promise<reloadly[]> {
 export async function getReloadlyGifts(): Promise<reloadly[]> {
 
   try {
-    const response = await fetch(`/listings/api/reloadly_giftcards`, {
+    const response = await fetch(`/api/reloadly_giftcards`, {
       cache: "force-cache", // Disable caching for real-time data
     })
     //console.log(response)
@@ -117,7 +117,7 @@ export async function getReloadlyGifts(): Promise<reloadly[]> {
 export async function getDevices(): Promise<Device[]> {
 
   try {
-    const response = await fetch(`/listings/api/devices`, {
+    const response = await fetch(`/api/devices`, {
       cache: "force-cache", // Disable caching for real-time data
     })
     //console.log(response)

@@ -31,7 +31,7 @@ export default function DynamicBrandLinks({ uniqueBrands}: DynamicCountryLinksPr
         {uniqueBrands.map((brand) => (
           <Link
             key={brand}
-            href={`https://mobgsm.com/listings/blog/#${brand}`}
+            href={`https://mobgsm.com/mobile/#${brand}`}
             className="flex items-center justify-between mb-1 px-4 py-3 bg-white hover:bg-gray-50 cursor-pointer rounded-2xl"
           >
             <span className="text-gray-900 font-medium">{brand}</span>

@@ -49,7 +49,7 @@ export default function DynamicCountryLinks({ deviceSlug, country, settings }: D
             .map(([code, cfg]) => (
               <a
                 key={code}
-                href={`https://mobgsm.com/listings/blog/${deviceSlug}-price-in-${cfg.country.replace(" ", "-")}`}
+                href={`https://mobgsm.com/mobile/${deviceSlug}-price-in-${cfg.country.replace(" ", "-")}`}
                 className="flex items-center justify-between mb-1 px-4 py-3 bg-white hover:bg-gray-50 cursor-pointer rounded-2xl"
               >
                 <span className="text-gray-900 font-medium">

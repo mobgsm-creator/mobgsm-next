@@ -107,16 +107,16 @@ export async function generateMetadata( props: { params: Promise<{ slug: string 
   if (entry) {
     // Match found → single canonical
     const [key] = entry;
-    canonical = `https://${key}.mobgsm.com/listings/blog/${pureSlug}-price-in-${rawCountry}`;
+    canonical = `https://${key}.mobgsm.com/mobile/${pureSlug}-price-in-${rawCountry}`;
   } else {
     // No match → fallback to a default canonical
-    canonical = `https://mobgsm.com/listings/blog/${pureSlug}`;
+    canonical = `https://mobgsm.com/mobile/${pureSlug}`;
 
     // And add alternates for all countries
     alternatesLanguages = Object.fromEntries(
       Object.keys(settings).map(key => [
         key,
-        `https://${key}.mobgsm.com/listings/blog/${pureSlug}-price-in-${settings[key].country.toLowerCase()}`
+        `https://${key}.mobgsm.com/mobile/${pureSlug}-price-in-${settings[key].country.toLowerCase()}`
       ])
     );
   }
@@ -170,7 +170,7 @@ export async function generateMetadata( props: { params: Promise<{ slug: string 
       title: `${device.name} ${country ? `Price in ${country} ${new Date().toLocaleDateString("en-US", { month: "long", year: "numeric" })} & Specifications | MobGsm` : '| MobGsm'}`,
       description: device.description ? device.description : `View detailed full specifications, mobile price and reviews about ${device.name}.`,
       images: [device.image || "/opengraph-image.png"],
-      url: `https://mobgsm.com/listings/blog/${pureSlug}`,
+      url: `https://mobgsm.com/mobile/${pureSlug}`,
     },
   }
 }
@@ -264,7 +264,7 @@ export default async function BlogPage({ params }: Params) {
       <div className="min-h-screen  bg-white">
         <header className="bg-white shadow-sm border-b">
         <div className=" mx-auto px-4 sm:px-6 lg:px-8 py-4 relative">
-          <Image src="/listings/MOBGSM-svg-vector.svg" alt="" width={40} height={40} />
+          <Image src="/MOBGSM-svg-vector.svg" alt="" width={40} height={40} />
           
         </div>
         </header>
