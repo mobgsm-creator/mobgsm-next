@@ -189,7 +189,7 @@ export default function ProductCard({ product }: ProductCardProps) {
 </div>
   
 ) : (
-  <Link href={`/blog/${currentProduct.product_links}`}>
+  <Link href={`/mobile/${currentProduct.product_links}`}>
   <div className="flex items-center justify-center h-32 w-full bg-white rounded-md shadow-inner p-2 hover:shadow-lg transition-transform transform hover:scale-105">
   <img
     src={currentProduct.img_link}
