@@ -95,7 +95,7 @@ export default function BlogListPage() {
             {brandMap[selectedBrand].map((device) => (
               <Link
                 key={device.id}
-                href={`/blog/${device.name_url}`}
+                href={`/mobile/${device.name_url}`}
                 className="group block bg-white rounded-lg shadow hover:shadow-lg overflow-hidden border border-gray-200"
               >
                 <div className="relative w-full h-48 bg-gray-100 hover:shadow-lg transition-transform transform hover:scale-105">
