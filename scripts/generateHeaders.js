@@ -18,7 +18,7 @@ async function generateHeaders() {
   let headersContent = "";
 
   devices.forEach(({ name_url }) => {
-    headersContent += `/mobile_test/${name_url}\n`;
+    headersContent += `/mobile/${name_url}\n`;
     headersContent += `  Cache-Control: public, max-age=31536000, immutable\n\n`;
   });
 

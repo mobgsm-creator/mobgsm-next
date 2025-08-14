@@ -4,12 +4,12 @@ import { ChevronDown } from "lucide-react"
 
 import Image from "next/image"
 import { settings as is } from "@/public/combined_settings"
-import { headers } from "next/headers"
+
 import { Suspense } from "react"
 import  DynamicCountryLinks  from "@/components/countryDropdownDevicePage"
 import DynamicBrandLinks from "@/components/brandsDropdownDevicePage"
 import DynamicMoreLinks from "@/components/moreDropdownDevicePage"
-export const runtime = 'edge';
+//export const runtime = 'edge';
 //redeploy
 function parseSlug(slugArray: string) {
   
@@ -71,23 +71,23 @@ interface Params {
   params: Promise<{ slug: string }>
 }
 
-// // Pre-generate all device pages at build time
-// export async function generateStaticParams() {
-//   const supabase = createClient()
+// Pre-generate all device pages at build time
+export async function generateStaticParams() {
+  const supabase = createClient()
 
-//   const { data: devices } = await supabase.from("devices").select("name_url") // Adjust based on your needs
+  const { data: devices } = await supabase.from("devices").select("name_url").limit(10) // Adjust based on your needs
 
-//   if (!devices) return []
+  if (!devices) return []
 
-//   return devices.map((device) => ({
-//     slug: device.name_url,
-//   }))
-// }
+  return devices.map((device) => ({
+    slug: [device.name_url],
+  }))
+}
 
-export const dynamic = 'force-dynamic'
+//export const dynamic = 'force-dynamic'
 
 //export const revalidate = 86400 // 24 hours
-export const dynamicParams = true
+//export const dynamicParams = true
 
 
 // Static metadata generation
@@ -137,7 +137,7 @@ export async function generateMetadata( props: { params: Promise<{ slug: string 
   }
 
   return {
-    title: `${device.name} ${country ? `Price in ${country} ${new Date().toLocaleDateString("en-US", { month: "long", year: "numeric" })} & Specifications | MobGsm` : '| MobGsm'}`,
+    title: `${device.name} ${country ? `Price in ${country}  & Specifications | MobGsm` : '| MobGsm'}`,
     description: device.description ? device.description : `View detailed full specifications, mobile price and reviews about ${device.name}.`,
     keywords: [...(device.keywords?.split(",") || [device.name?.split(" ")]), ...( `mobile,price,specifications,specs,information,info,reviews"`.split(","))].join(","),
     alternates: {
@@ -158,7 +158,7 @@ export async function generateMetadata( props: { params: Promise<{ slug: string 
       }
     },
     openGraph: {
-      title: `${device.name} ${country ? `Price in ${country} ${new Date().toLocaleDateString("en-US", { month: "long", year: "numeric" })} & Specifications | MobGsm` : '| MobGsm'}`,
+      title: `${device.name} ${country ? `Price in ${country} & Specifications | MobGsm` : '| MobGsm'}`,
       description: device.description ? `View detailed full specifications, mobile price and reviews about ${device.name}.` : "",
       images: [device.image || "/opengraph-image.png"],
       type: "article",
@@ -167,7 +167,7 @@ export async function generateMetadata( props: { params: Promise<{ slug: string 
     twitter: {
       card: "summary_large_image",
       site: "@mobgsm",
-      title: `${device.name} ${country ? `Price in ${country} ${new Date().toLocaleDateString("en-US", { month: "long", year: "numeric" })} & Specifications | MobGsm` : '| MobGsm'}`,
+      title: `${device.name} ${country ? `Price in ${country} & Specifications | MobGsm` : '| MobGsm'}`,
       description: device.description ? device.description : `View detailed full specifications, mobile price and reviews about ${device.name}.`,
       images: [device.image || "/opengraph-image.png"],
       url: `https://mobgsm.com/mobile/${pureSlug}`,
@@ -221,15 +221,13 @@ if (device?.specs) {
 
 // Dynamic component for country-specific content
 function DynamicCountryContent({ device, slugcountry}: { device: any, slugcountry:string|null }) {//eslint-disable-line
-  const headersList = headers()
-  const subdomain = headersList.get("x-subdomain") || "us"
+  
   
   const country = slugcountry
   const entry = Object.entries(settings).find(
     ([, value]) => value.country.toLowerCase() === country?.toLowerCase()
   )
   const setting =  (entry ? settings[entry[0]] : undefined) 
-  ?? settings[subdomain]
   ?? settings["us"]
   
   const currency = setting.currency
@@ -382,7 +380,7 @@ export default async function BlogPage({ params }: Params) {
      <div>
      <footer className="bg-white border-t mt-8">
        <div className=" mx-auto px-4 py-6 text-center text-gray-600">
-         © {new Date().getFullYear()} MobGsm. All rights reserved.
+         © MobGsm 2025. All rights reserved.
        </div>
      </footer>
     </div></div>
