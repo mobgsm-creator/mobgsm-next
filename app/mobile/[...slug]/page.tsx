@@ -9,7 +9,7 @@ import { Suspense } from "react"
 import  DynamicCountryLinks  from "@/components/countryDropdownDevicePage"
 import DynamicBrandLinks from "@/components/brandsDropdownDevicePage"
 import DynamicMoreLinks from "@/components/moreDropdownDevicePage"
-//export const runtime = 'edge';
+export const runtime = 'edge';
 //redeploy
 
 function parseSlug(slugArray: string) {
