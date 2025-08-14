@@ -4,7 +4,7 @@ import { ChevronDown } from "lucide-react"
 
 import Image from "next/image"
 import { settings as is } from "@/public/combined_settings"
-import { headers } from "next/headers"
+
 import { Suspense } from "react"
 import  DynamicCountryLinks  from "@/components/countryDropdownDevicePage"
 import DynamicBrandLinks from "@/components/brandsDropdownDevicePage"
@@ -221,15 +221,13 @@ if (device?.specs) {
 
 // Dynamic component for country-specific content
 function DynamicCountryContent({ device, slugcountry}: { device: any, slugcountry:string|null }) {//eslint-disable-line
-  const headersList = headers()
-  const subdomain = headersList.get("x-subdomain") || "us"
+  
   
   const country = slugcountry
   const entry = Object.entries(settings).find(
     ([, value]) => value.country.toLowerCase() === country?.toLowerCase()
   )
   const setting =  (entry ? settings[entry[0]] : undefined) 
-  ?? settings[subdomain]
   ?? settings["us"]
   
   const currency = setting.currency
@@ -382,7 +380,7 @@ export default async function BlogPage({ params }: Params) {
      <div>
      <footer className="bg-white border-t mt-8">
        <div className=" mx-auto px-4 py-6 text-center text-gray-600">
-         © {new Date().getFullYear()} MobGsm. All rights reserved.
+         © MobGsm 2025. All rights reserved.
        </div>
      </footer>
     </div></div>
