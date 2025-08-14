@@ -1,4 +1,7 @@
 const nextConfig = {
+  experimental: {
+    cpus: 4 // Limit build to 4 CPU threads
+  },
   eslint: {
     ignoreDuringBuilds: false,
   },
