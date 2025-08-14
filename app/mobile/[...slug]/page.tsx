@@ -75,7 +75,7 @@ interface Params {
 export async function generateStaticParams() {
   const supabase = createClient()
 
-  const { data: devices } = await supabase.from("devices").select("name_url").limit(10) // Adjust based on your needs
+  const { data: devices } = await supabase.from("devices").select("name_url") // Adjust based on your needs
 
   if (!devices) return []
 
