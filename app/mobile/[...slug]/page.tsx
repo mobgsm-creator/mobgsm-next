@@ -9,7 +9,7 @@ import { Suspense } from "react"
 import  DynamicCountryLinks  from "@/components/countryDropdownDevicePage"
 import DynamicBrandLinks from "@/components/brandsDropdownDevicePage"
 import DynamicMoreLinks from "@/components/moreDropdownDevicePage"
-export const runtime = 'edge';
+//export const runtime = 'edge';
 //redeploy
 
 function parseSlug(slugArray: string) {
@@ -73,21 +73,21 @@ interface Params {
 }
 
 // Pre-generate all device pages at build time
-// export async function generateStaticParams() {
-//   const supabase = createClient()
+export async function generateStaticParams() {
+  const supabase = createClient()
 
-//   const { data: devices } = await supabase.from("devices").select("name_url") // Adjust based on your needs
+  const { data: devices } = await supabase.from("devices").select("name_url") // Adjust based on your needs
 
-//   if (!devices) return []
+  if (!devices) return []
 
-//   return devices.map((device) => ({
-//     slug: [device.name_url],
-//   }))
-// }
+  return devices.map((device) => ({
+    slug: [device.name_url],
+  }))
+}
 
-export const dynamic = 'force-dynamic'
-
-export const revalidate =184600 // 24 hours
+//export const dynamic = 'force-dynamic'
+//
+//export const revalidate =184600 // 24 hours
 //export const dynamicParams = true
 
 
