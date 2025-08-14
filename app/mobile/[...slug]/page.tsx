@@ -198,7 +198,8 @@ if (device?.specs) {
     const safeSpecs = device.specs.replace('" inches', 'inches');
     img_specs = JSON.parse(safeSpecs);
   } catch (e) {
-    console.error('Invalid JSON in device.specs:', e);
+    console.error(e)
+    console.error('Invalid JSON in device.specs:', device.specs);
   }
 }
 
