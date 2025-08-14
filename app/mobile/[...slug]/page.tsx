@@ -87,7 +87,7 @@ export async function generateStaticParams() {
 
 //export const dynamic = 'force-dynamic'
 
-//export const revalidate = 0 // 24 hours
+export const revalidate =184600 // 24 hours
 //export const dynamicParams = true
 
 
