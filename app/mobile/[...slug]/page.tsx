@@ -11,6 +11,7 @@ import DynamicBrandLinks from "@/components/brandsDropdownDevicePage"
 import DynamicMoreLinks from "@/components/moreDropdownDevicePage"
 //export const runtime = 'edge';
 //redeploy
+console.log("here")
 function parseSlug(slugArray: string) {
   
   const fullSlug = slugArray[0] || ''
@@ -86,7 +87,7 @@ export async function generateStaticParams() {
 
 //export const dynamic = 'force-dynamic'
 
-//export const revalidate = 86400 // 24 hours
+//export const revalidate = 0 // 24 hours
 //export const dynamicParams = true
 
 
