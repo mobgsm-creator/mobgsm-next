@@ -11,7 +11,7 @@ import DynamicBrandLinks from "@/components/brandsDropdownDevicePage"
 import DynamicMoreLinks from "@/components/moreDropdownDevicePage"
 //export const runtime = 'edge';
 //redeploy
-console.log("here")
+
 function parseSlug(slugArray: string) {
   
   const fullSlug = slugArray[0] || ''
