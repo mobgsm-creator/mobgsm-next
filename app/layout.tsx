@@ -21,6 +21,7 @@ export default function RootLayout({
     <html lang="en">
        <Head>
         {/* Preconnect to speed up S3 images */}
+        <link rel="preload" href="/_next/static/css/ea3013c466b4c6eb.css" as="style" />
         <link rel="preconnect" href="https://s3.amazonaws.com" crossOrigin="" />
       </Head>
       <body className={inter.className}>{children}</body>
