@@ -21,14 +21,14 @@ export default function SortOptions() {
   }
 
   return (
-    <div className="flex items-center gap-2">
+    <div className="flex text-center items-center gap-2">
       
       <Select value={currentSort} onValueChange={handleSortChange}>
-        <SelectTrigger className="w-24">
-          <SelectValue placeholder="Select sorting" />
+        <SelectTrigger className="w-full flex justify-center items-center">
+          <SelectValue placeholder="Select sorting" className="text-center" />
         </SelectTrigger>
-        <SelectContent>
-          <SelectItem value="default">Default</SelectItem>
+        <SelectContent className="text-center">
+          <SelectItem value="default">Sort</SelectItem>
           <SelectItem value="price-low">Price: Low to High</SelectItem>
           <SelectItem value="price-high">Price: High to Low</SelectItem>
       

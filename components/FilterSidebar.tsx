@@ -1,8 +1,8 @@
 "use client"
-
+import SortOptions from './SortOptions'
 import { useState, useEffect } from "react"
 import { useRouter, useSearchParams } from "next/navigation"
-import { Slider } from "../components/ui/slider"
+//import { Slider } from "../components/ui/slider"
 import { Checkbox } from "../components/ui/checkbox"
 import { Button } from "../components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "../components/ui/card"
@@ -167,7 +167,7 @@ useEffect(() => {
 
         <Separator />
 
-        {/* Price Range Filter */}
+        {/* Price Range Filter
         {view === 'products' && (
         <div>
           <h3 className="font-medium mb-3">Price Range</h3>
@@ -178,7 +178,7 @@ useEffect(() => {
               <span>₹{priceRange[1].toLocaleString()}</span>
             </div>
           </div>
-        </div>)}
+        </div>)} */}
 
         <Separator />
 
@@ -192,6 +192,7 @@ useEffect(() => {
           <Button onClick={clearFilters} variant="outline" className="w-full">
             Clear All
           </Button>
+          {view === 'products' && <SortOptions />}
         </div>
       </CardContent>
     </Card></>

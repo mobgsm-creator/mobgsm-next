@@ -185,6 +185,7 @@ export default function ProductCard({ product }: ProductCardProps) {
     src={currentProduct.img_link}
     alt={currentProduct.product_name}
     className="h-20 w-20 object-contain p-1 drop-shadow-sm"
+    fill
   />
 </div>
   
@@ -195,6 +196,7 @@ export default function ProductCard({ product }: ProductCardProps) {
     src={currentProduct.img_link}
     alt={currentProduct.product_name}
     className="h-20 w-20 object-contain p-1 drop-shadow-sm"
+    fill
   />
 </div></Link>
 )}
@@ -213,6 +215,7 @@ export default function ProductCard({ product }: ProductCardProps) {
             width={60}
             height={20}
             className="h-5 w-auto"
+            fill
           />
         </div>)}
 
@@ -308,6 +311,7 @@ export default function ProductCard({ product }: ProductCardProps) {
                   src={currentProduct.Image_URL}
                   alt={currentProduct.Name}
                   className="h-20 w-20 object-contain p-1 drop-shadow-sm"
+                  fill
                 />
               </div>
                 <Badge className="absolute top-2 right-2 bg-blue-500 hover:bg-blue-600">
@@ -356,6 +360,7 @@ export default function ProductCard({ product }: ProductCardProps) {
                   src={currentProduct.img_link}
                   alt={currentProduct.provider}
                   className="h-20 w-20 object-contain p-1 drop-shadow-sm"
+                  fill
                 />
               </div>
                 <Badge className="absolute top-2 right-2 bg-green-500 hover:bg-green-600">
@@ -461,6 +466,7 @@ export default function ProductCard({ product }: ProductCardProps) {
       src={currentProduct.img_link}
       alt={currentProduct.operator}
       className="h-20 w-20 object-contain p-1 drop-shadow-sm"
+      fill
       priority
     />
   </div>

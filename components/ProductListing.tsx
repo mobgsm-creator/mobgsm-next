@@ -5,7 +5,7 @@ import type { Product, ESIMProvider,BNPLProvider,reloadly } from "../lib/types"
 import { useSearchParams, useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import ProductCard from './ProductCard'
-import SortOptions from './SortOptions'
+
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
 
 type GroupedProduct = {
@@ -204,11 +204,14 @@ export default function ProductListing({ product, esimProviders, BNPLProvider, a
   <ToggleTabs currentView={view} onChange={setView} />
   
   
-  <h2 className="hidden lg:block text-xs font-semibold text-gray-900">
-    {totalProducts} Products Found
-  </h2>
+  <h2
+  className="hidden lg:inline-block text-xs font-semibold text-blue-700 border border-blue-500 rounded-md px-2 py-1 bg-blue-50"
+>
+  {totalProducts > 0 ? `${totalProducts} Products Found` : "No Products Found"}
+</h2>
 
-  {view === 'products' && <SortOptions />}
+
+  
 </div>
 
     

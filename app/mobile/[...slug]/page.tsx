@@ -283,6 +283,7 @@ export default async function BlogPage({ params }: Params) {
                   <Image
                     src={device.image || "/placeholder.svg"}
                     alt={device.name}
+                    fill
                     className="object-contain max-w-full max-h-full"
                     loading="lazy"
                   />

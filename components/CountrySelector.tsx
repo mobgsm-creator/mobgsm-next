@@ -166,6 +166,8 @@ const CountrySelector = ({ country, setCountry }: Props) => {
                     src={`https://flagcdn.com/w20/${selectedCountry.code.toLocaleLowerCase()}.png`}
                     alt={selectedCountry.name}
                     className="inline-block w-5 h-4 mr-2"
+                    width={20}
+                    height={20}
                   />
              
               <span>{selectedCountry.name}</span>
@@ -194,6 +196,8 @@ const CountrySelector = ({ country, setCountry }: Props) => {
                     src={`https://flagcdn.com/w20/${item.code.toLowerCase()}.png`}
                     alt={item.name}
                     className="inline-block w-5 h-4 mr-2"
+                    width={20}
+                    height={20}
                   />
                   {item.name}
                 </Select.ItemText>
