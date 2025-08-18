@@ -2,7 +2,7 @@ import type React from "react"
 import type { Metadata } from "next"
 import { Inter } from "next/font/google"
 import "./globals.css"
-
+import Head from "next/head"
 const inter = Inter({ subsets: ["latin"] })
 
 export const metadata: Metadata = {
@@ -19,6 +19,10 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
+       <Head>
+        {/* Preconnect to speed up S3 images */}
+        <link rel="preconnect" href="https://s3.amazonaws.com" crossOrigin="" />
+      </Head>
       <body className={inter.className}>{children}</body>
     </html>
   )

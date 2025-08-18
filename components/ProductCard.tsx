@@ -461,6 +461,7 @@ export default function ProductCard({ product }: ProductCardProps) {
       src={currentProduct.img_link}
       alt={currentProduct.operator}
       className="h-20 w-20 object-contain p-1 drop-shadow-sm"
+      priority
     />
   </div>
 
