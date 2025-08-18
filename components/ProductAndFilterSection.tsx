@@ -3,9 +3,7 @@ import { getProducts, getBNPL, getESIM, getReloadlyAirtime, getReloadlyGifts, ge
 import { useState, useEffect } from "react"
 import ProductListing from "./ProductListing"
 import FilterSidebar from "./FilterSidebar"
-import { Skeleton } from "../components/ui/skeleton"
 import type { Product, ESIMProvider,BNPLProvider, reloadly } from "../lib/types"
-import { Suspense } from "react"
 import { Filter } from "lucide-react"
 interface ProductListingProps {
     country: string
@@ -22,7 +20,6 @@ type Device = {
 export default function ProductSectionWrapper({ country } : ProductListingProps) {
   const [view, setView] = useState<'products' | 'esim' | 'bnpl' | 'reloadly-airtime' | 'reloadly-gifts'>('reloadly-airtime')
   const priorityCountries = ['AE', 'AF', 'AG', 'AI', 'AL', 'AM', 'AO', 'AR', 'AS', 'AT', 'AU', 'AW', 'AZ', 'BB', 'BD', 'BE', 'BF', 'BG', 'BH', 'BI', 'BJ', 'BM', 'BO', 'BR', 'BS', 'BW', 'BY', 'BZ', 'CA', 'CD', 'CF', 'CG', 'CH', 'CI', 'CL', 'CM', 'CN', 'CO', 'CR', 'CU', 'CY', 'CZ', 'DE', 'DJ', 'DK', 'DM', 'DO', 'DZ', 'EC', 'EE', 'EG', 'ER', 'ES', 'ET', 'FI', 'FJ', 'FR', 'GA', 'GB', 'GD', 'GE', 'GH', 'GM', 'GN', 'GQ', 'GR', 'GT', 'GW', 'GY', 'HN', 'HT', 'ID', 'IE', 'IL', 'IN', 'IQ', 'IR', 'IS', 'IT', 'JM', 'JO', 'JP', 'KE', 'KG', 'KH', 'KM', 'KN', 'KR', 'KW', 'KY', 'KZ', 'LA', 'LB', 'LK', 'LR', 'LS', 'LT', 'LU', 'LV', 'LY', 'MA', 'MD', 'MG', 'ML', 'MM', 'MN', 'MR', 'MS', 'MT', 'MU', 'MV', 'MW', 'MX', 'MY', 'MZ', 'NA', 'NE', 'NG', 'NI', 'NL', 'NO', 'NP', 'NZ', 'OM', 'PA', 'PE', 'PH', 'PK', 'PL', 'PR', 'PT', 'PY', 'QA', 'RO', 'RS', 'RU', 'RW', 'SA', 'SC', 'SD', 'SE', 'SG', 'SI', 'SK', 'SL', 'SN', 'SO', 'SR', 'SV', 'SZ', 'TC', 'TD', 'TG', 'TH', 'TJ', 'TL', 'TN', 'TR', 'TT', 'TZ', 'UA', 'UG', 'US', 'UY', 'UZ', 'VC', 'VE', 'VG', 'VN', 'WS', 'YE', 'ZA', 'ZM', 'ZW']
-  const [loading, setLoading] = useState(true);
   const [isOpen, setIsOpen] = useState(false)
   const [devices, setDevices] = useState<Device[]>([])
   const [product, setProduct] = useState<Product[]>([]);
@@ -33,7 +30,7 @@ export default function ProductSectionWrapper({ country } : ProductListingProps)
   useEffect(() => {
     const fetchData = async () => {
       try {
-        setLoading(true);
+        
         const [products, bnpl, esim, airtime, giftcards, device_list] = await Promise.all([
           getProducts(country),
           getBNPL(),
@@ -49,7 +46,7 @@ export default function ProductSectionWrapper({ country } : ProductListingProps)
         setAirtime(airtime);
         setGifts(giftcards);
         setDevices(device_list);
-        setLoading(false);
+        
       } catch (error) {
         console.error("Error fetching data:", error);
       }
@@ -117,7 +114,7 @@ export default function ProductSectionWrapper({ country } : ProductListingProps)
         `}
       >
         <div className="h-full mt-4 overflow-y-auto p-4 pt-20 lg:pt-0">
-          <Suspense fallback={<Skeleton className="h-96 w-full" />}>
+          
             <FilterSidebar
               product={filteredProducts}
               esimProviders={filteredESIM}
@@ -126,7 +123,7 @@ export default function ProductSectionWrapper({ country } : ProductListingProps)
               gifts={fitleredGifts}
               view={view}
             />
-          </Suspense>
+       
         </div>
       </div>
 
@@ -142,9 +139,7 @@ export default function ProductSectionWrapper({ country } : ProductListingProps)
         )}
       </button>
       <div className="flex-1 min-w-0">
-    {loading ? (
-      <ProductListingSkeleton />
-    ) : (
+    
       <ProductListing
         product={filteredProducts}
         esimProviders={filteredESIM}
@@ -154,23 +149,8 @@ export default function ProductSectionWrapper({ country } : ProductListingProps)
         view={view}
         setView={setView}
       />
-    )}
+   
   </div>
     </div>
   )
 }
-function ProductListingSkeleton() {
-    return (
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        {Array.from({ length: 6 }).map((_, i) => (
-          <div key={i} className="bg-white rounded-lg shadow-md p-4">
-            <Skeleton className="h-48 w-full mb-4" />
-            <Skeleton className="h-4 w-3/4 mb-2" />
-            <Skeleton className="h-4 w-1/2 mb-2" />
-            <Skeleton className="h-6 w-1/3" />
-          </div>
-        ))}
-      </div>
-    )
-  }
-  
