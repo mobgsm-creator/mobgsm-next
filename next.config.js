@@ -7,6 +7,10 @@ const nextConfig = {
     ignoreBuildErrors: false,
   },
   images: {
+    images: {
+      formats: ["image/avif", "image/webp"], // enable AVIF + WebP
+      minimumCacheTTL: 60 * 60 * 24 * 365,
+    },
     domains: ['img.mobgsm.com','fdn2.gsmarena.com',"ibb.co", "via.placeholder.com","s3.amazonaws.com","cdn.reloadly.com"],
     remotePatterns: [
       {
@@ -14,7 +18,7 @@ const nextConfig = {
         hostname: "**",
       },
     ],
-    unoptimized: true,
+   
   },
   experimental: {
     serverActions: {
