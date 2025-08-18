@@ -181,7 +181,7 @@ export default function ProductCard({ product }: ProductCardProps) {
         {currentProduct.product_links?.startsWith('https') ? (
   
   <div className="flex items-center justify-center h-32 w-full bg-white rounded-md shadow-inner p-2 hover:shadow-lg transition-transform transform hover:scale-105">
-  <img
+  <Image
     src={currentProduct.img_link}
     alt={currentProduct.product_name}
     className="h-20 w-20 object-contain p-1 drop-shadow-sm"
@@ -191,7 +191,7 @@ export default function ProductCard({ product }: ProductCardProps) {
 ) : (
   <Link href={`/mobile/${currentProduct.product_links}`}>
   <div className="flex items-center justify-center h-32 w-full bg-white rounded-md shadow-inner p-2 hover:shadow-lg transition-transform transform hover:scale-105">
-  <img
+  <Image
     src={currentProduct.img_link}
     alt={currentProduct.product_name}
     className="h-20 w-20 object-contain p-1 drop-shadow-sm"
@@ -304,7 +304,7 @@ export default function ProductCard({ product }: ProductCardProps) {
               
               <div className="relative">
               <div className="flex items-center justify-center h-32 w-full bg-white rounded-md shadow-inner p-2 hover:shadow-lg transition-transform transform hover:scale-105">
-                <img
+                <Image
                   src={currentProduct.Image_URL}
                   alt={currentProduct.Name}
                   className="h-20 w-20 object-contain p-1 drop-shadow-sm"
@@ -352,7 +352,7 @@ export default function ProductCard({ product }: ProductCardProps) {
                 <div className="flex flex-col h-full border rounded-lg overflow-hidden">
               <div className="relative">
               <div className="flex items-center justify-center h-32 w-full bg-white rounded-md shadow-inner p-2 hover:shadow-lg transition-transform transform hover:scale-105">
-                <img
+                <Image
                   src={currentProduct.img_link}
                   alt={currentProduct.provider}
                   className="h-20 w-20 object-contain p-1 drop-shadow-sm"
@@ -457,7 +457,7 @@ export default function ProductCard({ product }: ProductCardProps) {
 
   {/* Logo */}
   <div className="flex items-center justify-center h-32 w-full bg-white rounded-md shadow-inner p-2">
-    <img
+    <Image
       src={currentProduct.img_link}
       alt={currentProduct.operator}
       className="h-20 w-20 object-contain p-1 drop-shadow-sm"

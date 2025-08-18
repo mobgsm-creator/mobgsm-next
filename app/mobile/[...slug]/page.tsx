@@ -73,17 +73,17 @@ interface Params {
 }
 
 // Pre-generate all device pages at build time
-export async function generateStaticParams() {
-  const supabase = createClient()
+// export async function generateStaticParams() {
+//   const supabase = createClient()
 
-  const { data: devices } = await supabase.from("devices").select("name_url") // Adjust based on your needs
+//   const { data: devices } = await supabase.from("devices").select("name_url") // Adjust based on your needs
 
-  if (!devices) return []
+//   if (!devices) return []
 
-  return devices.map((device) => ({
-    slug: [device.name_url],
-  }))
-}
+//   return devices.map((device) => ({
+//     slug: [device.name_url],
+//   }))
+// }
 
 //export const dynamic = 'force-dynamic'
 //
@@ -280,7 +280,7 @@ export default async function BlogPage({ params }: Params) {
               <div className="flex flex-row gap-4 bg-white p-4 rounded-2xl ">
                 {/* Left: Image */}
                 <div className="w-[150px] h-[150px] flex items-center justify-center bg-white ">
-                  <img
+                  <Image
                     src={device.image || "/placeholder.svg"}
                     alt={device.name}
                     className="object-contain max-w-full max-h-full"
