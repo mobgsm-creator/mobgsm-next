@@ -21,6 +21,7 @@ const nextConfig = {
    
   },
   experimental: {
+    optimizeCss: true,
     serverActions: {
       allowedOrigins: ["localhost:3000"],
     },

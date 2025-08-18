@@ -20,7 +20,23 @@ export default function RootLayout({
   return (
     <html lang="en">
        <Head>
-        
+       <link
+  rel="preload"
+  href="/_next/static/css/6c2e098d8009e3e1.css"
+  as="style"
+  onLoad={(e) => {
+    const link = e.currentTarget as HTMLLinkElement;
+    link.rel = "stylesheet";
+  }}
+/>
+<noscript>
+  <link
+    rel="stylesheet"
+    href="/_next/static/css/6c2e098d8009e3e1.css"
+  />
+</noscript>
+
+
         {/* Preconnect to speed up S3 images */}
         <link rel="preload" href="/_next/static/css/ea3013c466b4c6eb.css" as="style" />
         <link rel="preconnect" href="https://s3.amazonaws.com" crossOrigin="" />
