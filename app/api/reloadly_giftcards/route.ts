@@ -11,7 +11,7 @@ export async function GET() {
     const { data: products, error } = await supabase
       .from("reloadly_giftcards")
       .select(`
-       id, operator, currency, sendable_values, discount, code, flag, img_link
+       id, operator, currency, sendable_values, discount, code, flag, img_link, operator_id
       `)
     
     if (error) {

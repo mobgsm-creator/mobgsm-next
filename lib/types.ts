@@ -59,5 +59,6 @@ export interface reloadly {
   code : string, 
   flag : string,
   img_link : string
+  operator_id: number
 
 }

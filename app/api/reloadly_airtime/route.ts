@@ -11,7 +11,7 @@ export async function GET() {
     const { data: products, error } = await supabase
       .from("reloadly_airtime")
       .select(`
-       id, operator, sendable_values, discount, fx, code, flag, img_link
+       id, operator, sendable_values, discount, fx, code, flag, img_link, operator_id
       `)
     
     if (error) {
