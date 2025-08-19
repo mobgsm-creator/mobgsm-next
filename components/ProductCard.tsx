@@ -24,8 +24,48 @@ export default function ProductCard({ product }: ProductCardProps) {
   const [showCompare, setShowCompare] = useState(false)
   const [showForm, setShowForm] = useState(false)
   const [isOpen, setIsOpen] = useState(false)
-  const [, setSelectedValue] = useState("")
+  const [SelectedValue, setSelectedValue] = useState("")
   const [inputValue, setInputValue] = useState("")
+  const [PhoneValue, setPhoneValue] = useState({
+    countryCode: "",
+    number: ""
+  })
+  const [operatorId,setOperatorId] = useState(0)
+  const [EmailValue, setEmailValue] = useState("")
+  const handleTopup = async () => {
+    const data = {
+      operatorId: operatorId,
+      amount: inputValue || SelectedValue,
+      useLocalAmount: true,
+      customIdentifier: `txn_${Date.now()}`,
+      recipientEmail: EmailValue,
+      recipientPhone: {
+        countryCode: PhoneValue.countryCode,
+        number: PhoneValue.number,
+      },
+
+    }
+
+    try {
+      const response = await fetch("/api/topups", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      })
+
+      if (!response.ok) throw new Error("Topup failed")
+
+      const result = await response.json()
+      console.log("Topup Success:", result)
+      alert("Topup successful ✅")
+    } catch (error) {
+      console.error("Topup Error:", error)
+      alert("Topup failed ❌")
+    }
+  }
+  
 
   const handleReloadlySubmit = async () => {
     const response = await fetch("/api/reloadly_api", {
@@ -48,6 +88,7 @@ export default function ProductCard({ product }: ProductCardProps) {
       return (
         <>
           <DialogDescription className="text-sm font-semibold mb-2">Select Amount</DialogDescription>
+          
           <div className="flex flex-wrap gap-2 mb-4">
             {values.length > 1 ? (values.map((val, i) => {
               const local = (Number(val.trim()) * Number(product.fx)).toFixed(2)
@@ -58,6 +99,7 @@ export default function ProductCard({ product }: ProductCardProps) {
                   onClick={() => {
                     setSelectedValue(local)
                     setInputValue(local)
+                    setOperatorId(product.operator_id)
                   }}
                 >
                   {local}
@@ -75,6 +117,31 @@ export default function ProductCard({ product }: ProductCardProps) {
             className="w-full border rounded p-2 mb-4"
             placeholder="Enter amount"
           />
+          <input
+            type="number"
+            value={EmailValue}
+            onChange={(e) => setEmailValue(e.target.value)}
+            className="w-full border rounded p-2 mb-4"
+            placeholder="Enter Email"
+          />
+          <input
+  type="text"
+  value={PhoneValue.number || ""}
+  onChange={(e) =>
+    setPhoneValue({
+      ...PhoneValue,                
+      countryCode: product.code,    
+      number: e.target.value       
+    })
+  }
+  className="w-full border rounded p-2 mb-4"
+  placeholder="Enter Phone Number"
+/>
+<Button onClick={handleTopup} className="w-full mt-4">
+        Submit Topup
+      </Button>
+
+          <div className='flex justify-between mt-4'>{product.operator_id}</div>
         </>
       )
     } else if (product.img_link.includes("cdn.reloadly")) {
@@ -86,7 +153,7 @@ export default function ProductCard({ product }: ProductCardProps) {
         console.log(product.operator, values)
       return (
         <>
-          <DialogDescription className="text-sm font-semibold mb-2">Select Amount</DialogDescription>
+          <DialogDescription className="text-sm font-semibold mb-2">Select Amount in Local Currency</DialogDescription>
           <div className="flex flex-wrap gap-2 mb-4">
             {values.length > 2 ? (values.map((val, i) => {
               const local = (Number(val.trim())).toFixed(2)
@@ -476,13 +543,13 @@ export default function ProductCard({ product }: ProductCardProps) {
   </p>
 
   {/* Min/Max Values */}
-  {currentProduct.sendable_values && (
+  {/* {currentProduct.sendable_values && (
     <p className="text-xs text-gray-500 text-center">
       {currentProduct.sendable_values.includes("~")
         ? `Min: ${currentProduct.sendable_values.split("~")[0]} / Max: ${currentProduct.sendable_values.split("~")[1]}`
         : currentProduct.sendable_values.includes(",") ? `Min: ${currentProduct.sendable_values.split(",")[0]} / Max: ${currentProduct.sendable_values.split(",").slice(-1)[0]}` : `Value: ${currentProduct.sendable_values}`}
     </p>
-  )}
+  )} */}
 
 <div className="flex justify-center gap-3 mt-2">
   <Button onClick={() => setIsOpen(true)} className="text-xs  w-25">
