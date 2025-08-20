@@ -53,10 +53,13 @@ export default function ProductCard({ product }: ProductCardProps) {
     }))
   }
   const getAirtimeOperatorData = async (operatorId: number) => {
-    console.log("here", operatorId)
+    
     const res = await fetch(`/api/airtime_operator_data?operatorId=${operatorId}`);
     const data = await res.json();
-    return data['geographicalRechargePlans'][0]['localAmounts'];  
+    console.log(data)
+    const result = data?.geographicalRechargePlans?.[0]?.localAmounts 
+             ?? data?.suggestedAmounts ?? data?.localFixedAmounts;
+    return result
 
   }
   const handleGiftcard = async () => {
@@ -145,11 +148,11 @@ export default function ProductCard({ product }: ProductCardProps) {
      
       
     
-    const values = product.sendable_values.includes("~")
-    ? product.sendable_values.split("~")
-    : product.sendable_values.includes(",")
-    ? product.sendable_values.split(",")
-    : [product.sendable_values]
+    // const values = product.sendable_values.includes("~")
+    // ? product.sendable_values.split("~")
+    // : product.sendable_values.includes(",")
+    // ? product.sendable_values.split(",")
+    // : [product.sendable_values]
     //const values = airtimeOperatorData
       return (
         <>
@@ -173,7 +176,7 @@ export default function ProductCard({ product }: ProductCardProps) {
                 </Button>
               )
             })): ( <p>
-              Enter a value between Min value: {values[0]} and Max value: {values[1]}
+              Provider Not Supported
             </p>)
           }
           </div>
