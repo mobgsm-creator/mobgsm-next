@@ -32,22 +32,94 @@ export default function ProductCard({ product }: ProductCardProps) {
   })
   const [operatorId,setOperatorId] = useState(0)
   const [EmailValue, setEmailValue] = useState("")
+  const [airtimeOperatorData, setAirtimeOperatorData] = useState([])
+  const [formData, setFormData] = useState({
+    operatorId: 0,
+    inputValue: 0,
+    selectedValue: "",
+    quantity: 1,
+    userId: "",
+    senderName: "",
+    emailValue: "",
+    recipientCountryCode: "",
+    recipientNumber: "",
+  });
+  
+
+  const handleChange = (field: string, value: string | boolean) => {
+    setFormData((prev) => ({
+      ...prev,
+      [field]: value,
+    }))
+  }
+  const getAirtimeOperatorData = async (operatorId: number) => {
+    console.log("here", operatorId)
+    const res = await fetch(`/api/airtime_operator_data?operatorId=${operatorId}`);
+    const data = await res.json();
+    return data['geographicalRechargePlans'][0]['localAmounts'];  
+
+  }
+  const handleGiftcard = async () => {
+    // Build request payload based on formData
+    const data = {
+      productId: formData.operatorId,
+      quantity: 1, // keep static or make dynamic if needed
+      unitPrice: Number(formData.inputValue) || Number(formData.selectedValue), 
+      productAdditionalRequirements: {
+        userId: formData.userId || "12345", // fallback if not set
+      },
+      senderName: formData.senderName,
+      customIdentifier: `txn_${Date.now()}`,
+      recipientEmail: formData.emailValue,
+      recipientPhoneDetails: {
+        countryCode: formData.recipientCountryCode,
+        phoneNumber: formData.recipientNumber,
+      },
+      preorder : false, // or true based on your logic
+     
+    };
+  
+    console.log("Giftcard Purchase Request:", data);
+  
+    try {
+      const response = await fetch("/api/purchase_giftcard", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      });
+  
+      if (!response.ok) throw new Error("Giftcard purchase failed");
+  
+      const result = await response.json();
+      console.log("Giftcard Purchase Success ✅:", result);
+      alert("Giftcard purchase successful 🎉");
+    } catch (error) {
+      console.error("Giftcard Purchase Error ❌:", error);
+      alert("Giftcard purchase failed");
+    }
+  };
+  
+  
   const handleTopup = async () => {
+    
     const data = {
       operatorId: operatorId,
-      amount: inputValue || SelectedValue,
+      amount: Number(inputValue) || Number(SelectedValue),
       useLocalAmount: true,
       customIdentifier: `txn_${Date.now()}`,
       recipientEmail: EmailValue,
       recipientPhone: {
         countryCode: PhoneValue.countryCode,
-        number: PhoneValue.number,
+        phoneNumber: PhoneValue.number,
       },
+      
 
     }
-
+    console.log(data)
     try {
-      const response = await fetch("/api/topups", {
+      const response = await fetch("/api/topup_airtime", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -67,31 +139,25 @@ export default function ProductCard({ product }: ProductCardProps) {
   }
   
 
-  const handleReloadlySubmit = async () => {
-    const response = await fetch("/api/reloadly_api", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ value: inputValue, product: currentProduct })
-    })
-    const data = await response.json()
-    console.log(data)
-  }
 
-  const renderValues = (product : reloadly) => {
+  const renderValues = (product : reloadly, ) => {//Eslint-disable-line
     if (product.img_link.includes("s3.amazonaws")) {
-      const values = product.sendable_values.includes("~")
-        ? product.sendable_values.split("~")
-        : product.sendable_values.includes(",")
-        ? product.sendable_values.split(",")
-        : [product.sendable_values]
-
+     
+      
+    
+    const values = product.sendable_values.includes("~")
+    ? product.sendable_values.split("~")
+    : product.sendable_values.includes(",")
+    ? product.sendable_values.split(",")
+    : [product.sendable_values]
+    //const values = airtimeOperatorData
       return (
         <>
           <DialogDescription className="text-sm font-semibold mb-2">Select Amount</DialogDescription>
           
           <div className="flex flex-wrap gap-2 mb-4">
-            {values.length > 1 ? (values.map((val, i) => {
-              const local = (Number(val.trim()) * Number(product.fx)).toFixed(2)
+            {airtimeOperatorData.length > 1 ? (airtimeOperatorData.map((val, i) => {
+              const local = val
               return (
                 <Button
                   key={i}
@@ -100,6 +166,7 @@ export default function ProductCard({ product }: ProductCardProps) {
                     setSelectedValue(local)
                     setInputValue(local)
                     setOperatorId(product.operator_id)
+                    
                   }}
                 >
                   {local}
@@ -118,7 +185,7 @@ export default function ProductCard({ product }: ProductCardProps) {
             placeholder="Enter amount"
           />
           <input
-            type="number"
+            type="text"
             value={EmailValue}
             onChange={(e) => setEmailValue(e.target.value)}
             className="w-full border rounded p-2 mb-4"
@@ -141,7 +208,7 @@ export default function ProductCard({ product }: ProductCardProps) {
         Submit Topup
       </Button>
 
-          <div className='flex justify-between mt-4'>{product.operator_id}</div>
+          
         </>
       )
     } else if (product.img_link.includes("cdn.reloadly")) {
@@ -153,37 +220,92 @@ export default function ProductCard({ product }: ProductCardProps) {
         console.log(product.operator, values)
       return (
         <>
-          <DialogDescription className="text-sm font-semibold mb-2">Select Amount in Local Currency</DialogDescription>
-          <div className="flex flex-wrap gap-2 mb-4">
-            {values.length > 2 ? (values.map((val, i) => {
-              const local = (Number(val.trim())).toFixed(2)
-              return (
-                <Button
-                  key={i}
-                  variant="outline"
-                  onClick={() => {
-                    setSelectedValue(local)
-                    setInputValue(local)
-                  }}
-                >
-                  {local}
-                </Button>
-              )
-            })): values.length === 1 ?( <p>
-              Value: {values[0]} 
-            </p>) : ( <p>
-              Enter a value between Min value: {values[0]} and Max value: {values[1]}
-            </p>)
-          }
-          </div>
-          <input
-            type="number"
-            value={inputValue}
-            onChange={(e) => setInputValue(e.target.value)}
-            className="w-full border rounded p-2 mb-4"
-            placeholder="Enter amount"
-          />
-        </>
+      <DialogDescription className="text-sm font-semibold mb-2">
+        Select Amount in Local Currency
+      </DialogDescription>
+
+      <div className="flex flex-wrap gap-2 mb-4">
+        {values.length > 2 ? (
+          values.map((val, i) => {
+            const local = Number(val.trim()).toFixed(2)
+            return (
+              <Button
+                key={i}
+                variant="outline"
+                onClick={() => handleChange("inputValue", local)}
+              >
+                {local}
+              </Button>
+            )
+          })
+        ) : values.length === 1 ? (
+          <p>Value: {values[0]}</p>
+        ) : (
+          <p>
+            Enter a value between Min value: {values[0]} and Max value: {values[1]}
+          </p>
+        )}
+      </div>
+
+      <input
+        type="number"
+        value={formData.quantity}
+        onChange={(e) => handleChange("quantity", e.target.value)}
+        className="w-full border rounded p-2 mb-4"
+        placeholder="Enter Quanitity"
+      />
+      <input
+        type="number"
+        value={formData.inputValue}
+        onChange={(e) => handleChange("inputValue", e.target.value)}
+        className="w-full border rounded p-2 mb-4"
+        placeholder="Enter Amount"
+      />
+
+      
+
+      <input
+        type="text"
+        value={formData.senderName}
+        onChange={(e) => handleChange("senderName", e.target.value)}
+        className="w-full border rounded p-2 mb-4"
+        placeholder="Sender Name"
+      />
+
+      <input
+        type="email"
+        value={formData.emailValue}
+        onChange={(e) => handleChange("emailValue", e.target.value)}
+        className="w-full border rounded p-2 mb-4"
+        placeholder="Recipient Email"
+      />
+      <input
+        type="tel"
+        value={formData.recipientCountryCode}
+        onChange={(e) => handleChange("recipientCountryCode", e.target.value)}
+        className="w-full border rounded p-2 mb-4"
+        placeholder="Recipient Country Code"
+      />
+      <input
+        type="tel"
+        value={formData.recipientNumber}
+        onChange={(e) => handleChange("recipientNumber", e.target.value)}
+        className="w-full border rounded p-2 mb-4"
+        placeholder="Recipient Phone"
+      />
+
+     
+
+      <Button
+        onClick={() => {
+          console.log("Form Data for API:", formData)
+          handleGiftcard() // or handleTopup() based on your logic
+          // 🔥 send formData to your POST API here
+        }}
+      >
+        Submit
+      </Button>
+    </>
       )
     }
   }
@@ -252,6 +374,7 @@ export default function ProductCard({ product }: ProductCardProps) {
     src={currentProduct.img_link}
     alt={currentProduct.product_name}
     className="h-20 w-20 object-contain p-1 drop-shadow-sm"
+    width={40} height={40}
 
   />
 </div>
@@ -263,7 +386,7 @@ export default function ProductCard({ product }: ProductCardProps) {
     src={currentProduct.img_link}
     alt={currentProduct.product_name}
     className="h-20 w-20 object-contain p-1 drop-shadow-sm"
-    
+    width={40} height={40}
   />
 </div></Link>
 )}
@@ -378,7 +501,7 @@ export default function ProductCard({ product }: ProductCardProps) {
                   src={currentProduct.Image_URL}
                   alt={currentProduct.Name}
                   className="h-20 w-20 object-contain p-1 drop-shadow-sm"
-        
+                  width={40} height={40}
                 />
               </div>
                 <Badge className="absolute top-2 right-2 bg-blue-500 hover:bg-blue-600">
@@ -427,7 +550,7 @@ export default function ProductCard({ product }: ProductCardProps) {
                   src={currentProduct.img_link}
                   alt={currentProduct.provider}
                   className="h-20 w-20 object-contain p-1 drop-shadow-sm"
-         
+                  width={40} height={40}
                 />
               </div>
                 <Badge className="absolute top-2 right-2 bg-green-500 hover:bg-green-600">
@@ -534,6 +657,7 @@ export default function ProductCard({ product }: ProductCardProps) {
       alt={currentProduct.operator}
       className="h-20 w-20 object-contain p-1 drop-shadow-sm"
       priority
+      width={40} height={40}
     />
   </div>
 
@@ -552,9 +676,29 @@ export default function ProductCard({ product }: ProductCardProps) {
   )} */}
 
 <div className="flex justify-center gap-3 mt-2">
-  <Button onClick={() => setIsOpen(true)} className="text-xs  w-25">
-    Buy Now
-  </Button>
+<Button
+  onClick={async () => {
+    if (currentProduct.img_link?.includes("s3.amazonaws")) {
+      // Fetch operator data & set state
+      const localAmounts = await getAirtimeOperatorData(currentProduct.operator_id);
+      console.log("Local amounts:", localAmounts);
+      setOperatorId(currentProduct.operator_id);
+      setAirtimeOperatorData(localAmounts);
+      setIsOpen(true);
+    } else {
+      setFormData((prevData) => ({
+        ...prevData,
+        operatorId: currentProduct.operator_id,
+      }));
+      
+      setIsOpen(true);
+    }
+  }}
+  className="text-xs w-25"
+>
+  Buy Now
+</Button>
+
 
       <Button onClick={handleForm} className="text-xs w-25">
         <span className="text-xs">Request Quote</span>
@@ -576,9 +720,7 @@ export default function ProductCard({ product }: ProductCardProps) {
               {renderValues(currentProduct)}
 
               <DialogFooter>
-                {currentProduct.img_link.includes("s3.amazonaws") && (
-                  <Button onClick={handleReloadlySubmit}>Submit</Button>
-                )}
+                
               </DialogFooter>
             </DialogContent>
           </Dialog>

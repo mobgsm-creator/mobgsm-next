@@ -6,29 +6,31 @@ export async function POST(request: NextRequest) {
 
     // Extract required fields from request body
     const {
-      operatorId,
-      amount,
-      useLocalAmount = true,
+      productId,
+      quantity,
+      unitPrice,
+      productAdditionalRequirements= {
+		"userId": "*"},
+      senderName,
       customIdentifier = "",
       recipientEmail,
-      recipientPhone,
-      senderPhone = {
-		"countryCode": "AE",
-		"number": "562923497"
-	},
+      recipientPhoneDetails,
+      preOrder=false,
     } = body
     const req_body=JSON.stringify({
-        operatorId,
-        amount,
-        useLocalAmount,
+        productId,
+        quantity,
+        unitPrice, 
         customIdentifier,
+        productAdditionalRequirements,
+        senderName,
         recipientEmail,
-        recipientPhone,
-        senderPhone,
+        recipientPhoneDetails,
+        preOrder,
       })
     console.log(req_body)
     // Validate required fields
-    if (!operatorId || !amount || !recipientPhone) {
+    if (!productId || !recipientPhoneDetails) {
       return NextResponse.json(
         { error: "Missing required fields: operatorId, amount, recipientPhone" },
         { status: 400 },
@@ -36,24 +38,24 @@ export async function POST(request: NextRequest) {
     }
 
     // Get token from environment variables
-    const token = process.env.RELOADLY_TOKEN
+    const token = process.env.GIFTCARD_TOKEN
     if (!token) {
       return NextResponse.json({ error: "RELOADLY_TOKEN environment variable not configured" }, { status: 500 })
     }
 
     // Make request to Reloadly API
-    const response = await fetch("https://topups.reloadly.com/topups", {
+    const response = await fetch("https://giftcards.reloadly.com/orders", {
       method: "POST",
       headers: {
-        Accept: "application/com.reloadly.topups-v1+json",
+        Accept: "application/com.reloadly.giftcards-v1+json",
         Authorization: `Bearer ${token}`,
         "Content-Type": "application/json",
       },
       body: req_body ,
     })
-
+    console.log(response.status)
     const data = await response.json()
-    console.log(data)
+    
     if (!response.ok) {
       return NextResponse.json({ error: "Reloadly API error", details: data }, { status: response.status })
     }
