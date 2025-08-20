@@ -285,6 +285,7 @@ export default async function BlogPage({ params }: Params) {
                     alt={device.name}
                     className="object-contain max-w-full max-h-full"
                     loading="lazy"
+                    width={150} height={150}
                   />
                 </div>
 
