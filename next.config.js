@@ -11,7 +11,7 @@ const nextConfig = {
       formats: ["image/avif", "image/webp"], // enable AVIF + WebP
       minimumCacheTTL: 60 * 60 * 24 * 365,
   
-    domains: ['img.mobgsm.com','fdn2.gsmarena.com',"ibb.co", "via.placeholder.com","s3.amazonaws.com","cdn.reloadly.com"],
+    domains: ['img.mobgsm.com:9082','fdn2.gsmarena.com',"ibb.co", "via.placeholder.com","s3.amazonaws.com","cdn.reloadly.com"],
     remotePatterns: [
       {
         protocol: "https",
