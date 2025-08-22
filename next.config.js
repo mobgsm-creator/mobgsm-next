@@ -23,6 +23,18 @@ const nextConfig = {
         port: '9082',
         pathname: '/uploads/**',
       },
+      {
+        protocol: 'http',
+        hostname: 'fdn.mobgsm.com',
+        port: '9084',
+        pathname: '/**',
+      },
+      {
+        protocol: 'http',
+        hostname: 'fd2.mobgsm.com',
+        port: '9083',
+        pathname: '/**',
+      },
     ],
    
   },
