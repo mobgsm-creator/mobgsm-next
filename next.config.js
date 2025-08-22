@@ -17,6 +17,12 @@ const nextConfig = {
         protocol: "https",
         hostname: "**",
       },
+      {
+        protocol: 'http',
+        hostname: 'img.mobgsm.com',
+        port: '9082',
+        pathname: '/uploads/**',
+      },
     ],
    
   },
