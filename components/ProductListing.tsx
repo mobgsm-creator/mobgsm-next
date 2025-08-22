@@ -5,7 +5,6 @@ import type { Product, ESIMProvider,BNPLProvider,reloadly } from "../lib/types"
 import { useSearchParams, useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import ProductCard from './ProductCard'
-
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
 
 type GroupedProduct = {
@@ -30,10 +29,10 @@ interface ToggleTabsProps {
   currentView: 'products' | 'esim' | 'bnpl'| 'reloadly-airtime' | 'reloadly-gifts'
 }
 function ToggleTabs({ onChange, currentView }: ToggleTabsProps) {
-
+  const router = useRouter()
   return (
     
-    <Tabs value={currentView} onValueChange={(val: string) => onChange(val as 'products' | 'esim' | 'bnpl'| 'reloadly-airtime' | 'reloadly-gifts')}>
+    <Tabs value={currentView} onValueChange={(val: string) => {onChange(val as 'products' | 'esim' | 'bnpl'| 'reloadly-airtime' | 'reloadly-gifts'); router.replace(window.location.pathname)}}>
       <TabsList className = 'flex flex-wrap'>
         
         <TabsTrigger value="reloadly-airtime">Airtime Topup</TabsTrigger>
@@ -200,19 +199,16 @@ export default function ProductListing({ product, esimProviders, BNPLProvider, a
   return (
     <div>
       <>
-      <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4 mb-6">
+      <div className="flex flex-col lg:flex-row lg:justify-between items-center gap-4 mb-6">
   <ToggleTabs currentView={view} onChange={setView} />
-  
-  
+
   <h2
-  className="hidden lg:inline-block text-xs font-semibold text-blue-700 border border-blue-500 rounded-md px-2 py-1 bg-blue-50"
->
-  {totalProducts > 0 ? `${totalProducts} Products Found` : "No Products Found"}
-</h2>
-
-
-  
+    className="inline-flex justify-center items-center mt-4 lg:mt-0 text-xs font-semibold text-blue-700 border border-blue-500 rounded-md px-2 py-1 bg-blue-50"
+  >
+    {totalProducts > 0 ? `${totalProducts} Products Found` : "No Products Found"}
+  </h2>
 </div>
+
 
     
       {totalProducts > 0 && data.length === 0 ? (
