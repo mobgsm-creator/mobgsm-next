@@ -8,6 +8,6 @@ export const initMixpanel = () => {
     return;
   }
  
-  mixpanel.init(MIXPANEL_TOKEN, { autocapture: true });
+  mixpanel.init(MIXPANEL_TOKEN, { autocapture: true, record_sessions_percent: 1, record_heatmap_data: true });
 }
 

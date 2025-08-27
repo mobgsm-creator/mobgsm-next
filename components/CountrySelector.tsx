@@ -81,7 +81,7 @@ const CountrySelector = ({ country, setCountry }: Props) => {
     {'code': 'KH', 'name': 'Cambodia', 'flag': '🇰🇭'},
     {'code': 'KM', 'name': 'Comoros', 'flag': '🇰🇲'},
     {'code': 'KN', 'name': 'Saint Kitts and Nevis', 'flag': '🇰🇳'},
-    {'code': 'KR', 'name': 'Korea, Republic of', 'flag': '🇰🇷'},
+    {'code': 'KR', 'name': 'South Korea', 'flag': '🇰🇷'},
     {'code': 'KW', 'name': 'Kuwait', 'flag': '🇰🇼'},
     {'code': 'KY', 'name': 'Cayman Islands', 'flag': '🇰🇾'},
     {'code': 'LA', 'name': "Lao People's Democratic Republic", 'flag': '🇱🇦'},

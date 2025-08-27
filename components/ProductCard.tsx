@@ -19,7 +19,8 @@ type ProductCardProps = {
 };
 
 export default function ProductCard({ product }: ProductCardProps) {
-  //console.log(product.length)
+ 
+  
   const [currentIndex, setCurrentIndex] = useState(0);
   const [showCompare, setShowCompare] = useState(false)
   const [showForm, setShowForm] = useState(false)
@@ -56,7 +57,7 @@ export default function ProductCard({ product }: ProductCardProps) {
     
     const res = await fetch(`/api/airtime_operator_data?operatorId=${operatorId}`);
     const data = await res.json();
-    console.log(data)
+    //console.log(data)
     const result = data?.geographicalRechargePlans?.[0]?.localAmounts 
              ?? data?.suggestedAmounts ?? data?.localFixedAmounts;
     return result
@@ -220,7 +221,7 @@ export default function ProductCard({ product }: ProductCardProps) {
         : product.sendable_values.includes(",")
         ? product.sendable_values.split(",")
         : [product.sendable_values]
-        console.log(product.operator, values)
+        //console.log(product.operator, values)
       return (
         <>
       <DialogDescription className="text-sm font-semibold mb-2">
@@ -330,8 +331,12 @@ export default function ProductCard({ product }: ProductCardProps) {
     setShowForm(true)
 
   }
+  
+  const currentProduct = product?.[currentIndex];
 
-  const currentProduct = product[currentIndex];
+  if (!currentProduct) {
+    return <div>Loading product...</div>; // or a spinner
+  }
   
   function isProduct(item: Product | ESIMProvider | BNPLProvider | reloadly): item is Product {
     const flag = "product_name" in item && typeof item.product_name === "string";
