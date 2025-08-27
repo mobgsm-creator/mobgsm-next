@@ -40,6 +40,7 @@ const nextConfig = {
   },
   experimental: {
     optimizeCss: true,
+    outputFileTracingRoot: __dirname,
     serverActions: {
       allowedOrigins: ["localhost:3000"],
     },
