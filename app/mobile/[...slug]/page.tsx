@@ -86,8 +86,8 @@ export async function generateStaticParams() {
   }))
 }
 
-export const dynamic = "force-static"
-export const dynamicParams = false
+// export const dynamic = "force-static"
+// export const dynamicParams = false
 //export const dynamic = 'force-dynamic'
 //
 //export const revalidate =184600 // 24 hours
