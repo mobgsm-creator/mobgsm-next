@@ -6,7 +6,7 @@ import Link from "next/link";
 type Device = {
     name: string;
     image: string;
-    main_price: string;
+    main_price: number | null | undefined;
   };
 interface DynamicCountryLinksProps {
 

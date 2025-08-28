@@ -16,9 +16,9 @@ export default async function HomePage() {
     reqHeaders.get('cf-ipcountry') ||
     reqHeaders.get('x-vercel-ip-country') ||
     'unknown'
-  console.log(now - lastFetch)
+  //console.log("Time since Last Fetch",now - lastFetch)
   if (!cachedData || (now - lastFetch) > CACHE_DURATION) {
-    console.time("fetchAllData");
+    console.log("Fetching Data for Home Page");
     // Fetch all in parallel on the server
     
     const [products, bnpl, esim, airtime, giftcards, device_list] = await Promise.all([
@@ -34,7 +34,7 @@ export default async function HomePage() {
     lastFetch = now;
    
     
-    console.timeEnd("fetchAllData");
+    
   }
   //console.log(`products count: ${cachedData!.products.length}, device count: ${device_list.length} esim count: ${esim.length}, airtime count: ${airtime.length}, giftcards count: ${giftcards.length}`);
 

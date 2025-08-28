@@ -69,4 +69,18 @@ export type Device = {
   name_url: string;
   brand_name: string;
   image: string;
+  main_price?: number | null;
+  country_price?: number | null;
+  keywords?: string | null;
+  description?: string | null;
+  specs?: string | null;
+  json?: string | null;
+  models?: string | null;
+  content?: string | null;
+  brand?: string | null;
+  status?: string | null;
+  pictures?: string | null;
+  pictures2?: string | null;
+  udate?: number | null;
+  date?: number | null;
 };

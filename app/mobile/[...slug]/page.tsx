@@ -1,14 +1,19 @@
 import { notFound } from "next/navigation"
-import { createClient } from "@/lib/supabase"
 import { ChevronDown } from "lucide-react"
 import Image from "next/image"
 import { settings as is } from "@/public/combined_settings"
+import fs from 'fs';
+import path from 'path';
+
+const devicesJSONPath = path.join(process.cwd(), 'public', 'devices.json');
+const devicesData = JSON.parse(fs.readFileSync(devicesJSONPath, 'utf-8'));
 
 import { Suspense } from "react"
 import  DynamicCountryLinks  from "@/components/countryDropdownDevicePage"
 import DynamicBrandLinks from "@/components/brandsDropdownDevicePage"
 import DynamicMoreLinks from "@/components/moreDropdownDevicePage"
-export const runtime = 'edge';
+import { Device } from "@/lib/types"
+//export const runtime = 'edge';
 //redeploy
 
 function parseSlug(slugArray: string) {
@@ -123,15 +128,11 @@ export async function generateMetadata( props: { params: Promise<{ slug: string 
       ])
     );
   }
-  const supabase = createClient()
   
-  console.log("Generating Metadata for SEO Page")
-  const { data: device } = await supabase
-    .from("devices")
-    .select("name, description, keywords, image")
-    .eq("name_url", pureSlug)
-    .single()
 
+  const allDevices: Device[] = Object.values(devicesData) as Device[];
+  const device = allDevices.find(d => d.name_url === pureSlug);
+  console.log(pureSlug, allDevices.length)
   if (!device) {
     return {
       title: "Not Found | MobGsm",
@@ -182,15 +183,14 @@ export async function generateMetadata( props: { params: Promise<{ slug: string 
 async function StaticDeviceContent({ slug }: { slug: string }) {
   const { pureSlug,  } = parseSlug(slug);
  
-  const supabase = createClient()
-  console.log("Getting Static Content for Device Page")
-  const { data: device, error } = await supabase.from("devices").select("*").eq("name_url", pureSlug).single()
+  const allDevices: Device[] = Object.values(devicesData) as Device[];
+  const device = allDevices.find(d => d.name_url === pureSlug);
   
-  if (!device || error) return notFound()
+  if (!device) return notFound()
 
-  const json = device.json
+  const json = device.json ? JSON.parse(device.json) : {};
   const specs = json?.data || {}
-  const brandName = device.brand_name
+  
 
   let img_specs : ImgSpecs = {};
 
@@ -206,20 +206,18 @@ if (device?.specs) {
 }
 
 
-  const { data: moreFromBrand } = await supabase
-    .from("devices")
-    .select("name, name_url, image, main_price")
-    .eq("brand_name", brandName)
-    .neq("id", device.id)
-  console.log("Getting more Devices")
+    const moreFromBrand = allDevices
+    .filter(d => d.brand_name === device.brand_name && d.id !== device.id)
+    .map(d => ({
+      name: d.name,
+      name_url: d.name_url,
+      image: d.image,
+      main_price: d.main_price
+    }));
+
   
    
-    const { data } = await supabase
-  .from("devices")
-  .select("brand_name");
-  console.log("Getting more Brands")
-
-  const uniqueBrands = [...new Set(data?.map(item => item.brand_name))];
+    const uniqueBrands = [...new Set(allDevices.map(d => d.brand_name))];
   
 
   return { device, specs, img_specs, moreFromBrand, uniqueBrands }

@@ -8,6 +8,11 @@ import { getDevices } from '@/lib/supabase';
 
 
 export const runtime = 'edge';
+const now = Date.now();
+let cachedData: any = null;//eslint-disable-line
+let lastFetch = 0;
+const CACHE_DURATION = 72000 * 60 * 1000; // 2 hours
+
 
 type Device = {
   id: number;
@@ -21,26 +26,31 @@ export default function BlogListPage() {
   const [devices, setDevices] = useState<Device[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedBrand, setSelectedBrand] = useState<string | null>(null);
-
+  console.log("heres")
   // Fetch devices once
   useEffect(() => {
-    const fetchDevices = async () => {
-      const deviceData = await getDevices();
-      setDevices(deviceData);
+    async function fetchData() {
+    if (!cachedData || (now - lastFetch) > CACHE_DURATION) {
+      console.log("Fetching Data for Mobile Page");
+      const device_list = await getDevices();
+      cachedData = {  device_list };
+      lastFetch = now;
+    
+      setDevices(cachedData.device_list);
       setLoading(false);
 
       // On load, check if URL has #brand hash and select it
       const hashBrand = window.location.hash.replace('#', '');
-      if (hashBrand && deviceData.some(d => d.brand_name === hashBrand)) {
+      if (hashBrand && device_list.some(d => d.brand_name === hashBrand)) {
         setSelectedBrand(hashBrand);
-      } else if (deviceData.length > 0) {
+      } else if (device_list.length > 0) {
         // default select first brand
-        setSelectedBrand(deviceData[0].brand_name);
+        setSelectedBrand(device_list[0].brand_name);
       }
-    };
-
-    fetchDevices();
-  }, []);
+    }
+    
+  }
+  fetchData();}, []);
 
   // Group devices by brand
   const brandMap: Record<string, Device[]> = devices.reduce((acc, device) => {
