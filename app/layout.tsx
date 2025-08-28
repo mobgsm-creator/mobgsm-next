@@ -19,10 +19,13 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" className={inter.className}>
-      <body>
-        {/* Preconnect for faster S3/FlagCDN image loads */}
+      <head>
         <link rel="preconnect" href="https://s3.amazonaws.com" crossOrigin="" />
         <link rel="preconnect" href="https://flagcdn.com" crossOrigin="" />
+      </head>
+      <body>
+        {/* Preconnect for faster S3/FlagCDN image loads */}
+        
 
         {/* Google Analytics */}
         <Script

@@ -1,10 +1,11 @@
 'use client';
-
+import Image from 'next/image';
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 
 
 import { getDevices } from '@/lib/supabase';
+
 
 export const runtime = 'edge';
 
@@ -63,7 +64,7 @@ export default function BlogListPage() {
    <>
     <header className="bg-white shadow-sm border-b">
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 justify-center">
-      <img src="/MOBGSM-svg-vector.svg" alt="" width={40} height={40} />
+      <Image src="/MOBGSM-svg-vector.svg" alt="" width={40} height={40} />
     </div>
   </header>
   <div className="max-w-7xl mx-auto flex min-h-screen bg-gray-50">
@@ -99,7 +100,7 @@ export default function BlogListPage() {
                 className="group block bg-white rounded-lg shadow hover:shadow-lg overflow-hidden border border-gray-200"
               >
                 <div className="relative w-full h-48 bg-gray-100 hover:shadow-lg transition-transform transform hover:scale-105">
-                  <img
+                  <Image
                     src={device.image}
                     alt={device.name}
                     style={{ objectFit: 'contain' }}

@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation"
 import { createClient } from "@/lib/supabase"
 import { ChevronDown } from "lucide-react"
-
+import Image from "next/image"
 import { settings as is } from "@/public/combined_settings"
 
 import { Suspense } from "react"
@@ -266,7 +266,7 @@ export default async function BlogPage({ params }: Params) {
       <div className="min-h-screen  bg-white">
         <header className="bg-white shadow-sm border-b">
         <div className=" mx-auto px-4 sm:px-6 lg:px-8 py-4 relative">
-          <img src="/MOBGSM-svg-vector.svg" alt="" width={40} height={40} />
+          <Image src="/MOBGSM-svg-vector.svg" alt="" width={40} height={40} />
           
         </div>
         </header>
@@ -282,7 +282,7 @@ export default async function BlogPage({ params }: Params) {
               <div className="flex flex-row gap-4 bg-white p-4 rounded-2xl ">
                 {/* Left: Image */}
                 <div className="w-[150px] h-[150px] flex items-center justify-center bg-white ">
-                  <img
+                  <Image
                     src={device.image || "/placeholder.svg"}
                     alt={device.name}
                     className="object-contain max-w-full max-h-full"
