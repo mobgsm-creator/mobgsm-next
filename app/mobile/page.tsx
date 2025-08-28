@@ -63,7 +63,7 @@ export default function BlogListPage() {
    <>
     <header className="bg-white shadow-sm border-b">
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 justify-center">
-      <Image src="/MOBGSM-svg-vector.svg" alt="" width={40} height={40} />
+      <img src="/MOBGSM-svg-vector.svg" alt="" width={40} height={40} />
     </div>
   </header>
   <div className="max-w-7xl mx-auto flex min-h-screen bg-gray-50">
@@ -99,13 +99,13 @@ export default function BlogListPage() {
                 className="group block bg-white rounded-lg shadow hover:shadow-lg overflow-hidden border border-gray-200"
               >
                 <div className="relative w-full h-48 bg-gray-100 hover:shadow-lg transition-transform transform hover:scale-105">
-                  <Image
+                  <img
                     src={device.image}
                     alt={device.name}
                     fill
                     style={{ objectFit: 'contain' }}
                     sizes="(max-width: 768px) 100vw, 300px"
-                    priority={true}
+             
                   />
                 </div>
                 <div className="p-3 text-center text-black font-semibold group-hover:text-black">

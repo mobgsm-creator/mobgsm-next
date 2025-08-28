@@ -3,7 +3,7 @@
 import * as Select from "@radix-ui/react-select"
 import { ChevronDown } from "lucide-react"
 import { useEffect } from "react"
-import Image from "next/image"
+
 interface Props {
   country: string
   setCountry: (value: string) => void
@@ -162,7 +162,7 @@ const CountrySelector = ({ country, setCountry }: Props) => {
         <Select.Value>
           {selectedCountry && (
             <span className="flex items-center gap-2">
-              <Image
+              <img
                     src={`https://flagcdn.com/w20/${selectedCountry.code.toLocaleLowerCase()}.png`}
                     alt={selectedCountry.name}
                     className="inline-block w-5 h-4 mr-2"
@@ -192,7 +192,7 @@ const CountrySelector = ({ country, setCountry }: Props) => {
                 className="flex items-center gap-2 rounded-md px-4 py-2 text-sm cursor-pointer focus:bg-blue-100 focus:outline-none"
               >
                 <Select.ItemText>
-                  <Image
+                  <img
                     src={`https://flagcdn.com/w20/${item.code.toLowerCase()}.png`}
                     alt={item.name}
                     className="inline-block w-5 h-4 mr-2"
