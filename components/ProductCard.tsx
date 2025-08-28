@@ -20,7 +20,12 @@ type ProductCardProps = {
 };
 
 export default function ProductCard({ product }: ProductCardProps) {
- 
+  const webpLoader = ({ src, width, quality }: { src: string; width: number; quality?: number }) => {
+    // Append query params for width, quality, and format
+    const q = quality || 75;
+    return `${src}?w=${width}&q=${q}&format=webp`;
+  };
+  
   
   const [currentIndex, setCurrentIndex] = useState(0);
   const [showCompare, setShowCompare] = useState(false)
@@ -667,6 +672,8 @@ export default function ProductCard({ product }: ProductCardProps) {
       className="h-20 w-20 object-contain p-1 drop-shadow-sm"
       width={40} height={40}
       priority
+      loader={webpLoader}
+   
     />
   </div>
 
