@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 
-import Image from 'next/image';
+
 import { getDevices } from '@/lib/supabase';
 
 export const runtime = 'edge';
@@ -102,7 +102,6 @@ export default function BlogListPage() {
                   <img
                     src={device.image}
                     alt={device.name}
-                    fill
                     style={{ objectFit: 'contain' }}
                     sizes="(max-width: 768px) 100vw, 300px"
              
