@@ -28,7 +28,7 @@ export async function POST(request: NextRequest) {
         recipientPhoneDetails,
         preOrder,
       })
-    console.log(req_body)
+    //console.log(req_body)
     // Validate required fields
     if (!productId || !recipientPhoneDetails) {
       return NextResponse.json(
@@ -53,7 +53,7 @@ export async function POST(request: NextRequest) {
       },
       body: req_body ,
     })
-    console.log(response.status)
+    //console.log(response.status)
     const data = await response.json()
     
     if (!response.ok) {
@@ -62,7 +62,7 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json(data)
   } catch (error) {
-    console.log(error)
+    //console.log(error)
     console.error("Topup API error:", error)
     return NextResponse.json({ error: "Internal server error" }, { status: 500 })
   }

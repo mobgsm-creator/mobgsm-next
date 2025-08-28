@@ -13,7 +13,7 @@ export function createClient() {
     console.log("Fetching products from Supabase...")
 
     try {
-      const response = await fetch(`/api/products?country=${country}`, {
+      const response = await fetch(`https://mobgsm.com/api/products?country=${country}`, {
       cache: "force-cache", 
     })
     //console.log(response)
@@ -33,7 +33,7 @@ export function createClient() {
 export async function getBNPL(): Promise<BNPLProvider[]> {
 
   try {
-    const response = await fetch(`/api/BNPL`, {
+    const response = await fetch(`https://mobgsm.com/api/BNPL`, {
       cache: "force-cache", // Disable caching for real-time data
     })
 
@@ -53,10 +53,10 @@ export async function getESIM(): Promise<ESIMProvider[]> {
   console.log("cache")
   try {
 
-    const response = await fetch(`/api/ESIM`, {
+    const response = await fetch(`https://mobgsm.com/api/ESIM`, {
       cache: "force-cache", // Disable caching for real-time data
     })
-    console.log(response)
+    //console.log(response)
 
     if (!response.ok) {
       throw new Error("Failed to fetch products")
@@ -72,7 +72,7 @@ export async function getESIM(): Promise<ESIMProvider[]> {
 export async function getReloadlyAirtime(): Promise<reloadly[]> {
 
   try {
-    const response = await fetch(`/api/reloadly_airtime`, {
+    const response = await fetch(`https://mobgsm.com/api/reloadly_airtime`, {
       cache: "force-cache", // Disable caching for real-time data
     })
     //console.log(response)
@@ -92,7 +92,7 @@ export async function getReloadlyAirtime(): Promise<reloadly[]> {
 export async function getReloadlyGifts(): Promise<reloadly[]> {
 
   try {
-    const response = await fetch(`/api/reloadly_giftcards`, {
+    const response = await fetch(`https://mobgsm.com/api/reloadly_giftcards`, {
       cache: "force-cache", // Disable caching for real-time data
     })
     //console.log(response)
@@ -111,7 +111,7 @@ export async function getReloadlyGifts(): Promise<reloadly[]> {
 export async function getDevices(): Promise<Device[]> {
 
   try {
-    const response = await fetch(`/api/devices`, {
+    const response = await fetch(`https://mobgsm.com/api/devices`, {
       cache: "force-cache", // Disable caching for real-time data
     })
     //console.log(response)

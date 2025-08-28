@@ -16,7 +16,7 @@ interface DynamicCountryLinksProps {
 
 export default function DynamicMoreLinks({ more, brand}: DynamicCountryLinksProps) {
   const [isOpen, setIsOpen] = useState(false);
-  console.log(brand, more)
+  //console.log(brand, more)
   return (
     <div className="max-h-[160rem] bg-gray-50 mt-6">
       {/* Header acting as toggle */}

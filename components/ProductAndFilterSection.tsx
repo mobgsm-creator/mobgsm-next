@@ -1,5 +1,5 @@
 'use client'
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import ProductListing from "./ProductListing"
 import FilterSidebar from "./FilterSidebar"
 import type { Product, ESIMProvider,BNPLProvider, reloadly } from "../lib/types"
@@ -41,14 +41,15 @@ export default function ProductSectionWrapper({ country,
   const [r_airtime,setAirtime] = useState<reloadly[]>([])
   const [r_gifts,setGifts] = useState<reloadly[]>([])
   
-      
-  setProduct(products);
-  setBNPLProvider(bnpl);
-  setEsimProviders(esim);
-  setAirtime(airtime);
-  setGifts(giftcards);
-  setDevices(device_list);
-  
+  useEffect(() => {    
+    setProduct(products);
+    setBNPLProvider(bnpl);
+    setEsimProviders(esim);
+    setAirtime(airtime);
+    setGifts(giftcards);
+    setDevices(device_list);
+  },[])
+    
     
   const productsFromDevices: Product[] = devices.map((device) => ({
     flag: device.id,

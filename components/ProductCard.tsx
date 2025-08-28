@@ -121,7 +121,7 @@ export default function ProductCard({ product }: ProductCardProps) {
       
 
     }
-    console.log(data)
+    //console.log(data)
     try {
       const response = await fetch("/api/topup_airtime", {
         method: "POST",
