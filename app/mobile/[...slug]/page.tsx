@@ -73,18 +73,18 @@ interface Params {
 }
 
 // Pre-generate all device pages at build time
-export async function generateStaticParams() {
+// export async function generateStaticParams() {
   
-  const supabase = createClient()
+//   const supabase = createClient()
 
-  const { data: devices } = await supabase.from("devices").select("name_url") // Adjust based on your needs
+//   const { data: devices } = await supabase.from("devices").select("name_url") // Adjust based on your needs
 
-  if (!devices) return []
+//   if (!devices) return []
 
-  return devices.map((device) => ({
-    slug: [device.name_url],
-  }))
-}
+//   return devices.map((device) => ({
+//     slug: [device.name_url],
+//   }))
+// }
 
 // export const dynamic = "force-static"
 // export const dynamicParams = false
