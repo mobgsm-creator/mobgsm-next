@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { ChevronRight } from "lucide-react";
-
+import Link from "next/link";
 type Device = {
     name: string;
     image: string;
@@ -34,13 +34,14 @@ export default function DynamicMoreLinks({ more, brand}: DynamicCountryLinksProp
       {!isOpen && (
         <div className="max-h-[22rem] overflow-y-auto"> {/* scrollable container */}
           {more.map((dev, index) => (
-                  <div
+                  <Link
                     key={index}
                     className="flex items-center justify-between mb-1 px-4 py-3 bg-white hover:bg-gray-50 cursor-pointer rounded-2xl"
+                    href={`https://mobgsm.com/mobile/${dev.name.replace(/\s+/g, '-').toLowerCase()}` }
                   >
                     <span className="text-gray-900 font-medium">{dev.name}</span>
                     <ChevronRight className="h-4 w-4 text-red-500" />
-                  </div>
+                  </Link>
                 ))}
         </div>
       )}
