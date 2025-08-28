@@ -125,7 +125,7 @@ export async function generateMetadata( props: { params: Promise<{ slug: string 
   }
   const supabase = createClient()
   
-  
+  console.log("Generating Metadata for SEO Page")
   const { data: device } = await supabase
     .from("devices")
     .select("name, description, keywords, image")
@@ -183,7 +183,7 @@ async function StaticDeviceContent({ slug }: { slug: string }) {
   const { pureSlug,  } = parseSlug(slug);
  
   const supabase = createClient()
-
+  console.log("Getting Static Content for Device Page")
   const { data: device, error } = await supabase.from("devices").select("*").eq("name_url", pureSlug).single()
   
   if (!device || error) return notFound()
@@ -211,11 +211,13 @@ if (device?.specs) {
     .select("name, name_url, image, main_price")
     .eq("brand_name", brandName)
     .neq("id", device.id)
+  console.log("Getting more Devices")
   
    
     const { data } = await supabase
   .from("devices")
   .select("brand_name");
+  console.log("Getting more Brands")
 
   const uniqueBrands = [...new Set(data?.map(item => item.brand_name))];
   
