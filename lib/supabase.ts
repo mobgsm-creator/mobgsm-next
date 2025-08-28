@@ -114,7 +114,7 @@ export async function getDevices(): Promise<Device[]> {
     const response = await fetch(`https://mobgsm.com/api/devices`, {
       cache: "force-cache", // Disable caching for real-time data
     })
-    console.log(response)
+    //console.log(response)
 
     if (!response.ok) {
       throw new Error("Failed to fetch products")
