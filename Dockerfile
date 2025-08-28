@@ -53,11 +53,11 @@ RUN chown nextjs:nodejs .next
 # https://nextjs.org/docs/advanced-features/output-file-tracing
 COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
-
+RUN npm install -g pm2
 USER nextjs
 
 # Install pm2 globally
-RUN npm install -g pm2
+
 
 EXPOSE 3000
 
