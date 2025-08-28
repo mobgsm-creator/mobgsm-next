@@ -39,14 +39,15 @@ const nextConfig = {
    
   },
   experimental: {
-    browsersListForSwc: true,
+    workerThreads: false,
+    cpus: 6,
     optimizeCss: true,
     outputFileTracingRoot: __dirname,
     serverActions: {
       allowedOrigins: ["localhost:3000"],
     },
   },
-  swcMinify: true,
+
   webpack: (config, { dev, isServer }) => {
     if (!dev && !isServer) {
       // Target modern browsers to reduce polyfills
