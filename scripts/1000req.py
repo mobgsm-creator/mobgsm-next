@@ -1,45 +1,43 @@
-import requests
-import time
-import statistics
+# generate_devices_json.py
 import pandas as pd
+import json
 
-URL = "https://mobgsm.com"
-ITERATIONS = 1000
+# Path to your CSV file
+csv_file = 'devices_rows.csv'
 
-results = []
+# Load CSV
+df = pd.read_csv(csv_file)
 
-for i in range(ITERATIONS):
-    try:
-        start = time.time()
-        response = requests.get(URL, stream=True, timeout=60)
-        # Force reading the first byte
-        next(response.iter_content(1))
-        first_byte = time.time()
-        
-        ttfb = first_byte - start
-        results.append({"Run": i + 1, "TTFB_seconds": ttfb, "Status": "Success"})
-        
-        print(f"Run {i+1}: TTFB = {ttfb:.4f} seconds")
-    except Exception as e:
-        results.append({"Run": i + 1, "TTFB_seconds": None, "Status": f"Error: {e}"})
-        print(f"Run {i+1}: Error - {e}")
+# List of countries
+countries = [
+    "Hong Kong","Singapore","Colombia","Tajikistan","Slovakia","Finland",
+    "Cameroon","Japan","Germany","Sierra Leone","Lebanon","Ghana",
+    "Malta","Iraq","Namibia","Bolivia","Rwanda","Norway","Denmark",
+    "Netherlands","Czech Republic","Brazil","Macedonia","Tanzania",
+    "Syrian","Kenya","Spain","Bosnia","Taiwan","Thailand","Peru","Tunisia",
+    "United States","Sudan","Greece","Portugal","India","Zambia","Romania",
+    "Ecuador","South Africa","Indonesia","France","Papua New Guinea","Belarus",
+    "Sweden","Russia","Kazakhstan","Jordan","Viet Nam","Philippines","Mozambique",
+    "Honduras","Jamaica","Greenland","Egypt","Morocco","Seychelles","Uruguay",
+    "Switzerland","Nigeria","Dominican","Oman","New Zealand","Yemen","Korea (South)",
+    "Belgium","Europe","Hungary","Afghanistan","Haiti","Zimbabwe","Ukraine","Moldova",
+    "Israel","UAE Dubai","Armenia","Kuwait","Mauritius","Ethiopia","Italy","Pakistan",
+    "Saudi Arabia","Azerbaijan","Poland","Argentina","Algeria","Malaysia","Bahrain",
+    "Australia","Mexico","China","Bangladesh","Nepal","Austria","Uganda","Chile",
+    "Iran","Qatar","Lithuania","Latvia","Sri Lanka","Montserrat","Solomon Islands",
+    "Angola","Venezuela","Madagascar","Puerto Rico","Turkey","United Kingdom","Malawi",
+    "Uzbekistan","Canada"
+]
 
-# Convert to DataFrame
-df = pd.DataFrame(results)
 
-# Save to CSV
-csv_file = "ttfb_results.csv"
-df.to_csv(csv_file, index=False)
 
-print(f"\n✅ Results saved to {csv_file}")
+# Convert DataFrame to list of dicts
+devices_list = df.to_dict(orient='records')
 
-# Summary stats only for successful runs
-successful_runs = [r["TTFB_seconds"] for r in results if r["TTFB_seconds"] is not None]
 
-if successful_runs:
-    print("\n--- Summary ---")
-    print(f"Total successful runs: {len(successful_runs)}/{ITERATIONS}")
-    print(f"Average TTFB: {statistics.mean(successful_runs):.4f} seconds")
-    print(f"Median TTFB: {statistics.median(successful_runs):.4f} seconds")
-    print(f"Min TTFB: {min(successful_runs):.4f} seconds")
-    print(f"Max TTFB: {max(successful_runs):.4f} seconds")
+
+# Write JSON file
+with open('devices.json', 'w', encoding='utf-8') as f:
+    json.dump(devices_list, f, indent=2, ensure_ascii=False)
+
+print("JSON file generated successfully at devices.json")
