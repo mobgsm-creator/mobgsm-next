@@ -26,6 +26,7 @@ export default async function HomePage() {
       getDevices(),
     ])
   console.timeEnd("fetchAllData");
+  console.log(`products count: ${products.length}, device count: ${device_list.length} esim count: ${esim.length}, airtime count: ${airtime.length}, giftcards count: ${giftcards.length}`);
   return (
   
     <HomePageClient
