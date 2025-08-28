@@ -22,6 +22,7 @@ export default function RootLayout({
       <head>
         {/* Preconnect for faster S3 image loads */}
         <link rel="preconnect" href="https://s3.amazonaws.com" crossOrigin="" />
+        <link rel="preconnect" href="https://flagcdn.com" crossOrigin="" />
       </head>
       <body className={inter.className}>
         <MixpanelInit>{children}</MixpanelInit>

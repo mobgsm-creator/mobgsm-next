@@ -3,7 +3,7 @@ import time
 import statistics
 import pandas as pd
 
-URL = "http://fwk48scocg0okkw08kc0g0gc.128.199.165.212.sslip.io"
+URL = "https://mobgsm.com"
 ITERATIONS = 1000
 
 results = []
