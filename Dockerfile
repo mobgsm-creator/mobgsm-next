@@ -58,10 +58,10 @@ RUN chown nextjs:nodejs .next
 # https://nextjs.org/docs/advanced-features/output-file-tracing
 COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
-#RUN npm install -g pm2
+RUN npm install -g pm2
 USER nextjs
 
-# Install pm2 globally
+
 
 
 EXPOSE 3000
@@ -70,5 +70,5 @@ ENV PORT 3000
 
 # server.js is created by next build from the standalone output
 # https://nextjs.org/docs/pages/api-reference/next-config-js/output
-#CMD ["pm2-runtime", "ecosystem.config.js"]
-CMD HOSTNAME="0.0.0.0" node server.js
+CMD ["pm2-runtime", "ecosystem.config.js"]
+#CMD HOSTNAME="0.0.0.0" node server.js
