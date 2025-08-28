@@ -36,7 +36,7 @@ export default async function HomePage() {
     
     
   }
-  //console.log(`products count: ${cachedData!.products.length}, device count: ${device_list.length} esim count: ${esim.length}, airtime count: ${airtime.length}, giftcards count: ${giftcards.length}`);
+  console.log(`products count: ${cachedData!.products.length}, device count: ${cachedData.device_list.length} esim count: ${cachedData.esim.length}, airtime count: ${cachedData.airtime.length}, giftcards count: ${cachedData.giftcards.length}`);
 
   return (
   
