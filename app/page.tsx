@@ -14,6 +14,7 @@ export default async function HomePage() {
     reqHeaders.get('cf-ipcountry') ||
     reqHeaders.get('x-vercel-ip-country') ||
     'unknown'
+  console.time("fetchAllData");
   // Fetch all in parallel on the server
   const [products, bnpl, esim, airtime, giftcards, device_list] =
     await Promise.all([
@@ -24,7 +25,7 @@ export default async function HomePage() {
       getReloadlyGifts(),
       getDevices(),
     ])
-
+  console.timeEnd("fetchAllData");
   return (
   
     <HomePageClient

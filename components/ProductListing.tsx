@@ -1,6 +1,6 @@
 
 'use client'
-
+import dynamic from 'next/dynamic'
 import type { Product, ESIMProvider,BNPLProvider,reloadly } from "../lib/types"
 import { useSearchParams, useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
@@ -64,6 +64,13 @@ function ToggleTabs({ onChange, currentView }: ToggleTabsProps) {
     </Tabs>
   )
 }
+const LazyProductCard = dynamic(() => import('./ProductCard'), {
+  loading: () => (
+    <div className="h-64 bg-gray-100 animate-pulse rounded-lg" />
+  ),
+  ssr: false
+})
+
 export default function ProductListing({ product, esimProviders, BNPLProvider, airtime, gifts, view, setView }: ProductListingProps) {  
   
   const router = useRouter()
@@ -159,14 +166,28 @@ export default function ProductListing({ product, esimProviders, BNPLProvider, a
     </p>
   </div>
 ) : (
-  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-     {data.map((item, index) => (
-    <ProductCard 
-      key={index} 
-      product={getProductsForCard(item, view)} 
-    />
-  ))}
-  </div>
+  
+<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+  {data.map((item, index) => {
+    // First 2 products load immediately
+    if (index < 2) {
+      return (
+        <ProductCard
+          key={index}
+          product={getProductsForCard(item, view)}
+        />
+      )
+    }
+    
+    // Rest load lazily
+    return (
+      <LazyProductCard
+        key={index}
+        product={getProductsForCard(item, view)}
+      />
+    )
+  })}
+</div>
 )}
 
 

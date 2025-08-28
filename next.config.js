@@ -39,13 +39,22 @@ const nextConfig = {
    
   },
   experimental: {
+    browsersListForSwc: true,
     optimizeCss: true,
     outputFileTracingRoot: __dirname,
     serverActions: {
       allowedOrigins: ["localhost:3000"],
     },
   },
- 
+  swcMinify: true,
+  webpack: (config, { dev, isServer }) => {
+    if (!dev && !isServer) {
+      // Target modern browsers to reduce polyfills
+      config.target = ['web', 'es2020']
+    }
+    return config
+  },
+  compress: true,
   trailingSlash: true,
 }
 
