@@ -665,6 +665,8 @@ export default function ProductCard({ product }: ProductCardProps) {
       alt={currentProduct.operator}
       className="h-20 w-20 object-contain p-1 drop-shadow-sm"
       width={40} height={40}
+      fetchPriority="high"
+      rel='preload'
     />
   </div>
 
