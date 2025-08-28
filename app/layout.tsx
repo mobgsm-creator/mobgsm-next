@@ -1,9 +1,9 @@
-import MixpanelInit  from '@/lib/initMixpanel';
-import type React from "react"
+// app/layout.tsx
 import type { Metadata } from "next"
 import { Inter } from "next/font/google"
 import "./globals.css"
-import Head from "next/head"
+import MixpanelInit from "@/lib/initMixpanel"
+
 const inter = Inter({ subsets: ["latin"] })
 
 export const metadata: Metadata = {
@@ -12,39 +12,21 @@ export const metadata: Metadata = {
   keywords: "mobile phones, smartphone specs, phone comparisons, latest mobiles, tech reviews, MobGSM",
 }
 
-
 export default function RootLayout({
   children,
 }: {
   children: React.ReactNode
 }) {
-  
   return (
     <html lang="en">
-       <Head>
-       <link
-  rel="preload"
-  href="/_next/static/css/6c2e098d8009e3e1.css"
-  as="style"
-  onLoad={(e) => {
-    const link = e.currentTarget as HTMLLinkElement;
-    link.rel = "stylesheet";
-  }}
-/>
-<noscript>
-  <link
-    rel="stylesheet"
-    href="/_next/static/css/6c2e098d8009e3e1.css"
-  />
-</noscript>
-
-
-        {/* Preconnect to speed up S3 images */}
-        <link rel="preload" href="/_next/static/css/ea3013c466b4c6eb.css" as="style" />
+      <head>
+        {/* Preconnect for faster S3 image loads */}
         <link rel="preconnect" href="https://s3.amazonaws.com" crossOrigin="" />
-        
-      </Head>
-      <body className={inter.className}><MixpanelInit>{children}</MixpanelInit></body>
+      </head>
+      <body className={inter.className}>
+        <MixpanelInit>{children}</MixpanelInit>
+      </body>
     </html>
   )
 }
+

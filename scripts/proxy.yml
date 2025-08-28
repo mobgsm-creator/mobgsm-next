@@ -1,0 +1,56 @@
+name: coolify-proxy
+
+networks:
+  coolify:
+    external: true
+
+services:
+  traefik:
+    container_name: coolify-proxy
+    image: traefik:v3.1
+    restart: unless-stopped
+    environment:
+      - CF_DNS_API_TOKEN=3m6vZq0Mc8plMaRiYVIY0sksosS7iA6KqxRZMgdr
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    networks:
+      - coolify
+    ports:
+      - "80:80"
+      - "443:443"
+      - "443:443/udp"
+      - "8080:8080"
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://localhost:80/ping || exit 1"]
+      interval: 4s
+      timeout: 2s
+      retries: 5
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"
+      - "/data/coolify/proxy:/traefik"
+    command:
+      - "--ping=true"
+      - "--ping.entrypoint=http"
+      - "--api.dashboard=true"
+      - "--api.insecure=false"
+      - "--entrypoints.http.address=:80"
+      - "--entrypoints.https.address=:443"
+      - "--entrypoints.http.http.encodequerysemicolons=true"
+      - "--entrypoints.https.http.encodequerysemicolons=true"
+      - "--providers.docker.exposedbydefault=false"
+      - "--providers.file.directory=/traefik/dynamic/"
+      - "--providers.file.watch=true"
+      - "--certificatesresolvers.letsencrypt.acme.dnschallenge=true"
+      - "--certificatesresolvers.letsencrypt.acme.dnschallenge.provider=cloudflare"
+      - "--certificatesresolvers.letsencrypt.acme.dnschallenge.delaybeforecheck=0"
+      - "--certificatesresolvers.letsencrypt.acme.storage=/traefik/acme.json"
+      - "--providers.docker=true"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.traefik.entrypoints=http"
+      - "traefik.http.routers.traefik.service=api@internal"
+      - "traefik.http.services.traefik.loadbalancer.server.port=8080"
+      - "traefik.http.middlewares.redirect-to-https.redirectscheme.scheme=https"
+      - "traefik.http.middlewares.gzip.compress=true"
+      - "coolify.managed=true"
+      - "coolify.proxy=true"

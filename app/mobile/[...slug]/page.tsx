@@ -9,7 +9,7 @@ import { Suspense } from "react"
 import  DynamicCountryLinks  from "@/components/countryDropdownDevicePage"
 import DynamicBrandLinks from "@/components/brandsDropdownDevicePage"
 import DynamicMoreLinks from "@/components/moreDropdownDevicePage"
-//export const runtime = 'edge';
+export const runtime = 'edge';
 //redeploy
 
 function parseSlug(slugArray: string) {
@@ -90,7 +90,7 @@ interface Params {
 // export const dynamicParams = false
 //export const dynamic = 'force-dynamic'
 //
-//export const revalidate =184600 // 24 hours
+export const revalidate =184600 // 24 hours
 //export const dynamicParams = true
 
 
