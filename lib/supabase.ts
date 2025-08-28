@@ -1,15 +1,9 @@
 import { createClient as createSupabaseClient } from "@supabase/supabase-js"
-import type { Product, BNPLProvider, ESIMProvider, reloadly } from "./types"
+import type { Product, BNPLProvider, ESIMProvider, reloadly, Device } from "./types"
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!
 const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-type Device = {
-  id: number;
-  name: string;
-  name_url: string;
-  brand_name: string;
-  image: string;
-};
+
 export function createClient() {
   return createSupabaseClient(supabaseUrl, supabaseAnonKey)
 }

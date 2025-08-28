@@ -1,6 +1,6 @@
 import HomePageClient from "@/components/HomePage"
 import { headers } from 'next/headers'
-
+import { getProducts, getBNPL, getESIM, getReloadlyAirtime, getReloadlyGifts, getDevices } from "../lib/supabase"
 export const runtime = 'edge'
 export const dynamic = 'force-dynamic'
 
@@ -14,10 +14,28 @@ export default async function HomePage() {
     reqHeaders.get('cf-ipcountry') ||
     reqHeaders.get('x-vercel-ip-country') ||
     'unknown'
+  // Fetch all in parallel on the server
+  const [products, bnpl, esim, airtime, giftcards, device_list] =
+    await Promise.all([
+      getProducts(country),
+      getBNPL(),
+      getESIM(),
+      getReloadlyAirtime(),
+      getReloadlyGifts(),
+      getDevices(),
+    ])
 
   return (
   
-    <HomePageClient country_code={country} />
+    <HomePageClient
+      country_code={country}
+      products={products}
+      bnpl={bnpl}
+      esim={esim}
+      airtime={airtime}
+      giftcards={giftcards}
+      device_list={device_list}
+    />
  
   )
 }

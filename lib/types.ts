@@ -62,3 +62,11 @@ export interface reloadly {
   operator_id: number
 
 }
+
+export type Device = {
+  id: number;
+  name: string;
+  name_url: string;
+  brand_name: string;
+  image: string;
+};
