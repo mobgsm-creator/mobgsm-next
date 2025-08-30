@@ -132,7 +132,7 @@ export async function generateMetadata( props: { params: Promise<{ slug: string 
 
   const allDevices: Device[] = Object.values(devicesData) as Device[];
   const device = allDevices.find(d => d.name_url === pureSlug);
-  console.log(pureSlug, allDevices.length)
+  //console.log(pureSlug, allDevices.length)
   if (!device) {
     return {
       title: "Not Found | MobGsm",

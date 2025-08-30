@@ -34,9 +34,9 @@ interface ToggleTabsProps {
 }
 function ToggleTabs({ onChange, currentView }: ToggleTabsProps) {
   const router = useRouter()
-  useEffect(() => {
-    console.log("ToggleTabs called with currentView:", currentView);
-  }, [currentView]);
+  // useEffect(() => {
+  //   //console.log("ToggleTabs called with currentView:", currentView);
+  // }, [currentView]);
   return (
     
     <Tabs value={currentView} onValueChange={(val: string) => {onChange(val as 'products' | 'esim' | 'bnpl'| 'reloadly-airtime' | 'reloadly-gifts'); router.replace(window.location.pathname)}}>
@@ -125,7 +125,7 @@ export default function ProductListing({ product, esimProviders, BNPLProvider, a
   }
   const data = paginatedData
  
-  console.log("Logging Data length:", view,data.length);
+  //console.log("Logging Data length:", view,data.length);
  
   function getProductsForCard(item: GroupedProduct | ESIMProvider | BNPLProvider | GroupedReloadlyProduct, view : string) {
     switch(view) {

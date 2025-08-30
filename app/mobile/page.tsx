@@ -26,12 +26,12 @@ export default function BlogListPage() {
   const [devices, setDevices] = useState<Device[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedBrand, setSelectedBrand] = useState<string | null>(null);
-  console.log("heres")
+  //console.log("heres")
   // Fetch devices once
   useEffect(() => {
     async function fetchData() {
     if (!cachedData || (now - lastFetch) > CACHE_DURATION) {
-      console.log("Fetching Data for Mobile Page");
+      //console.log("Fetching Data for Mobile Page");
       const device_list = await getDevices();
       cachedData = {  device_list };
       lastFetch = now;

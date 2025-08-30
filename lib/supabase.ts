@@ -10,7 +10,7 @@ export function createClient() {
 
 // Server-side function to get products
   export async function getProducts(country: string): Promise<Product[]> {
-    console.log("Fetching products from Supabase...")
+    //console.log("Fetching products from Supabase...")
 
     try {
       const response = await fetch(`https://mobgsm.com/api/products?country=${country}`, {
@@ -50,7 +50,7 @@ export async function getBNPL(): Promise<BNPLProvider[]> {
 
 // Server-side function to get products
 export async function getESIM(): Promise<ESIMProvider[]> {
-  console.log("cache")
+  //console.log("cache")
   try {
 
     const response = await fetch(`https://mobgsm.com/api/ESIM`, {

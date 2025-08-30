@@ -9,7 +9,7 @@ type MixpanelInitProps = {
 
 export default function MixpanelInit({ children }: MixpanelInitProps) {
   useEffect(() => {
-    console.log("Initializing Mixpanel...")
+    //console.log("Initializing Mixpanel...")
     initMixpanel()
   }, [])
 
