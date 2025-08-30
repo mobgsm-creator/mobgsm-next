@@ -32,6 +32,7 @@ export default function HomePageClient({
     const stored = localStorage.getItem("selectedCountry")
     if (stored) setCountry(stored)
   }, [])
+  console.log(country)
 
   return (
     <div className="min-h-screen bg-gray-50">

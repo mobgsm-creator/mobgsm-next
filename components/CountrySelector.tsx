@@ -150,7 +150,7 @@ const CountrySelector = ({ country, setCountry }: Props) => {
     localStorage.setItem("selectedCountry", country)
   }, [country])
 
-  const selectedCountry = countries.find((c) => c.code === country) || countries.find((c) => c.code === "US");
+  const selectedCountry = countries.find((c) => c.code === country.toUpperCase()) || countries.find((c) => c.code === "US");
 
 
   return (

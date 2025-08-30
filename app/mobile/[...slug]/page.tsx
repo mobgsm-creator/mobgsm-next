@@ -257,6 +257,13 @@ export default async function BlogPage({ params }: Params) {
     "hong-kong": "Hong Kong",
     "united-states": "United States",
     "united-kingdom": "United Kingdom",
+    "czech-republic": "Czech Republic",
+    "saudi-arabia": "Saudi Arabia",
+    "south-africa": "South Africa",
+    "new-zealand": "New Zealand",
+    "dominican-republic": "Dominican Republic",
+    "el-salvador": "El Salvador",
+    "sierra-leone": "Sierra Leone",
     // add more as needed
   };
   const { slug } = await params
