@@ -252,9 +252,17 @@ function DynamicCountryContent({ device, slugcountry}: { device: any, slugcountr
 
 
 export default async function BlogPage({ params }: Params) {
+  const countryMap: Record<string, string> = {
+    "korea-south": "Korea (South)",
+    "hong-kong": "Hong Kong",
+    "united-states": "United States",
+    "united-kingdom": "United Kingdom",
+    // add more as needed
+  };
   const { slug } = await params
   const { pureSlug, rawCountry } = parseSlug(slug);
-  const country = rawCountry === "korea-south" ? "Korea (South)" : rawCountry;
+  
+  const country = countryMap[rawCountry!] || rawCountry;
   //console.log("pureSlug",pureSlug)
   // Get static content (this is cached/pre-rendered)
   const staticContent = await StaticDeviceContent({ slug })
@@ -265,7 +273,7 @@ export default async function BlogPage({ params }: Params) {
     ([, value]) => value.country.toLowerCase() === country?.toLowerCase()
   )
   }
-  console.log("Entry:",entry)
+  //console.log("Entry:",entry[0])
   
 
   return (
