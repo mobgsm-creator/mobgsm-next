@@ -265,6 +265,7 @@ export default async function BlogPage({ params }: Params) {
     ([, value]) => value.country.toLowerCase() === country?.toLowerCase()
   )
   }
+  console.log("Entry:",entry)
   
 
   return (

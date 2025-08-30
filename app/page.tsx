@@ -10,7 +10,10 @@ export default async function HomePage() {
   // Edge runtime request headers aren't available by default in App Router
   // So you fetch them manually with `headers()` from 'next/headers'
   const reqHeaders = headers()
-  const host = reqHeaders.get("host") || ""; // e.g., "in.mobgsm.com"
+  const host =
+  reqHeaders.get("x-forwarded-host") ||
+  reqHeaders.get("host") ||
+  "";
   // Split hostname by dots
   const parts = host.split(".");
   // If it has a subdomain (like "in.mobgsm.com"), take the first part
@@ -19,11 +22,11 @@ export default async function HomePage() {
   if (parts[0].length === 2) {
     country_domain = parts[0]; // "in" from "in.mobgsm.com"
   }
+  console.log(country_domain)
   const now = Date.now();
   const country = country_domain ||
     reqHeaders.get('x-geo-country') ||
     reqHeaders.get('cf-ipcountry') ||
-    reqHeaders.get('x-vercel-ip-country') ||
     'unknown'
   console.log("Detected Country:", country);
   //console.log("Time since Last Fetch",now - lastFetch)
