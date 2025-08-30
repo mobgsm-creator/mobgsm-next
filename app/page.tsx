@@ -1,7 +1,7 @@
 import HomePageClient from "@/components/HomePage"
 import { headers } from 'next/headers'
 import { getProducts, getBNPL, getESIM, getReloadlyAirtime, getReloadlyGifts, getDevices } from "../lib/supabase"
-export const runtime = 'edge'
+//export const runtime = 'edge'
 export const dynamic = 'force-dynamic'
 let cachedData: any = null;//eslint-disable-line
 let lastFetch = 0;
