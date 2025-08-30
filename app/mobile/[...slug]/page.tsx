@@ -4,7 +4,7 @@ import Image from "next/image"
 import { settings as is } from "@/public/combined_settings"
 import fs from 'fs';
 import path from 'path';
-
+import Link from "next/link"
 const devicesJSONPath = path.join(process.cwd(), 'public', 'devices.json');
 const devicesData = JSON.parse(fs.readFileSync(devicesJSONPath, 'utf-8'));
 
@@ -259,16 +259,30 @@ export default async function BlogPage({ params }: Params) {
   // Get static content (this is cached/pre-rendered)
   const staticContent = await StaticDeviceContent({ slug })
   const { device, specs, img_specs, moreFromBrand, uniqueBrands } = staticContent
+  let entry
+  if (rawCountry !== null) {
+     entry = Object.entries(settings).find(
+    ([, value]) => value.country.toLowerCase() === country?.toLowerCase()
+  )
+  }
+  
 
   return (
     <>
     <div className="flex justify-center max-w-7xl items-center">
       <div className="min-h-screen  bg-white">
         <header className="bg-white shadow-sm border-b">
-        <div className=" mx-auto px-4 sm:px-6 lg:px-8 py-4 relative">
-          <Image src="/MOBGSM-svg-vector.svg" alt="" width={40} height={40} />
-          
-        </div>
+        <div className="mx-auto px-4 sm:px-6 lg:px-8 py-4 relative">
+      <Link  href={`https://${entry?.[0] ? entry[0] + "." : ""}mobgsm.com`}>
+        <Image
+          src="/MOBGSM-svg-vector.svg"
+          alt="MOBGSM Logo"
+          width={40}
+          height={40}
+          className="cursor-pointer"
+        />
+      </Link>
+    </div>
         </header>
 
         <div className=" mx-auto flex max-w-7xl flex-col md:flex-row">
