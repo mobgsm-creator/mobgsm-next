@@ -15,7 +15,7 @@ export async function POST(req: NextRequest) {
 
     const { data, error } = await supabase
       .from("form_data")
-      .insert([{ first_name, last_name, mobile, email, country }])
+      .insert([{ first_name, last_name, mobile, email, country, product }])
       .select()
       .single()
 
