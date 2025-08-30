@@ -24,7 +24,7 @@ export default function HomePageClient({
   giftcards,
   device_list
 }: HomePageProps) {
-  //console.log(country_code)
+  console.log(country_code)
   const [country, setCountry] = useState(country_code)
 
   // Load initial country from localStorage
