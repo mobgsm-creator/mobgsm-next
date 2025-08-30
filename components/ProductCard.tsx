@@ -373,6 +373,7 @@ export default function ProductCard({ product }: ProductCardProps) {
         {showForm && (
     <FormPopup
       onClose={() => setShowForm(false)}
+      currentProduct={currentProduct}
      
     />
   )}
@@ -501,6 +502,7 @@ export default function ProductCard({ product }: ProductCardProps) {
               {showForm && (
     <FormPopup
       onClose={() => setShowForm(false)}
+      currentProduct={currentProduct}
      
     />
   )}
@@ -550,6 +552,7 @@ export default function ProductCard({ product }: ProductCardProps) {
                 {showForm && (
     <FormPopup
       onClose={() => setShowForm(false)}
+      currentProduct={currentProduct}
      
     />
   )}
@@ -639,6 +642,7 @@ export default function ProductCard({ product }: ProductCardProps) {
         {showForm && (
     <FormPopup
       onClose={() => setShowForm(false)}
+      currentProduct={currentProduct}
      
     />
   )}

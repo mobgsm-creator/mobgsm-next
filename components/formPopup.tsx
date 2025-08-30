@@ -1,21 +1,37 @@
 "use client";
 // components/ComparePopup.tsx
 import { useState } from "react"
-
+import type { Product, ESIMProvider, BNPLProvider, reloadly } from "../lib/types"
 
 type ComparePopupProps = {
   onClose: () => void
-}
+  currentProduct: Product | ESIMProvider | BNPLProvider | reloadly;
+};
 
-export default function FormPopup({ onClose }: ComparePopupProps) {
+
+export default function FormPopup({ onClose, currentProduct }: ComparePopupProps) {
+    let formProduct = "'";
+    console.log(typeof(currentProduct))
+    if ("product_name" in currentProduct) {
+      formProduct = currentProduct.product_name;   // Product
+    } else if ("provider" in currentProduct) {
+      formProduct = currentProduct.provider;       // ESIMProvider
+    } else if ("Name" in currentProduct) {
+      formProduct = currentProduct.Name;           // BNPLProvider
+    } else if ("operator" in currentProduct) {
+      formProduct = currentProduct.operator;       // Operator
+    }                   // reloadly
+ 
+ 
   const [formData, setFormData] = useState({
     first_name: "",
     last_name: "",
     mobile: "",
     email: "",
     country: "",
+    product: formProduct
   })
-
+  
   const [loading, setLoading] = useState(false)
   const [message, setMessage] = useState("")
 
@@ -39,7 +55,7 @@ export default function FormPopup({ onClose }: ComparePopupProps) {
 
       if (!res.ok) throw new Error(data.error || "Failed to submit form")
       setMessage("✅ Form submitted successfully!")
-      setFormData({ first_name: "", last_name: "", mobile: "", email: "", country: "" })
+      setFormData({ first_name: "", last_name: "", mobile: "", email: "", country: "", product: ""})
     } catch (err: any) {//eslint-disable-line @typescript-eslint/no-explicit-any
       setMessage(`❌ ${err.message}`)
     } finally {
@@ -110,6 +126,7 @@ export default function FormPopup({ onClose }: ComparePopupProps) {
               required
               className="border p-2 rounded w-full"
             />
+            
           </div>
 
           <button

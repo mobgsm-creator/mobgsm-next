@@ -5,9 +5,9 @@ export const revalidate = 72000
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json()
-    const { first_name, last_name, mobile, email, country } = body
+    const { first_name, last_name, mobile, email, country, product } = body
 
-    if (!first_name || !last_name || !mobile || !email || !country) {
+    if (!first_name || !last_name || !mobile || !email || !country || !product) {
       return NextResponse.json({ message: "Missing required fields" }, { status: 400 })
     }
     console.log("here is the form data:", body)

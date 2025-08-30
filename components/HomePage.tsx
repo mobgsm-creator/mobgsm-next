@@ -24,7 +24,7 @@ export default function HomePageClient({
   giftcards,
   device_list
 }: HomePageProps) {
-  console.log(country_code)
+  
   const [country, setCountry] = useState(country_code)
 
   // Load initial country from localStorage
@@ -32,7 +32,7 @@ export default function HomePageClient({
     const stored = localStorage.getItem("selectedCountry")
     if (stored) setCountry(stored)
   }, [])
-  console.log(country)
+  
 
   return (
     <div className="min-h-screen bg-gray-50">

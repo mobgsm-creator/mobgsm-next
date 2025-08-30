@@ -75,6 +75,7 @@ const CountrySelector = ({ country, setCountry }: Props) => {
     {'code': 'IQ', 'name': 'Iraq', 'flag': '🇮🇶'},
     {'code': 'IT', 'name': 'Italy', 'flag': '🇮🇹'},
     {'code': 'JM', 'name': 'Jamaica', 'flag': '🇯🇲'},
+    {'code': 'JP', 'name': 'Japan', 'flag': '🇯🇵'},
     {'code': 'JO', 'name': 'Jordan', 'flag': '🇯🇴'},
     {'code': 'KE', 'name': 'Kenya', 'flag': '🇰🇪'},
     {'code': 'KG', 'name': 'Kyrgyzstan', 'flag': '🇰🇬'},
