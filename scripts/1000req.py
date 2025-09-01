@@ -3,7 +3,7 @@ import pandas as pd
 import json
 
 # Path to your CSV file
-csv_file = 'devices_rows.csv'
+csv_file = r'C:\Users\agney\Downloads\devices_rows.csv'
 
 # Load CSV
 df = pd.read_csv(csv_file)
