@@ -28,3 +28,21 @@ caddy_0.header=-Server
 caddy_0.try_files={path} /index.html /index.php
 caddy_0=http://mobgsm-service
 caddy_ingress_network=coolify
+
+
+#### Coolify Hotizontal Scaling override ###
+Edit the data/coolify/application docker_compose.yaml
+services:
+  my-service:
+    deploy:
+      replicas: 3
+    networks:
+      coolify: null
+    container_name: !reset null
+
+networks:
+  coolify:
+    name: coolify
+    external: true
+docker compose up -d 
+docker ps should show multiple containers
