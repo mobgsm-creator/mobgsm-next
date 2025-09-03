@@ -160,7 +160,7 @@ export default function ProductCard({ product }: ProductCardProps) {
       return (
         <>
           <DialogDescription className="text-sm font-semibold mb-2">Select Amount</DialogDescription>
-          
+          <div className="h-20 overflow-x-auto">
           <div className="flex flex-wrap gap-2 mb-4">
             {airtimeOperatorData.length > 1 ? (airtimeOperatorData.map((val, i) => {
               const local = val
@@ -182,7 +182,7 @@ export default function ProductCard({ product }: ProductCardProps) {
               Provider Not Supported
             </p>)
           }
-          </div>
+          </div></div>
           <input
             type="number"
             value={inputValue}
