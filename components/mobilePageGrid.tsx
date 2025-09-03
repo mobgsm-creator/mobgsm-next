@@ -12,7 +12,10 @@ type Props = {
 };
 
 export default function DevicesGrid({ brands, brandMap }: Props) {
-  const [selectedBrand, setSelectedBrand] = useState<string | null>("Nokia");
+  const [selectedBrand, setSelectedBrand] = useState<string | null>(() => {
+    const hashBrand = window.location.hash.replace("#", "");
+    return hashBrand || "Nokia"; // no default Nokia, just use hashBrand if present
+  });
 
   useEffect(() => {
     const hashBrand = window.location.hash.replace("#", "");
