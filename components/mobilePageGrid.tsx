@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Sidebar from "./mobilePageSidebar";
 import Link from "next/link";
 import Image from "next/image";
@@ -21,12 +21,12 @@ export default function DevicesGrid({ brands, brandMap }: Props) {
   });
   
 
-  // useEffect(() => {
-  //   const hashBrand = window.location.hash.replace("#", "");
-  //   if (hashBrand && brands.includes(hashBrand)) {
-  //     setSelectedBrand(hashBrand);
-  //   }
-  // }, [brands]);
+  useEffect(() => {
+    const hashBrand = window.location.hash.replace("#", "");
+    if (hashBrand && brands.includes(hashBrand)) {
+      setSelectedBrand(hashBrand);
+    }
+  }, [brands]);
 
   const handleBrandClick = (brand: string) => {
     setSelectedBrand(brand);
