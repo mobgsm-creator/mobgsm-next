@@ -11,6 +11,7 @@ interface DynamicCountryLinksProps {
 
 export default function DynamicBrandLinks({ country, uniqueBrands}: DynamicCountryLinksProps) {
   const [isOpen, setIsOpen] = useState(false);
+  console.log(country)
 
   return (
     <div className="max-h-[160rem] bg-gray-50 mt-6">

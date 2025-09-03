@@ -280,6 +280,7 @@ export default async function BlogPage({ params }: Params) {
     ([, value]) => value.country.toLowerCase() === country?.toLowerCase()
   )
   }
+  else entry = ""
   //console.log("Entry:",entry[0])
   
 
@@ -394,7 +395,7 @@ export default async function BlogPage({ params }: Params) {
             <DynamicMoreLinks more={moreFromBrand || []} brand={device.brand_name} />
 
             {/* Brands Section */}
-            <DynamicBrandLinks country={entry ? entry[0] : ""} uniqueBrands={uniqueBrands} />
+            <DynamicBrandLinks country={entry![0]} uniqueBrands={uniqueBrands} />
 
             {/* Dynamic Countries Section */}
             <Suspense fallback={<div>Loading countries...</div>}>
