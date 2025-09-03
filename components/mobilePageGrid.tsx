@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import Sidebar from "./mobilePageSidebar";
 import Link from "next/link";
 import Image from "next/image";
@@ -13,16 +13,20 @@ type Props = {
 
 export default function DevicesGrid({ brands, brandMap }: Props) {
   const [selectedBrand, setSelectedBrand] = useState<string | null>(() => {
-    const hashBrand = window.location.hash.replace("#", "");
-    return hashBrand || "Nokia"; // no default Nokia, just use hashBrand if present
-  });
-
-  useEffect(() => {
-    const hashBrand = window.location.hash.replace("#", "");
-    if (hashBrand && brands.includes(hashBrand)) {
-      setSelectedBrand(hashBrand);
+    if (typeof window !== "undefined") {
+      const hashBrand = window.location.hash.replace("#", "");
+      return hashBrand || null;
     }
-  }, [brands]);
+    return null; // SSR fallback
+  });
+  
+
+  // useEffect(() => {
+  //   const hashBrand = window.location.hash.replace("#", "");
+  //   if (hashBrand && brands.includes(hashBrand)) {
+  //     setSelectedBrand(hashBrand);
+  //   }
+  // }, [brands]);
 
   const handleBrandClick = (brand: string) => {
     setSelectedBrand(brand);
