@@ -394,7 +394,7 @@ export default async function BlogPage({ params }: Params) {
             <DynamicMoreLinks more={moreFromBrand || []} brand={device.brand_name} />
 
             {/* Brands Section */}
-            <DynamicBrandLinks uniqueBrands={uniqueBrands} />
+            <DynamicBrandLinks country={entry ? entry[0] : ""} uniqueBrands={uniqueBrands} />
 
             {/* Dynamic Countries Section */}
             <Suspense fallback={<div>Loading countries...</div>}>
