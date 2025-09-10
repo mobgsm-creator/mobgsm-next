@@ -114,14 +114,21 @@ const countryNameMap = {
   zw: "zimbabwe",
 };
 
-const redirects = Object.entries(countryNameMap).map(([code, name]) => ({
-  source: `/mobile/:slug-price-in-${name}`,
-  has: [
-    { type: "host", value: "mobgsm.com" }, // only redirect on root domain
-  ],
-  destination: `https://${code}.mobgsm.com/mobile/:slug-price-in-${name}`,
-  permanent: true,
-}));
+const redirects = Object.entries(countryNameMap).flatMap(([code, name]) => [
+  {
+    source: `/mobile/:slug-price-in-${name}`,
+    has: [{ type: "host", value: "mobgsm.com" }],
+    destination: `https://${code}.mobgsm.com/mobile/:slug-price-in-${name}`,
+    permanent: true,
+  },
+  {
+    source: `/mobile/:slug-price-in-${name}`,
+    has: [{ type: "host", value: "mobgsm.com.ng" }],
+    destination: `https://${code}.mobgsm.com/mobile/:slug-price-in-${name}`,
+    permanent: true,
+  },
+]);
+
 
 
 const nextConfig = {
