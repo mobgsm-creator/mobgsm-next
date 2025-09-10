@@ -1,0 +1,7 @@
+User-agent: *
+Disallow: *-review-*.php
+Disallow: /review/*
+Disallow: *.php/
+Disallow: /news/*.php
+Allow: /
+Sitemap: https://mobgsm.com/sitemap.xml
