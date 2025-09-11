@@ -7,7 +7,21 @@ import path from 'path';
 import Link from "next/link"
 const devicesJSONPath = path.join(process.cwd(), 'public', 'devices.json');
 const devicesData = JSON.parse(fs.readFileSync(devicesJSONPath, 'utf-8'));
-
+const countryMap: Record<string, string> = {
+  "korea-south": "Korea (South)",
+  "Hong-Kong": "Hong Kong",
+  "united-states": "United States",
+  "united-kingdom": "United Kingdom",
+  "czech-republic": "Czech Republic",
+  "saudi-arabia": "Saudi Arabia",
+  "south-africa": "South Africa",
+  "new-zealand": "New Zealand",
+  "dominican-republic": "Dominican Republic",
+  "el-salvador": "El Salvador",
+  "sierra-leone": "Sierra Leone",
+  "viet-nam": "Viet nam",
+  // add more as needed
+};
 import { Suspense } from "react"
 import  DynamicCountryLinks  from "@/components/countryDropdownDevicePage"
 import DynamicBrandLinks from "@/components/brandsDropdownDevicePage"
@@ -104,11 +118,12 @@ export async function generateMetadata( props: { params: Promise<{ slug: string 
   const settings = is as SettingsMap
   const { slug } = await props.params;
   const { pureSlug, rawCountry } = parseSlug(slug);
-  const country = rawCountry === "korea-south" ? "Korea (South)" : rawCountry;
-
+  const country = countryMap[rawCountry!] || rawCountry;
+  console.log(country)
   const entry = Object.entries(settings).find(
     ([, value]) => value.country.toLowerCase() === country?.toLowerCase()
   )
+  console.log(entry)
   let canonical: string;
   let alternatesLanguages: Record<string, string> = {};
 
@@ -252,20 +267,7 @@ function DynamicCountryContent({ device, slugcountry}: { device: any, slugcountr
 
 
 export default async function BlogPage({ params }: Params) {
-  const countryMap: Record<string, string> = {
-    "korea-south": "Korea (South)",
-    "hong-kong": "Hong Kong",
-    "united-states": "United States",
-    "united-kingdom": "United Kingdom",
-    "czech-republic": "Czech Republic",
-    "saudi-arabia": "Saudi Arabia",
-    "south-africa": "South Africa",
-    "new-zealand": "New Zealand",
-    "dominican-republic": "Dominican Republic",
-    "el-salvador": "El Salvador",
-    "sierra-leone": "Sierra Leone",
-    // add more as needed
-  };
+  
   const { slug } = await params
   const { pureSlug, rawCountry } = parseSlug(slug);
   
@@ -392,7 +394,7 @@ export default async function BlogPage({ params }: Params) {
           {/* Sidebar */}
           <div className="bg-gray-50 p-4 rounded-2xl">
             {/* Related Devices */}
-            <DynamicMoreLinks more={moreFromBrand || []} brand={device.brand_name} />
+            <DynamicMoreLinks country={entry![0]} more={moreFromBrand || []} brand={device.brand_name} />
 
             {/* Brands Section */}
             <DynamicBrandLinks country={entry![0]} uniqueBrands={uniqueBrands} />

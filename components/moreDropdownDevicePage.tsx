@@ -9,12 +9,12 @@ type Device = {
     main_price: number | null | undefined;
   };
 interface DynamicCountryLinksProps {
-
+  country: string | null;
   more: Device[];
   brand: string;
 }
 
-export default function DynamicMoreLinks({ more, brand}: DynamicCountryLinksProps) {
+export default function DynamicMoreLinks({ country, more, brand}: DynamicCountryLinksProps) {
   const [isOpen, setIsOpen] = useState(false);
   //console.log(brand, more)
   return (
@@ -37,7 +37,7 @@ export default function DynamicMoreLinks({ more, brand}: DynamicCountryLinksProp
                   <Link
                     key={index}
                     className="flex items-center justify-between mb-1 px-4 py-3 bg-white hover:bg-gray-50 cursor-pointer rounded-2xl"
-                    href={`https://mobgsm.com/mobile/${dev.name.replace(/\s+/g, '-').toLowerCase()}` }
+                    href={`https://${country ? country + "." : ""}mobgsm.com/mobile/${dev.name.replace(/\s+/g, '-').toLowerCase()}` }
                   >
                     <span className="text-gray-900 font-medium">{dev.name}</span>
                     <ChevronRight className="h-4 w-4 text-red-500" />
