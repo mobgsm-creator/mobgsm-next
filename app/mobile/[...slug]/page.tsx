@@ -19,7 +19,7 @@ const countryMap: Record<string, string> = {
   "dominican-republic": "Dominican Republic",
   "el-salvador": "El Salvador",
   "sierra-leone": "Sierra Leone",
-  "viet-nam": "Viet nam",
+  "Viet-Nam": "Viet Nam",
   // add more as needed
 };
 import { Suspense } from "react"
