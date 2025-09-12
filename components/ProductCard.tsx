@@ -15,11 +15,199 @@ import {
 } from "@/components/ui/dialog"
 import FormPopup from "./formPopup"
 import Image from "next/image"
+import { loadStripe } from "@stripe/stripe-js";
+import {
+  Elements,
+  PaymentElement,
+  useStripe,
+  useElements,
+} from "@stripe/react-stripe-js";
+
+const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_KEY!);
 type ProductCardProps = {
   product: Product[] | ESIMProvider[] | BNPLProvider[] | reloadly[];
 };
+const countryToCurrency: {[key: string]: string} = {
+  AE: "AED",
+  AF: "AFN",
+  AG: "XCD",
+  AI: "XCD",
+  AL: "ALL",
+  AM: "AMD",
+  AO: "AOA",
+  AR: "ARS",
+  AS: "USD",
+  AT: "EUR",
+  AU: "AUD",
+  AW: "AWG",
+  AZ: "AZN",
+  BB: "BBD",
+  BD: "BDT",
+  BE: "EUR",
+  BF: "XOF",
+  BG: "BGN",
+  BH: "BHD",
+  BI: "BIF",
+  BJ: "XOF",
+  BM: "BMD",
+  BO: "BOB",
+  BR: "BRL",
+  BS: "BSD",
+  BW: "BWP",
+  BY: "BYN",
+  BZ: "BZD",
+  CA: "CAD",
+  CD: "CDF",
+  CF: "XAF",
+  CG: "XAF",
+  CH: "CHF",
+  CI: "XOF",
+  CL: "CLP",
+  CM: "XAF",
+  CN: "CNY",
+  CO: "COP",
+  CR: "CRC",
+  CU: "CUP",
+  CY: "EUR",
+  CZ: "CZK",
+  DE: "EUR",
+  DJ: "DJF",
+  DK: "DKK",
+  DM: "XCD",
+  DO: "DOP",
+  DZ: "DZD",
+  EC: "USD",
+  EE: "EUR",
+  EG: "EGP",
+  ER: "ERN",
+  ES: "EUR",
+  ET: "ETB",
+  FI: "EUR",
+  FJ: "FJD",
+  FR: "EUR",
+  GA: "XAF",
+  GB: "GBP",
+  GD: "XCD",
+  GE: "GEL",
+  GH: "GHS",
+  GM: "GMD",
+  GN: "GNF",
+  GQ: "XAF",
+  GR: "EUR",
+  GT: "GTQ",
+  GW: "XOF",
+  GY: "GYD",
+  HN: "HNL",
+  HT: "HTG",
+  ID: "IDR",
+  IE: "EUR",
+  IL: "ILS",
+  IN: "INR",
+  IQ: "IQD",
+  IR: "IRR",
+  IS: "ISK",
+  IT: "EUR",
+  JM: "JMD",
+  JO: "JOD",
+  JP: "JPY",
+  KE: "KES",
+  KG: "KGS",
+  KH: "KHR",
+  KM: "KMF",
+  KN: "XCD",
+  KR: "KRW",
+  KW: "KWD",
+  KY: "KYD",
+  KZ: "KZT",
+  LA: "LAK",
+  LB: "LBP",
+  LK: "LKR",
+  LR: "LRD",
+  LS: "LSL",
+  LT: "EUR",
+  LU: "EUR",
+  LV: "EUR",
+  LY: "LYD",
+  MA: "MAD",
+  MD: "MDL",
+  MG: "MGA",
+  ML: "XOF",
+  MM: "MMK",
+  MN: "MNT",
+  MR: "MRU",
+  MS: "XCD",
+  MT: "EUR",
+  MU: "MUR",
+  MV: "MVR",
+  MW: "MWK",
+  MX: "MXN",
+  MY: "MYR",
+  MZ: "MZN",
+  NA: "NAD",
+  NE: "XOF",
+  NG: "NGN",
+  NI: "NIO",
+  NL: "EUR",
+  NO: "NOK",
+  NP: "NPR",
+  NZ: "NZD",
+  OM: "OMR",
+  PA: "PAB",
+  PE: "PEN",
+  PH: "PHP",
+  PK: "PKR",
+  PL: "PLN",
+  PR: "USD",
+  PT: "EUR",
+  PY: "PYG",
+  QA: "QAR",
+  RO: "RON",
+  RS: "RSD",
+  RU: "RUB",
+  RW: "RWF",
+  SA: "SAR",
+  SC: "SCR",
+  SD: "SDG",
+  SE: "SEK",
+  SG: "SGD",
+  SI: "EUR",
+  SK: "EUR",
+  SL: "SLL",
+  SN: "XOF",
+  SO: "SOS",
+  SR: "SRD",
+  SV: "USD",
+  SZ: "SZL",
+  TC: "USD",
+  TD: "XAF",
+  TG: "XOF",
+  TH: "THB",
+  TJ: "TJS",
+  TL: "USD",
+  TN: "TND",
+  TR: "TRY",
+  TT: "TTD",
+  TZ: "TZS",
+  UA: "UAH",
+  UG: "UGX",
+  US: "USD",
+  UY: "UYU",
+  UZ: "UZS",
+  VC: "XCD",
+  VE: "VES",
+  VG: "USD",
+  VN: "VND",
+  WS: "WST",
+  YE: "YER",
+  ZA: "ZAR",
+  ZM: "ZMW",
+  ZW: "ZWL"
+};
 
 export default function ProductCard({ product }: ProductCardProps) {
+  const [showPayment, setShowPayment] = useState(false);
+  const [clientSecret, setClientSecret] = useState<string | null>(null);
+  const [pendingAction, setPendingAction] = useState<"giftcard" | "topup" | null>(null);
   
   
   
@@ -48,7 +236,7 @@ export default function ProductCard({ product }: ProductCardProps) {
     recipientNumber: "",
   });
   
-
+  
   const handleChange = (field: string, value: string | boolean) => {
     setFormData((prev) => ({
       ...prev,
@@ -101,9 +289,15 @@ export default function ProductCard({ product }: ProductCardProps) {
       const result = await response.json();
       console.log("Giftcard Purchase Success ✅:", result);
       alert("Giftcard purchase successful 🎉");
+      
     } catch (error) {
       console.error("Giftcard Purchase Error ❌:", error);
       alert("Giftcard purchase failed");
+    }
+    finally {
+      setShowPayment(false)
+      setClientSecret(null)
+      setPendingAction(null)
     }
   };
   
@@ -142,11 +336,56 @@ export default function ProductCard({ product }: ProductCardProps) {
       console.error("Topup Error:", error)
       alert("Topup failed ❌")
     }
+    finally {
+      setShowPayment(false)
+      setClientSecret(null)
+      setPendingAction(null)
+    }
   }
   
+  const PaymentForm = ({ onSuccess }: { onSuccess: () => void }) => {
+    console.log("Rendering PaymentForm with clientSecret:", clientSecret);
 
+    const stripe = useStripe();
+    const elements = useElements();
+  
+    const handleSubmit = async (e: React.FormEvent) => {
+      e.preventDefault();
+      if (!stripe || !elements) return;
+  
+      const { error, paymentIntent } = await stripe.confirmPayment({
+        elements,
+        confirmParams: {
+          return_url: window.location.href,
+        },
+        redirect: "if_required"
+      });
+  
+      if (error) {
+        console.error(error.message);
+        alert(error.message);
+      } else if (paymentIntent && paymentIntent.status === "succeeded") {
+        onSuccess(); // 🔥 call Giftcard/Topup here
+      }
+    };
+  
+    return (
+      <form onSubmit={handleSubmit}>
+        <PaymentElement />
+        <button
+          type="submit"
+          disabled={!stripe}
+          className="bg-black text-white px-4 py-2 rounded mt-4"
+        >
+          Pay
+        </button>
+      </form>
+    );
+  };
+  
 
   const renderValues = (product : reloadly, ) => {//Eslint-disable-line
+    
     if (product.img_link.includes("s3.amazonaws")) {
      
       
@@ -159,6 +398,18 @@ export default function ProductCard({ product }: ProductCardProps) {
     //const values = airtimeOperatorData
       return (
         <>
+        {showPayment && clientSecret && (
+          <Elements stripe={stripePromise} options={{ clientSecret }}>
+            <PaymentForm
+              onSuccess={() => {
+                if (pendingAction === "giftcard") handleGiftcard();
+                if (pendingAction === "topup") handleTopup();
+                setShowPayment(false);
+              }}
+            />
+          </Elements>
+        )}
+          {!showPayment && !clientSecret && (<>
           <DialogDescription className="text-sm font-semibold mb-2">Select Amount</DialogDescription>
           <div className="h-20 overflow-x-auto">
           <div className="flex flex-wrap gap-2 mb-4">
@@ -210,9 +461,38 @@ export default function ProductCard({ product }: ProductCardProps) {
   className="w-full border rounded p-2 mb-4"
   placeholder="Enter Phone Number"
 />
-<Button onClick={handleTopup} className="w-full mt-4">
-        Submit Topup
-      </Button>
+<Button
+  onClick={async () => {
+    const zeroDecimalCurrencies = [
+      "BIF","CLP","DJF","GNF","JPY","KMF","KRW","MGA","PYG","RWF",
+      "UGX","VND","VUV","XAF","XOF","XPF"
+    ];
+    const currency = countryToCurrency[formData.recipientCountryCode];//eslint-disable-line
+    const amount = zeroDecimalCurrencies.includes(currency) 
+      ? Number(inputValue) 
+      : Number(inputValue) * 100;
+    // Call your backend to create a PaymentIntent
+    const res = await fetch("/api/stripe/createPayment", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ 
+        amount: amount, 
+        currency: currency 
+      }) // cents
+    });
+
+    const data = await res.json();
+    if (data.clientSecret) {
+      console.log("Client Secret:", data.clientSecret);
+      setClientSecret(data.clientSecret);
+      setPendingAction("topup"); // or "giftcard"
+      setShowPayment(true);
+    }
+  }}
+>
+  Submit Topup
+</Button></>)}
+
 
           
         </>
@@ -226,6 +506,18 @@ export default function ProductCard({ product }: ProductCardProps) {
         //console.log(product.operator, values)
       return (
         <>
+        {showPayment && clientSecret && (
+          <Elements stripe={stripePromise} options={{ clientSecret }}>
+            <PaymentForm
+              onSuccess={() => {
+                if (pendingAction === "giftcard") handleGiftcard();
+                if (pendingAction === "topup") handleTopup();
+                setShowPayment(false);
+              }}
+            />
+          </Elements>
+        )}
+       {!showPayment && !clientSecret && (<>
       <DialogDescription className="text-sm font-semibold mb-2">
         Select Amount in Local Currency
       </DialogDescription>
@@ -290,7 +582,7 @@ export default function ProductCard({ product }: ProductCardProps) {
         value={formData.recipientCountryCode}
         onChange={(e) => handleChange("recipientCountryCode", e.target.value)}
         className="w-full border rounded p-2 mb-4"
-        placeholder="Recipient Country Code"
+        placeholder="Recipient Country Code: US, IN, PK, PH, CN ..."
       />
       <input
         type="tel"
@@ -302,15 +594,35 @@ export default function ProductCard({ product }: ProductCardProps) {
 
      
 
-      <Button
-        onClick={() => {
-          console.log("Form Data for API:", formData)
-          handleGiftcard() // or handleTopup() based on your logic
-          // 🔥 send formData to your POST API here
-        }}
-      >
-        Submit
-      </Button>
+<Button
+  onClick={async () => {
+    const zeroDecimalCurrencies = [
+      "BIF","CLP","DJF","GNF","JPY","KMF","KRW","MGA","PYG","RWF",
+      "UGX","VND","VUV","XAF","XOF","XPF"
+    ];
+    const currency = countryToCurrency[formData.recipientCountryCode];//eslint-disable-line
+    const amount = zeroDecimalCurrencies.includes(currency) 
+      ? Number(formData.inputValue) 
+      : Number(formData.inputValue) * 100;
+    
+    const res = await fetch("/api/stripe/createPayment", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ amount: amount, currency: currency }) // cents
+    });
+
+    const data = await res.json();
+    if (data.clientSecret) {
+      console.log("Logging secret",data.clientSecret)
+      setClientSecret(data.clientSecret);
+      setPendingAction("giftcard");
+      setShowPayment(true);
+    }
+  }}
+>
+  Submit  
+</Button></>
+)}
     </>
       )
     }
