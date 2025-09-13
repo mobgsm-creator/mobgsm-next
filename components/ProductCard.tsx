@@ -448,26 +448,42 @@ export default function ProductCard({ product }: ProductCardProps) {
             className="w-full border rounded p-2 mb-4"
             placeholder="Enter Email"
           />
-          <input
-  type="text"
-  value={PhoneValue.number || ""}
-  onChange={(e) =>
-    setPhoneValue({
-      ...PhoneValue,                
-      countryCode: product.code,    
-      number: e.target.value       
-    })
-  }
-  className="w-full border rounded p-2 mb-4"
-  placeholder="Enter Phone Number"
-/>
+          <div className="flex gap-2 mb-4">
+  {/* Country Code Input */}
+  <input
+    type="text"
+    value={PhoneValue.countryCode || ""}
+    onChange={(e) =>
+      setPhoneValue({
+        ...PhoneValue,
+        countryCode: e.target.value, // update code only
+      })
+    }
+    className="w-1/3 border rounded p-2"
+    placeholder="Code (e.g. +1)"
+  />
+
+  {/* Phone Number Input */}
+  <input
+    type="text"
+    value={PhoneValue.number || ""}
+    onChange={(e) =>
+      setPhoneValue({
+        ...PhoneValue,
+        number: e.target.value, // update number only
+      })
+    }
+    className="w-2/3 border rounded p-2"
+    placeholder="Enter Phone Number"
+  />
+</div>
 <Button
   onClick={async () => {
     const zeroDecimalCurrencies = [
       "BIF","CLP","DJF","GNF","JPY","KMF","KRW","MGA","PYG","RWF",
       "UGX","VND","VUV","XAF","XOF","XPF"
     ];
-    const currency = countryToCurrency[formData.recipientCountryCode];//eslint-disable-line
+    const currency = countryToCurrency[formData.recipientCountryCode || PhoneValue.countryCode];//eslint-disable-line
     const amount = zeroDecimalCurrencies.includes(currency) 
       ? Number(inputValue) 
       : Number(inputValue) * 100;
