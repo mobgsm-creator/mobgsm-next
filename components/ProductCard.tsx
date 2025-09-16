@@ -460,7 +460,7 @@ export default function ProductCard({ product }: ProductCardProps) {
       })
     }
     className="w-1/3 border rounded p-2"
-    placeholder="Code (e.g. +1)"
+    placeholder="IN, US, CN, PH..."
   />
 
   {/* Phone Number Input */}

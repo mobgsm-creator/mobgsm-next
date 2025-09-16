@@ -150,7 +150,7 @@ export async function GET(
   const urls = allDevices
     .map(
       (device) => `<url><loc>${escapeXml(
-            `https://${country}.mobgsm.com/phones/${device.name_url}-price-in-${countrySlug}`
+            `https://${country}.mobgsm.com/mobile/${device.name_url}-price-in-${countrySlug}`
           )}</loc></url>`
     )
     .join('');
