@@ -127,7 +127,9 @@ const countryNameMap: Record<string, string> = {
     zm: "zambia",
     zw: "zimbabwe",
   };
-  
+const countryCodeMap: Record<string, string> = Object.fromEntries(
+    Object.entries(countryNameMap).map(([code, name]) => [name, code])
+  );
 type Device = {
   id: string;
   name: string;
@@ -140,7 +142,9 @@ export async function GET(
   { params }: { params: { country: string } }
 ) {
   const { country } = params;
-  const countrySlug = countryNameMap[country] || country;
+  
+  const countrySlug = countryCodeMap[country] || country;
+
 
   const allDevices: Device[] = Object.values(devicesData) as Device[];
 
@@ -150,7 +154,7 @@ export async function GET(
   const urls = allDevices
     .map(
       (device) => `<url><loc>${escapeXml(
-            `https://${country}.mobgsm.com/mobile/${device.name_url}-price-in-${countrySlug}`
+            `https://${countrySlug}.mobgsm.com/mobile/${device.name_url}-price-in-${country}`
           )}</loc></url>`
     )
     .join('');
