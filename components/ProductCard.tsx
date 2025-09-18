@@ -22,7 +22,7 @@ import {
   useStripe,
   useElements,
 } from "@stripe/react-stripe-js";
-
+import { CheckCircle2 } from "lucide-react";
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_KEY!);
 type ProductCardProps = {
   product: Product[] | ESIMProvider[] | BNPLProvider[] | reloadly[];
@@ -226,9 +226,9 @@ export default function ProductCard({ product }: ProductCardProps) {
   const [airtimeOperatorData, setAirtimeOperatorData] = useState([])
   const [formData, setFormData] = useState({
     operatorId: 0,
-    inputValue: 0,
+    inputValue: "",
     selectedValue: "",
-    quantity: 1,
+    quantity: "",
     userId: "",
     senderName: "",
     emailValue: "",
@@ -276,7 +276,7 @@ export default function ProductCard({ product }: ProductCardProps) {
     console.log("Giftcard Purchase Request:", data);
   
     try {
-      const response = await fetch("/api/purchase_giftcard", {
+      const response = await fetch("/api/purchase_giftcard?drryRns=True", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -398,6 +398,9 @@ export default function ProductCard({ product }: ProductCardProps) {
     //const values = airtimeOperatorData
       return (
         <>
+        {/* {!showPayment && clientSecret && (
+          <div className='text-center mb-4 font-semibold'>Here</div>
+        )}
         {showPayment && clientSecret && (
           <Elements stripe={stripePromise} options={{ clientSecret }}>
             <PaymentForm
@@ -408,7 +411,7 @@ export default function ProductCard({ product }: ProductCardProps) {
               }}
             />
           </Elements>
-        )}
+        )} */}
           {!showPayment && !clientSecret && (<>
           <DialogDescription className="text-sm font-semibold mb-2">Select Amount</DialogDescription>
           <div className="h-20 overflow-x-auto">
@@ -478,33 +481,33 @@ export default function ProductCard({ product }: ProductCardProps) {
   />
 </div>
 <Button
-  onClick={async () => {
-    const zeroDecimalCurrencies = [
-      "BIF","CLP","DJF","GNF","JPY","KMF","KRW","MGA","PYG","RWF",
-      "UGX","VND","VUV","XAF","XOF","XPF"
-    ];
-    const currency = countryToCurrency[formData.recipientCountryCode || PhoneValue.countryCode];//eslint-disable-line
-    const amount = zeroDecimalCurrencies.includes(currency) 
-      ? Number(inputValue) 
-      : Number(inputValue) * 100;
-    // Call your backend to create a PaymentIntent
-    const res = await fetch("/api/stripe/createPayment", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ 
-        amount: amount, 
-        currency: currency 
-      }) // cents
-    });
+  // onClick={async () => {
+  //   const zeroDecimalCurrencies = [
+  //     "BIF","CLP","DJF","GNF","JPY","KMF","KRW","MGA","PYG","RWF",
+  //     "UGX","VND","VUV","XAF","XOF","XPF"
+  //   ];
+  //   const currency = countryToCurrency[formData.recipientCountryCode || PhoneValue.countryCode];//eslint-disable-line
+  //   const amount = zeroDecimalCurrencies.includes(currency) 
+  //     ? Number(inputValue) 
+  //     : Number(inputValue) * 100;
+  //   // Call your backend to create a PaymentIntent
+  //   const res = await fetch("/api/stripe/createPayment", {
+  //     method: "POST",
+  //     headers: { "Content-Type": "application/json" },
+  //     body: JSON.stringify({ 
+  //       amount: amount, 
+  //       currency: currency 
+  //     }) // cents
+  //   });
 
-    const data = await res.json();
-    if (data.clientSecret) {
-      console.log("Client Secret:", data.clientSecret);
-      setClientSecret(data.clientSecret);
-      setPendingAction("topup"); // or "giftcard"
-      setShowPayment(true);
-    }
-  }}
+  //   const data = await res.json();
+  //   if (data.clientSecret) {
+  //     console.log("Client Secret:", data.clientSecret);
+  //     setClientSecret(data.clientSecret);
+  //     setPendingAction("topup"); // or "giftcard"
+  //     setShowPayment(true);
+  //   }
+  // }}
 >
   Submit Topup
 </Button></>)}
@@ -522,6 +525,29 @@ export default function ProductCard({ product }: ProductCardProps) {
         //console.log(product.operator, values)
       return (
         <>
+        {!showPayment && clientSecret && (
+           <div className="flex flex-col items-center justify-center p-6 bg-green-50 rounded-2xl shadow-md max-w-md mx-auto">
+           <CheckCircle2 className="text-green-600 w-12 h-12 mb-3" />
+           <h2 className="text-2xl font-bold text-green-700 mb-2">
+             Payment Successful
+           </h2>
+           <p className="text-gray-700 text-center mb-4">
+             Thank you for your purchase! Your payment has been processed
+             successfully. You’ll receive a confirmation email shortly.
+           </p>
+           <button
+             onClick={() => {
+                window.location.href = "/";
+                setShowPayment(false)
+                setClientSecret(null)
+                setPendingAction(null)
+             }}
+             className="bg-indigo-600 text-white px-6 py-2 rounded-lg hover:bg-indigo-700 transition"
+           >
+             Back to Home
+           </button>
+         </div>
+        )}
         {showPayment && clientSecret && (
           <Elements stripe={stripePromise} options={{ clientSecret }}>
             <PaymentForm
@@ -560,7 +586,7 @@ export default function ProductCard({ product }: ProductCardProps) {
           </p>
         )}
       </div>
-
+      <div className="flex gap-2 mb-4">
       <input
         type="number"
         value={formData.quantity}
@@ -574,7 +600,7 @@ export default function ProductCard({ product }: ProductCardProps) {
         onChange={(e) => handleChange("inputValue", e.target.value)}
         className="w-full border rounded p-2 mb-4"
         placeholder="Enter Amount"
-      />
+      /></div>
 
       
 
@@ -593,12 +619,13 @@ export default function ProductCard({ product }: ProductCardProps) {
         className="w-full border rounded p-2 mb-4"
         placeholder="Recipient Email"
       />
+      <div className="flex gap-2 mb-4">
       <input
         type="tel"
         value={formData.recipientCountryCode}
         onChange={(e) => handleChange("recipientCountryCode", e.target.value)}
         className="w-full border rounded p-2 mb-4"
-        placeholder="Recipient Country Code: US, IN, PK, PH, CN ..."
+        placeholder="US, IN, PK, PH, CN ..."
       />
       <input
         type="tel"
@@ -606,7 +633,7 @@ export default function ProductCard({ product }: ProductCardProps) {
         onChange={(e) => handleChange("recipientNumber", e.target.value)}
         className="w-full border rounded p-2 mb-4"
         placeholder="Recipient Phone"
-      />
+      /></div>
 
      
 
@@ -993,7 +1020,7 @@ export default function ProductCard({ product }: ProductCardProps) {
  
 
   {/* Logo */}
-  <div className="flex items-center justify-center h-32 w-full bg-white rounded-md shadow-inner p-2">
+  <div className="flex items-center justify-center h-32 w-full bg-white rounded-md shadow-inner p-2" onClick={handleForm}>
     <Image
       src={currentProduct.img_link}
       alt={currentProduct.operator}
