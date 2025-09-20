@@ -29,6 +29,7 @@ interface ProductListingProps {
   view: 'products' | 'esim' | 'bnpl' | 'reloadly-airtime' | 'reloadly-gifts'
   setView: (view: 'products' | 'esim' | 'bnpl' | 'reloadly-airtime' | 'reloadly-gifts') => void
   session: Session | null
+  balance: { amount: number; currency: string }[];
 }
 interface ToggleTabsProps {
   onChange: (value: 'products' | 'esim' | 'bnpl'| 'reloadly-airtime' | 'reloadly-gifts') => void
@@ -73,8 +74,8 @@ const LazyProductCard = dynamic(() => import('./ProductCard'), {
   ssr: false
 })
 
-export default function ProductListing({ product, esimProviders, BNPLProvider, airtime, gifts, view, setView, session }: ProductListingProps) {  
-  
+export default function ProductListing({ product, esimProviders, BNPLProvider, airtime, gifts, view, setView, session, balance }: ProductListingProps) {  
+  console.log(balance)
   const router = useRouter()
   const urlSearchParams = useSearchParams()
   const [filteredData, setFilteredData] = useState<TabData>([])
@@ -178,6 +179,7 @@ export default function ProductListing({ product, esimProviders, BNPLProvider, a
           key={index}
           product={getProductsForCard(item, view)}
           session={session}
+          balance={balance}
         />
       )
     }
@@ -188,6 +190,7 @@ export default function ProductListing({ product, esimProviders, BNPLProvider, a
         key={index}
         product={getProductsForCard(item, view)}
         session={session}
+        balance={balance}
       />
     )
   })}

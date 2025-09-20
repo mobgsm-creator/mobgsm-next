@@ -3,7 +3,7 @@ import Link from "next/link"
 import type { Product, ESIMProvider, BNPLProvider, reloadly } from "../lib/types"
 import { Button } from "../components/ui/button"
 import { Badge } from "../components/ui/badge"
-import { useState, useEffect } from "react";
+import { useState} from "react";
 import Turnstile from '../components/Turnstile';
 import ComparePopup from "./comparePopup";
 import {
@@ -29,6 +29,7 @@ const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_KEY!);
 type ProductCardProps = {
   product: Product[] | ESIMProvider[] | BNPLProvider[] | reloadly[];
   session: Session | null;
+  balance: { amount: number; currency: string }[];
 };
 const countryToCurrency: {[key: string]: string} = {
   AE: "AED",
@@ -207,13 +208,12 @@ const countryToCurrency: {[key: string]: string} = {
   ZW: "ZWL"
 };
 
-export default function ProductCard({ product, session }: ProductCardProps) {
+export default function ProductCard({ product, session, balance }: ProductCardProps) {
   const [showPayment, setShowPayment] = useState(false);
   const [clientSecret, setClientSecret] = useState<string | null>(null);
   const [pendingAction, setPendingAction] = useState<"giftcard" | "topup" | null>(null);
   const [isVerified, setIsVerified] = useState(false);
   const [isCredits, setIsCredits] = useState(false);
-  const [balance, setBalance] = useState<{ amount: number; currency: string }[]>([]);;
   const [currentIndex, setCurrentIndex] = useState(0);
   const [showCompare, setShowCompare] = useState(false)
   const [showForm, setShowForm] = useState(false)
@@ -267,41 +267,7 @@ export default function ProductCard({ product, session }: ProductCardProps) {
     return result
 
   }
-  const getBalance = async () => {
-    const res = await fetch(`/api/get_balance?email=${session?.user?.email}`);
-    const data = await res.json();
   
-    const balances: { amount: number; currency: string }[] = [];
-  
-    const credits = data.credit || [];
-    const debits = data.debit || [];
-  
-    // index debits by currency for quick lookup
-    const debitMap: Record<string, number> = {};
-    for (const d of debits) {
-      debitMap[d.currency] = (debitMap[d.currency] || 0) + d.amount;
-    }
-  
-    for (const c of credits) {
-      const debitAmount = debitMap[c.currency] || 0;
-      balances.push({
-        currency: c.currency,
-        amount: c.amount - debitAmount,
-      });
-    }
-  
-    return balances;
-  };
-  
-  
-  // Example usage inside useEffect or handler
-  
-useEffect(() => {
-  (async () => {
-    const result = await getBalance();
-    setBalance(result);
-  })();
-}, [session]);
   
   const handleGiftcard = async () => {
     // Build request payload based on formData

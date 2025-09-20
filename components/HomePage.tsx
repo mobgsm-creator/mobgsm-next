@@ -37,7 +37,10 @@ export default function HomePageClient({
   // Load initial country from localStorage
   useEffect(() => {
     
-   
+    (async () => {
+      const result = await getBalance();
+      setBalance(result);
+    })();
     const stored = localStorage.getItem("selectedCountry")
     if (stored) setCountry(stored)
   }, [])
@@ -70,15 +73,7 @@ export default function HomePageClient({
   
   
   // Example usage inside useEffect or handler
-  
-useEffect(() => {
-  (async () => {
-    const result = await getBalance();
-    setBalance(result);
-  })();
-}, [session]);
-  
-  
+
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -127,6 +122,7 @@ useEffect(() => {
           giftcards={giftcards}
           device_list={device_list}
           session={session}
+          balance={balance}
         
           
         />
