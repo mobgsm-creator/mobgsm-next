@@ -67,7 +67,18 @@ export const authOptions: NextAuthOptions = {
       },
     }),
   ],
-
+  cookies: {
+    sessionToken: {
+      name: `__Secure-next-auth.session-token`,
+      options: {
+        httpOnly: true,
+        sameSite: "lax",
+        path: "/",
+        secure: true, // important for HTTPS behind proxy
+      },
+    },
+  },
+  useSecureCookies: true,
    
   callbacks: {
     async signIn({ user }) {
