@@ -54,7 +54,7 @@ export default function LoginForm() {
 
   const handleOAuthLogin = async () => {
     try {
-      await signIn("google", { callbackUrl: "/" });
+      await signIn("google", { callbackUrl: "/", redirect: true });
     } catch (error) {
       console.error("Error signing in:", error);
     }
