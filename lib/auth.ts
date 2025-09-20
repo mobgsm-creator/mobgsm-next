@@ -79,6 +79,7 @@ export const authOptions: NextAuthOptions = {
     },
   },
   useSecureCookies: true,
+ 
    
   callbacks: {
     async signIn({ user }) {

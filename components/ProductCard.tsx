@@ -1107,6 +1107,11 @@ export default function ProductCard({ product, session, balance }: ProductCardPr
   {/* Logo */}
   <div className="flex items-center justify-center h-32 w-full bg-white rounded-md shadow-inner p-2"
   onClick={async () => {
+    if (!session) {
+      alert("Please sign in to continue.");
+      window.location.href = "/register";
+      return
+    }
     if (currentProduct.img_link?.includes("s3.amazonaws")) {
       // Fetch operator data & set state
       const localAmounts = await getAirtimeOperatorData(currentProduct.operator_id);
