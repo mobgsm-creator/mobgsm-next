@@ -103,11 +103,11 @@ export default function LoginForm() {
                     "Log in"
                   )}
                 </Button>
-                <Button onClick={handleOAuthLogin} className="w-full">
+                
+              </form>
+              <Button onClick={handleOAuthLogin} className="w-full">
               Login with Google
             </Button>
-              </form>
-       
           </TabsContent>
 
           
