@@ -3,7 +3,8 @@ import Link from "next/link"
 import type { Product, ESIMProvider, BNPLProvider, reloadly } from "../lib/types"
 import { Button } from "../components/ui/button"
 import { Badge } from "../components/ui/badge"
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import Turnstile from '../components/Turnstile';
 import ComparePopup from "./comparePopup";
 import {
   Dialog,
@@ -23,9 +24,11 @@ import {
   useElements,
 } from "@stripe/react-stripe-js";
 import { CheckCircle2 } from "lucide-react";
+import { Session } from "next-auth";
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_KEY!);
 type ProductCardProps = {
   product: Product[] | ESIMProvider[] | BNPLProvider[] | reloadly[];
+  session: Session | null;
 };
 const countryToCurrency: {[key: string]: string} = {
   AE: "AED",
@@ -204,13 +207,13 @@ const countryToCurrency: {[key: string]: string} = {
   ZW: "ZWL"
 };
 
-export default function ProductCard({ product }: ProductCardProps) {
+export default function ProductCard({ product, session }: ProductCardProps) {
   const [showPayment, setShowPayment] = useState(false);
   const [clientSecret, setClientSecret] = useState<string | null>(null);
   const [pendingAction, setPendingAction] = useState<"giftcard" | "topup" | null>(null);
-  
-  
-  
+  const [isVerified, setIsVerified] = useState(false);
+  const [isCredits, setIsCredits] = useState(false);
+  const [balance, setBalance] = useState<{ amount: number; currency: string }[]>([]);;
   const [currentIndex, setCurrentIndex] = useState(0);
   const [showCompare, setShowCompare] = useState(false)
   const [showForm, setShowForm] = useState(false)
@@ -235,8 +238,19 @@ export default function ProductCard({ product }: ProductCardProps) {
     recipientCountryCode: "",
     recipientNumber: "",
   });
-  
-  
+ 
+  const VerificationBox = () => (
+    <>
+    <div className="flex flex-col items-center">
+      
+      <p className="mb-4 text-gray-600">Please complete the verification to continue</p>
+      {(
+        <Turnstile
+          onVerify={() => setIsVerified(true)}
+        />
+      )}
+    </div></>
+  )
   const handleChange = (field: string, value: string | boolean) => {
     setFormData((prev) => ({
       ...prev,
@@ -253,6 +267,42 @@ export default function ProductCard({ product }: ProductCardProps) {
     return result
 
   }
+  const getBalance = async () => {
+    const res = await fetch(`/api/get_balance?email=${session?.user?.email}`);
+    const data = await res.json();
+  
+    const balances: { amount: number; currency: string }[] = [];
+  
+    const credits = data.credit || [];
+    const debits = data.debit || [];
+  
+    // index debits by currency for quick lookup
+    const debitMap: Record<string, number> = {};
+    for (const d of debits) {
+      debitMap[d.currency] = (debitMap[d.currency] || 0) + d.amount;
+    }
+  
+    for (const c of credits) {
+      const debitAmount = debitMap[c.currency] || 0;
+      balances.push({
+        currency: c.currency,
+        amount: c.amount - debitAmount,
+      });
+    }
+  
+    return balances;
+  };
+  
+  
+  // Example usage inside useEffect or handler
+  
+useEffect(() => {
+  (async () => {
+    const result = await getBalance();
+    setBalance(result);
+  })();
+}, [session]);
+  
   const handleGiftcard = async () => {
     // Build request payload based on formData
     const data = {
@@ -276,7 +326,7 @@ export default function ProductCard({ product }: ProductCardProps) {
     console.log("Giftcard Purchase Request:", data);
   
     try {
-      const response = await fetch("/api/purchase_giftcard?drryRns=True", {
+      const response = await fetch("/api/purchase_giftcard", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -289,6 +339,17 @@ export default function ProductCard({ product }: ProductCardProps) {
       const result = await response.json();
       console.log("Giftcard Purchase Success ✅:", result);
       alert("Giftcard purchase successful 🎉");
+      const debit_response = await fetch("/api/debit", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ 
+          amount: Number(formData.inputValue) || Number(formData.selectedValue),
+          currency: countryToCurrency[formData.recipientCountryCode || PhoneValue.countryCode], //eslint-disable-line
+          email: session?.user?.email
+         }),
+      })
+      const debit_result = await debit_response.json();
+      console.log("Debit Success",debit_result)
       
     } catch (error) {
       console.error("Giftcard Purchase Error ❌:", error);
@@ -332,6 +393,7 @@ export default function ProductCard({ product }: ProductCardProps) {
       const result = await response.json()
       console.log("Topup Success:", result)
       alert("Topup successful ✅")
+      //Debit API
     } catch (error) {
       console.error("Topup Error:", error)
       alert("Topup failed ❌")
@@ -371,14 +433,21 @@ export default function ProductCard({ product }: ProductCardProps) {
   
     return (
       <form onSubmit={handleSubmit}>
+        <div className="flex flex-col items-center">
         <PaymentElement />
+        {!isVerified ? (
+          // Show verification box if not verified
+          <VerificationBox />  
+              
+            ) : (
         <button
           type="submit"
           disabled={!stripe}
           className="bg-black text-white px-4 py-2 rounded mt-4"
         >
           Pay
-        </button>
+        </button>)}</div> 
+        
       </form>
     );
   };
@@ -542,7 +611,7 @@ export default function ProductCard({ product }: ProductCardProps) {
                 setClientSecret(null)
                 setPendingAction(null)
              }}
-             className="bg-indigo-600 text-white px-6 py-2 rounded-lg hover:bg-indigo-700 transition"
+             className="bg-black text-white px-6 py-2 rounded-lg hover:bg-indigo-700 transition"
            >
              Back to Home
            </button>
@@ -550,13 +619,35 @@ export default function ProductCard({ product }: ProductCardProps) {
         )}
         {showPayment && clientSecret && (
           <Elements stripe={stripePromise} options={{ clientSecret }}>
+            <div className="flex flex-col items-center">
             <PaymentForm
-              onSuccess={() => {
+              onSuccess={async () => {
                 if (pendingAction === "giftcard") handleGiftcard();
                 if (pendingAction === "topup") handleTopup();
                 setShowPayment(false);
+                //fetch api/credit post {amount, currency, email}
+                const credit_response = await fetch("/api/credit", {
+                  method: "POST",
+                  headers: { "Content-Type": "application/json" },
+                  body: JSON.stringify({ 
+                    amount: Number(formData.inputValue) || Number(formData.selectedValue),
+                    currency: countryToCurrency[formData.recipientCountryCode || PhoneValue.countryCode], //eslint-disable-line
+                    email: session?.user?.email
+                   }),
+                })
+                if (!credit_response.ok) {
+                  const err = await credit_response.json().catch(() => ({}));
+                  console.error("Failed to credit:", err);
+                  return;
+                }
+          
+                console.log("Credit success:", await credit_response.json());
+                
+                  
+                
+                
               }}
-            />
+            /></div>
           </Elements>
         )}
        {!showPayment && !clientSecret && (<>
@@ -633,38 +724,66 @@ export default function ProductCard({ product }: ProductCardProps) {
         onChange={(e) => handleChange("recipientNumber", e.target.value)}
         className="w-full border rounded p-2 mb-4"
         placeholder="Recipient Phone"
-      /></div>
+      />
+       </div><div className="flex flex-col items-center gap-3 mb-4">
+        <span className="text-sm font-medium">Use Credits</span>
+        <label className="relative inline-flex items-center cursor-pointer">
+          <input
+            type="checkbox"
+            checked={isCredits}
+            onChange={(e) => setIsCredits(e.target.checked)}
+            className="sr-only peer"
+          />
+          <div className="w-11 h-6 bg-gray-300 peer-focus:outline-none rounded-full peer peer-checked:bg-blue-600 transition"></div>
+          <div className="absolute left-0.5 top-0.5 bg-white w-5 h-5 rounded-full transition peer-checked:translate-x-5"></div>
+        </label>
+        
+      </div>
 
      
-
+<div className='flex items-center justify-center'>
 <Button
+  className="w-1/3 px-6"
   onClick={async () => {
-    const zeroDecimalCurrencies = [
-      "BIF","CLP","DJF","GNF","JPY","KMF","KRW","MGA","PYG","RWF",
-      "UGX","VND","VUV","XAF","XOF","XPF"
-    ];
-    const currency = countryToCurrency[formData.recipientCountryCode];//eslint-disable-line
-    const amount = zeroDecimalCurrencies.includes(currency) 
-      ? Number(formData.inputValue) 
-      : Number(formData.inputValue) * 100;
     
-    const res = await fetch("/api/stripe/createPayment", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ amount: amount, currency: currency }) // cents
-    });
+      // Stripe flow
+      const zeroDecimalCurrencies = [
+        "BIF","CLP","DJF","GNF","JPY","KMF","KRW","MGA","PYG","RWF",
+        "UGX","VND","VUV","XAF","XOF","XPF"
+      ];
+      const currency = countryToCurrency[formData.recipientCountryCode]; // eslint-disable-line
+      const amount = zeroDecimalCurrencies.includes(currency) 
+        ? Number(formData.inputValue) 
+        : Number(formData.inputValue) * 100;
+      if (!isCredits) {
+        const res = await fetch("/api/stripe/createPayment", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ amount, currency }), // cents
+        });
 
-    const data = await res.json();
-    if (data.clientSecret) {
-      console.log("Logging secret",data.clientSecret)
-      setClientSecret(data.clientSecret);
-      setPendingAction("giftcard");
-      setShowPayment(true);
+        const data = await res.json();
+        if (data.clientSecret) {
+          
+          setClientSecret(data.clientSecret);
+          setPendingAction("giftcard");
+          setShowPayment(true);
+        }
+    } else {
+      // Placeholder credits flow
+      if(balance[0].amount >= Number(formData.inputValue)) {
+     
+        handleGiftcard()
+      }
+      
+      // You can directly fulfill or open another UI flow here
+      // Example: call your backend API to deduct credits
+      // await fetch("/api/credits/use", { method: "POST", body: JSON.stringify({ ...formData }) })
     }
   }}
 >
-  Submit  
-</Button></>
+  Submit
+</Button></div></>
 )}
     </>
       )
@@ -1020,7 +1139,24 @@ export default function ProductCard({ product }: ProductCardProps) {
  
 
   {/* Logo */}
-  <div className="flex items-center justify-center h-32 w-full bg-white rounded-md shadow-inner p-2" onClick={handleForm}>
+  <div className="flex items-center justify-center h-32 w-full bg-white rounded-md shadow-inner p-2"
+  onClick={async () => {
+    if (currentProduct.img_link?.includes("s3.amazonaws")) {
+      // Fetch operator data & set state
+      const localAmounts = await getAirtimeOperatorData(currentProduct.operator_id);
+      console.log("Local amounts:", localAmounts);
+      setOperatorId(currentProduct.operator_id);
+      setAirtimeOperatorData(localAmounts);
+      setIsOpen(true);
+    } else {
+      setFormData((prevData) => ({
+        ...prevData,
+        operatorId: currentProduct.operator_id,
+      }));
+      
+      setIsOpen(true);
+    }
+  }}>
     <Image
       src={currentProduct.img_link}
       alt={currentProduct.operator}
@@ -1048,6 +1184,11 @@ export default function ProductCard({ product }: ProductCardProps) {
 <div className="flex justify-center gap-3 mt-2">
 <Button
   onClick={async () => {
+    if (!session) {
+      alert("Please sign in to continue.");
+      window.location.href = "/register";
+      return
+    }
     if (currentProduct.img_link?.includes("s3.amazonaws")) {
       // Fetch operator data & set state
       const localAmounts = await getAirtimeOperatorData(currentProduct.operator_id);

@@ -2,6 +2,9 @@ import HomePageClient from "@/components/HomePage"
 import { headers } from 'next/headers'
 import { getProducts, getBNPL, getESIM, getReloadlyAirtime, getReloadlyGifts, getDevices } from "../lib/supabase"
 //export const runtime = 'edge'
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/lib/auth";
+
 export const dynamic = 'force-dynamic'
 let cachedData: any = null;//eslint-disable-line
 let lastFetch = 0;
@@ -50,7 +53,7 @@ export default async function HomePage() {
     
   }
   //console.log(`products count: ${cachedData!.products.length}, device count: ${cachedData.device_list.length} esim count: ${cachedData.esim.length}, airtime count: ${cachedData.airtime.length}, giftcards count: ${cachedData.giftcards.length}`);
-
+  const session = await getServerSession(authOptions);
   return (
   
     <HomePageClient
@@ -61,6 +64,7 @@ export default async function HomePage() {
       airtime={cachedData!.airtime}
       giftcards={cachedData!.giftcards}
       device_list={cachedData!.device_list}
+      session={session}
     />
  
   )

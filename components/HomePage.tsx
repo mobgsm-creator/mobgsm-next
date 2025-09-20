@@ -5,6 +5,8 @@ import ProductSectionWrapper from "@/components/ProductAndFilterSection"
 import CountrySelector from "@/components/CountrySelector"
 import type { Product, BNPLProvider, ESIMProvider, Device, reloadly } from "../lib/types"
 import Link from "next/link"
+import { Session } from "next-auth";
+import { Wallet } from "lucide-react";
 type HomePageProps = {
   country_code: string
   products: Product[]
@@ -13,6 +15,7 @@ type HomePageProps = {
   airtime: reloadly[]
   giftcards: reloadly[]
   device_list: Device[]
+  session: Session | null
 }
 
 export default function HomePageClient({
@@ -22,14 +25,15 @@ export default function HomePageClient({
   esim,
   airtime,
   giftcards,
-  device_list
+  device_list,
+  session
 }: HomePageProps) {
   if (country_code === "unknown")
     { 
       country_code = "ae"
     }
   const [country, setCountry] = useState(country_code || "")
-
+  const [balance, setBalance] = useState<{ amount: number; currency: string }[]>([]);;
   // Load initial country from localStorage
   useEffect(() => {
     
@@ -37,6 +41,43 @@ export default function HomePageClient({
     const stored = localStorage.getItem("selectedCountry")
     if (stored) setCountry(stored)
   }, [])
+
+  const getBalance = async () => {
+    const res = await fetch(`/api/get_balance?email=${session?.user?.email}`);
+    const data = await res.json();
+  
+    const balances: { amount: number; currency: string }[] = [];
+  
+    const credits = data.credit || [];
+    const debits = data.debit || [];
+  
+    // index debits by currency for quick lookup
+    const debitMap: Record<string, number> = {};
+    for (const d of debits) {
+      debitMap[d.currency] = (debitMap[d.currency] || 0) + d.amount;
+    }
+  
+    for (const c of credits) {
+      const debitAmount = debitMap[c.currency] || 0;
+      balances.push({
+        currency: c.currency,
+        amount: c.amount - debitAmount,
+      });
+    }
+  
+    return balances;
+  };
+  
+  
+  // Example usage inside useEffect or handler
+  
+useEffect(() => {
+  (async () => {
+    const result = await getBalance();
+    setBalance(result);
+  })();
+}, [session]);
+  
   
 
   return (
@@ -54,8 +95,24 @@ export default function HomePageClient({
         />
       </Link>
     </div>
-          <div className="absolute top-3 right-4">
-            <CountrySelector country={country} setCountry={setCountry} />
+    
+          <div className="flex flex-row absolute top-7 right-4">
+            {/* Balance Display */}
+    <div className="flex items-center gap-2 bg-gray-50 px-3 py-1 rounded-2xl shadow-sm border">
+        <Wallet className="w-5 h-5 text-green-600" />
+        <div className="flex gap-2">
+          {balance.map((b, idx) => (
+            <span
+              key={idx}
+              className="text-sm font-medium text-gray-800"
+            >
+              {b.amount} {b.currency}
+            </span>
+          ))}
+        </div>
+      </div>
+      <div className='mx-2'>
+            <CountrySelector country={country} setCountry={setCountry} /></div>
           </div>
         </div>
       </header>
@@ -69,6 +126,7 @@ export default function HomePageClient({
           airtime={airtime}
           giftcards={giftcards}
           device_list={device_list}
+          session={session}
         
           
         />

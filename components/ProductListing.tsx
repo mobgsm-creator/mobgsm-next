@@ -6,6 +6,7 @@ import { useSearchParams, useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import ProductCard from './ProductCard'
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { Session } from 'next-auth'
 type TabData =
   | GroupedProduct[]
   | BNPLProvider[]
@@ -27,6 +28,7 @@ interface ProductListingProps {
   gifts: reloadly[],
   view: 'products' | 'esim' | 'bnpl' | 'reloadly-airtime' | 'reloadly-gifts'
   setView: (view: 'products' | 'esim' | 'bnpl' | 'reloadly-airtime' | 'reloadly-gifts') => void
+  session: Session | null
 }
 interface ToggleTabsProps {
   onChange: (value: 'products' | 'esim' | 'bnpl'| 'reloadly-airtime' | 'reloadly-gifts') => void
@@ -71,7 +73,7 @@ const LazyProductCard = dynamic(() => import('./ProductCard'), {
   ssr: false
 })
 
-export default function ProductListing({ product, esimProviders, BNPLProvider, airtime, gifts, view, setView }: ProductListingProps) {  
+export default function ProductListing({ product, esimProviders, BNPLProvider, airtime, gifts, view, setView, session }: ProductListingProps) {  
   
   const router = useRouter()
   const urlSearchParams = useSearchParams()
@@ -127,7 +129,7 @@ export default function ProductListing({ product, esimProviders, BNPLProvider, a
  
   //console.log("Logging Data length:", view,data.length);
  
-  function getProductsForCard(item: GroupedProduct | ESIMProvider | BNPLProvider | GroupedReloadlyProduct, view : string) {
+  function getProductsForCard(item: GroupedProduct | ESIMProvider | BNPLProvider | GroupedReloadlyProduct, view : string,) {
     switch(view) {
       case 'products':
         return (item as GroupedProduct).items;
@@ -175,6 +177,7 @@ export default function ProductListing({ product, esimProviders, BNPLProvider, a
         <ProductCard
           key={index}
           product={getProductsForCard(item, view)}
+          session={session}
         />
       )
     }
@@ -184,6 +187,7 @@ export default function ProductListing({ product, esimProviders, BNPLProvider, a
       <LazyProductCard
         key={index}
         product={getProductsForCard(item, view)}
+        session={session}
       />
     )
   })}
