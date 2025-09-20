@@ -105,8 +105,15 @@ export default function LoginForm() {
                 </Button>
                 
               </form>
-              <Button onClick={handleOAuthLogin} className="w-full">
-              Login with Google
+              <Button onClick={handleOAuthLogin} className="w-full" disabled={isPending}>
+              {isPending ? (
+                    <>
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      Logging in...
+                    </>
+                  ) : (
+                    "Log in with Google"
+                  )}
             </Button>
           </TabsContent>
 
