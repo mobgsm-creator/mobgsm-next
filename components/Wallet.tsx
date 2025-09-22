@@ -1,8 +1,9 @@
 // WalletPopup.tsx
 'use client'
-
+import Image from 'next/image'
+import { Card } from './ui/card'
 import { useState } from 'react'
-import { Wallet, CheckCircle2 } from 'lucide-react'
+import { Wallet, CheckCircle2, TrendingUp } from 'lucide-react'
 import { Button } from './ui/button'
 import { loadStripe } from "@stripe/stripe-js";
 import Turnstile from './Turnstile';
@@ -11,6 +12,7 @@ import {
   useElements,
 } from "@stripe/react-stripe-js";
 import { Session } from 'next-auth';
+import { signOut } from "next-auth/react";
 interface WalletPopupProps {
   balance: { amount: number; currency: string }[]
   session: Session | null
@@ -27,6 +29,7 @@ import {
   const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_KEY!);
 
 export default function WalletPopup({ balance, session }: WalletPopupProps) {
+  
   const [open, setOpen] = useState(false)
   const [currencyValue, setCurrencyValue] = useState('USD')
   const [amountValue, setAmountValue] = useState(0)
@@ -115,17 +118,92 @@ export default function WalletPopup({ balance, session }: WalletPopupProps) {
     }
   }}>
             <DialogContent>
-              <DialogHeader>
+              <DialogHeader className='flex flex-row items-center'>
                 <DialogTitle className='text-center'>{`Welcome ${session?.user?.name}`}</DialogTitle>
+                <Button
+            variant="ghost"
+            size="sm"
+            className="ml-32 w-1/4 text-red-500 hover:text-red-600 hover:bg-red-50"
+            onClick={() => signOut({ callbackUrl: "/" })}
+          >
+            
+            Logout
+          </Button>
               </DialogHeader>
       {open && !paymentCreated && (
         <>
-        <div className=" mt-2 right-0 bg-white border shadow-lg rounded p-4 z-50">
-          <p className="text-sm font-semibold">Wallet Details</p>
-          {balance.map((b, idx) => (
-            <p key={idx} className="text-sm">{b.amount} {b.currency}</p>
-          ))}
+        
+        
+         
+          {balance.length !== 0 ? (
+  <Card className="p-6 bg-card border-border">
+  <div className="space-y-4">
+    {/* Header */}
+    <div className="flex items-center justify-between">
+      <div className="flex items-center space-x-2">
+        <div className="p-2 rounded-lg bg-primary/10">
+          <Wallet className="h-5 w-5 text-primary" />
         </div>
+        <div>
+          <h3 className="font-semibold text-foreground">Account Balance</h3>
+          <p className="text-sm text-muted-foreground">
+            {balance.length} {balance.length === 1 ? "currency" : "currencies"}
+          </p>
+        </div>
+      </div>
+      
+    </div>
+
+    {/* Balance List */}
+    <div className="space-y-3">
+      {balance.map((b, idx) => (
+        <div
+          key={idx}
+          className="flex items-center justify-between p-3 rounded-lg bg-muted/50 hover:bg-muted/70 transition-colors"
+        >
+          
+
+          <div className="flex items-center space-x-2">
+          <Image
+                    src={`https://flagcdn.com/w20/${b.currency.toLocaleLowerCase().slice(0,2)}.png`}
+                    alt={b.currency.toLocaleLowerCase()}
+                    className="inline-block w-5 h-4 mr-2"
+                    width={40} height={40}
+                   
+                  />
+            
+            <p className="font-mono text-sm text-foreground">
+              
+              {b.amount} {b.currency.toLocaleUpperCase()}
+            </p>
+            {b.amount > 0 && (
+             
+             <TrendingUp className="h-3 w-3 mr-1" />
+            
+         
+         )}
+            
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>
+</Card>
+) : (
+  <Card className="p-6 bg-card border-border">
+  <div className="flex items-center justify-center flex-col space-y-3 text-muted-foreground">
+    <div className="p-3 rounded-full bg-muted">
+      <Wallet className="h-6 w-6" />
+    </div>
+    <div className="text-center">
+      <p className="font-medium text-foreground">No Balance Available</p>
+      <p className="text-sm">{"Your wallet is empty. Add funds to get started."}</p>
+    </div>
+  </div>
+</Card>
+)}
+
+       
         <div className='flex flex-col items-center'>
         <div className="flex gap-2 mb-4">
   {/* Currency Input */}
