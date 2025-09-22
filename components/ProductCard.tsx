@@ -353,16 +353,24 @@ export default function ProductCard({ product, session, balance }: ProductCardPr
         },
         body: JSON.stringify(data),
       })
-
-      if (!response.ok) throw new Error("Topup failed")
-
       const result = await response.json()
-      console.log("Topup Success:", result)
+      if (!response.ok) throw new Error(`${result.details.message}... If payment was successful, your credits have not been deducted and can be reused.`)
       alert("Topup successful ✅")
+      const debit_response = await fetch("/api/debit", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ 
+          amount: Number(formData.inputValue) || Number(formData.selectedValue),
+          currency: countryToCurrency[formData.recipientCountryCode || PhoneValue.countryCode], //eslint-disable-line
+          email: session?.user?.email
+         }),
+      })
+      const debit_result = await debit_response.json();
+      console.log("Debit Success",debit_result)
       //Debit API
     } catch (error) {
       console.error("Topup Error:", error)
-      alert("Topup failed ❌")
+      alert(`Topup failed ❌ ${error}`)
     }
     finally {
       setShowPayment(false)
@@ -433,20 +441,56 @@ export default function ProductCard({ product, session, balance }: ProductCardPr
     //const values = airtimeOperatorData
       return (
         <>
-        {/* {!showPayment && clientSecret && (
-          <div className='text-center mb-4 font-semibold'>Here</div>
+        {!showPayment && clientSecret && (
+           <div className="flex flex-col items-center justify-center p-6 bg-green-50 rounded-2xl shadow-md max-w-md mx-auto">
+           <CheckCircle2 className="text-green-600 w-12 h-12 mb-3" />
+           <h2 className="text-2xl font-bold text-green-700 mb-2">
+             Payment Successful
+           </h2>
+           <p className="text-gray-700 text-center mb-4">
+             Thank you for your purchase! Your payment has been processed
+             successfully. You’ll receive a confirmation email shortly.
+           </p>
+           <button
+             onClick={() => {
+                window.location.href = "/";
+                setShowPayment(false)
+                setClientSecret(null)
+                setPendingAction(null)
+             }}
+             className="bg-black text-white px-6 py-2 rounded-lg hover:bg-indigo-700 transition"
+           >
+             Back to Home
+           </button>
+         </div>
         )}
         {showPayment && clientSecret && (
           <Elements stripe={stripePromise} options={{ clientSecret }}>
             <PaymentForm
-              onSuccess={() => {
+              onSuccess={async () => {
                 if (pendingAction === "giftcard") handleGiftcard();
                 if (pendingAction === "topup") handleTopup();
                 setShowPayment(false);
+                const credit_response = await fetch("/api/credit", {
+                  method: "POST",
+                  headers: { "Content-Type": "application/json" },
+                  body: JSON.stringify({ 
+                    amount: Number(formData.inputValue) || Number(formData.selectedValue),
+                    currency: countryToCurrency[formData.recipientCountryCode || PhoneValue.countryCode], //eslint-disable-line
+                    email: session?.user?.email
+                   }),
+                })
+                if (!credit_response.ok) {
+                  const err = await credit_response.json().catch(() => ({}));
+                  console.error("Failed to credit:", err);
+                  return;
+                }
+          
+                console.log("Credit success:", await credit_response.json());
               }}
             />
           </Elements>
-        )} */}
+        )}
           {!showPayment && !clientSecret && (<>
           <DialogDescription className="text-sm font-semibold mb-2">Select Amount</DialogDescription>
           <div className="h-20 overflow-x-auto">
@@ -512,37 +556,63 @@ export default function ProductCard({ product, session, balance }: ProductCardPr
       })
     }
     className="w-2/3 border rounded p-2"
-    placeholder="Enter Phone Number"
+    placeholder="Verified Pre-Paid Phone Number"
   />
-</div>
+</div><div className="flex flex-col items-center gap-3 mb-4">
+        <span className="text-sm font-medium">Use Credits</span>
+        <label className="relative inline-flex items-center cursor-pointer">
+          <input
+            type="checkbox"
+            checked={isCredits}
+            onChange={(e) => setIsCredits(e.target.checked)}
+            className="sr-only peer"
+          />
+          <div className="w-11 h-6 bg-gray-300 peer-focus:outline-none rounded-full peer peer-checked:bg-blue-600 transition"></div>
+          <div className="absolute left-0.5 top-0.5 bg-white w-5 h-5 rounded-full transition peer-checked:translate-x-5"></div>
+        </label>
+        
+      </div>
 <Button
-  // onClick={async () => {
-  //   const zeroDecimalCurrencies = [
-  //     "BIF","CLP","DJF","GNF","JPY","KMF","KRW","MGA","PYG","RWF",
-  //     "UGX","VND","VUV","XAF","XOF","XPF"
-  //   ];
-  //   const currency = countryToCurrency[formData.recipientCountryCode || PhoneValue.countryCode];//eslint-disable-line
-  //   const amount = zeroDecimalCurrencies.includes(currency) 
-  //     ? Number(inputValue) 
-  //     : Number(inputValue) * 100;
-  //   // Call your backend to create a PaymentIntent
-  //   const res = await fetch("/api/stripe/createPayment", {
-  //     method: "POST",
-  //     headers: { "Content-Type": "application/json" },
-  //     body: JSON.stringify({ 
-  //       amount: amount, 
-  //       currency: currency 
-  //     }) // cents
-  //   });
+  onClick={async () => {
+    
+    // Stripe flow
+    const zeroDecimalCurrencies = [
+      "BIF","CLP","DJF","GNF","JPY","KMF","KRW","MGA","PYG","RWF",
+      "UGX","VND","VUV","XAF","XOF","XPF"
+    ];
+    const currency = countryToCurrency[PhoneValue.countryCode]; // eslint-disable-line
+    const amount = zeroDecimalCurrencies.includes(currency) 
+      ? Number(inputValue) 
+      : Number(inputValue) * 100;
+    if (!isCredits) {
+      const res = await fetch("/api/stripe/createPayment", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ amount, currency }), // cents
+      });
 
-  //   const data = await res.json();
-  //   if (data.clientSecret) {
-  //     console.log("Client Secret:", data.clientSecret);
-  //     setClientSecret(data.clientSecret);
-  //     setPendingAction("topup"); // or "giftcard"
-  //     setShowPayment(true);
-  //   }
-  // }}
+      const data = await res.json();
+      if (data.clientSecret) {
+        
+        setClientSecret(data.clientSecret);
+        setPendingAction("topup");
+        setShowPayment(true);
+      }
+  } else {
+    // Placeholder credits flow
+    console.log(balance[0].amount, Number(inputValue))
+    if(balance[0].amount >= Number(inputValue)) {
+      
+   
+      handleTopup()
+    }
+    else { alert("Insufficient Credits")}
+    
+    // You can directly fulfill or open another UI flow here
+    // Example: call your backend API to deduct credits
+    // await fetch("/api/credits/use", { method: "POST", body: JSON.stringify({ ...formData }) })
+  }
+}}
 >
   Submit Topup
 </Button></>)}
@@ -737,10 +807,14 @@ export default function ProductCard({ product, session, balance }: ProductCardPr
         }
     } else {
       // Placeholder credits flow
+
+      
       if(balance[0].amount >= Number(formData.inputValue)) {
+   
      
         handleGiftcard()
       }
+      else { alert("Insufficient Credits")}
       
       // You can directly fulfill or open another UI flow here
       // Example: call your backend API to deduct credits
