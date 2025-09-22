@@ -104,7 +104,16 @@ export default function WalletPopup({ balance, session }: WalletPopupProps) {
         <Wallet className="w-5 h-5 text-black" />
         
       </div>
-      <Dialog open={open} onOpenChange={setOpen}>
+      <Dialog open={open}  onOpenChange={(isOpen) => {
+    setOpen(isOpen); // update the state
+    if (!isOpen) {
+      setPaymentCreated(false)
+      setClientSecret(null)
+      setSuccessfulPayment(false)
+      console.log("Dialog closed");
+      // You can put any other logic here, e.g. reset fields
+    }
+  }}>
             <DialogContent>
               <DialogHeader>
                 <DialogTitle className='text-center'>{`Welcome ${session?.user?.name}`}</DialogTitle>
@@ -117,6 +126,7 @@ export default function WalletPopup({ balance, session }: WalletPopupProps) {
             <p key={idx} className="text-sm">{b.amount} {b.currency}</p>
           ))}
         </div>
+        <div className='flex flex-col items-center'>
         <div className="flex gap-2 mb-4">
   {/* Currency Input */}
   <input
@@ -140,7 +150,7 @@ export default function WalletPopup({ balance, session }: WalletPopupProps) {
     placeholder="Amount"
   /></div>
       
-      <Button
+      <Button className='w-1/3'
   onClick={async () => {
     
     // Stripe flow
@@ -171,7 +181,7 @@ export default function WalletPopup({ balance, session }: WalletPopupProps) {
   }
 >
   Submit Topup
-</Button></>
+</Button></div></>
 )}
 {open && clientSecret && paymentCreated && (
           <Elements stripe={stripePromise} options={{ clientSecret }}>
