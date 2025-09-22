@@ -171,7 +171,7 @@ const CountrySelector = ({ country, setCountry }: Props) => {
                    
                   />
              
-              <span>{selectedCountry.name}</span>
+              <span>{selectedCountry.code}</span>
             </span>
           )}
         </Select.Value>

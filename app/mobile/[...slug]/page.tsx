@@ -303,6 +303,13 @@ export default async function BlogPage({ params }: Params) {
       </Link>
     </div>
         </header>
+        <Link href={`https://mobgsm.com`}>
+        <div className="relative overflow-hidden bg-gray-950 border-b h-6">
+          <p className="absolute whitespace-nowrap animate-marquee text-white text-sm">
+            🚨 Click Here to Topup Airtime across 170+ countries and 800+ operators, Buy Giftcards, Explore BNPL Offers, Esim Details and Browse Mobile Specs!  🚨
+          </p>
+        </div></Link>
+
 
         <div className=" mx-auto flex max-w-7xl flex-col md:flex-row">
           {/* Main Content */}
