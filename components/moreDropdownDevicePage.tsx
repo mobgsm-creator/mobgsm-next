@@ -18,10 +18,10 @@ export default function DynamicMoreLinks({ country, more, brand}: DynamicCountry
   const [isOpen, setIsOpen] = useState(false);
   //console.log(brand, more)
   return (
-    <div className="max-h-[160rem] bg-gray-50 mt-6">
+    <div className="max-h-[160rem] bg-white mt-6">
       {/* Header acting as toggle */}
       <div
-        className="bg-gray-50 px-4 py-2 flex items-center justify-between cursor-pointer"
+        className="bg-white px-4 py-2 flex items-center justify-between cursor-pointer"
         onClick={() => setIsOpen(!isOpen)}
       >
         <h2 className="mt-2 font-bold text-black">MORE FROM {brand.toUpperCase()}</h2>
@@ -40,7 +40,7 @@ export default function DynamicMoreLinks({ country, more, brand}: DynamicCountry
                     href={`https://${country ? country + "." : ""}mobgsm.com/mobile/${dev.name.replace(/\s+/g, '-').toLowerCase()}` }
                   >
                     <span className="text-gray-900 font-medium">{dev.name}</span>
-                    <ChevronRight className="h-4 w-4 text-red-500" />
+                    <ChevronRight className="h-4 w-4 text-black" />
                   </Link>
                 ))}
         </div>

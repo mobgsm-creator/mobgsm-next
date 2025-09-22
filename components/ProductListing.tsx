@@ -86,6 +86,16 @@ export default function ProductListing({ product, esimProviders, BNPLProvider, a
 
   // Run filters and sort every time product or searchParams change
   useEffect(() => {
+    const hash = window.location.hash.replace('#', '') as
+    | 'products'
+    | 'esim'
+    | 'bnpl'
+    | 'reloadly-airtime'
+    | 'reloadly-gifts'
+
+  if (hash && hash !== view) {
+    setView(hash)
+  }
     const filtered = applyFiltersAndSort(
       product,
       esimProviders!,

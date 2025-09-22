@@ -6,7 +6,8 @@ import fs from 'fs';
 import path from 'path';
 import Link from "next/link"
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { Wallet } from "lucide-react";
+import { LogIn } from "lucide-react";
+import { Button } from "@/components/ui/button"
 import CountrySelector from "@/components/CountrySelector"
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
@@ -33,6 +34,7 @@ import  DynamicCountryLinks  from "@/components/countryDropdownDevicePage"
 import DynamicBrandLinks from "@/components/brandsDropdownDevicePage"
 import DynamicMoreLinks from "@/components/moreDropdownDevicePage"
 import { Device } from "@/lib/types"
+import WalletPopup from "@/components/Wallet";
 //export const runtime = 'edge';
 //redeploy
 
@@ -301,6 +303,7 @@ function DynamicCountryContent({ device, slugcountry}: { device: any, slugcountr
 
 export default async function BlogPage({ params }: Params) {
   const balance= await getBalance()
+  const session = await getServerSession(authOptions);
   const { slug } = await params
   const { pureSlug, rawCountry } = parseSlug(slug);
   
@@ -321,7 +324,7 @@ export default async function BlogPage({ params }: Params) {
 
   return (
     <>
-    <div className="flex justify-center items-center">
+    <div className="">
       <div className="min-h-screen  bg-white">
       <header className="bg-white shadow-sm border-b">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 relative">
@@ -339,19 +342,12 @@ export default async function BlogPage({ params }: Params) {
     
           <div className="flex flex-row absolute top-7 right-4">
             {/* Balance Display */}
-    <div className="flex items-center gap-2 bg-gray-50 px-3 py-1 rounded-2xl shadow-sm border">
-        <Wallet className="w-5 h-5 text-green-600" />
-        <div className="flex gap-2">
-          {balance.map((b, idx) => (
-            <span
-              key={idx}
-              className="text-sm font-medium text-gray-800"
-            >
-              {b.amount} {b.currency}
-            </span>
-          ))}
-        </div>
-      </div>
+            {session?.user?.email ? (
+    
+        <WalletPopup balance={balance} />
+      ) : <Button variant="ghost" size="sm" onClick={() => (window.location.href = "/register")}>
+          <LogIn className="w-4 h-4 mr-1 mt-2" />
+        </Button>}
       <div className='mx-2'>
             <CountrySelector country={entry![0]}  /></div>
           </div>
@@ -484,7 +480,7 @@ export default async function BlogPage({ params }: Params) {
             {/* Specifications Sections */}
             {Object.entries(specs).map(([category, details]) => (
               <div key={category} className="bg-white mb-1 rounded-2xl overflow-hidden">
-                <div className="bg-gray-50 px-4 py-2 flex items-center justify-between cursor-pointer rounded-2xl">
+                <div className="bg-white px-4 py-2 flex items-center justify-between cursor-pointer rounded-2xl">
                   <div className="text-md font-bold text-black uppercase">{category.replace(/_/g, " & ")}</div>
                   <ChevronDown className="h-4 w-4 text-black" />
                 </div>
@@ -501,7 +497,7 @@ export default async function BlogPage({ params }: Params) {
           </div>
 
           {/* Sidebar */}
-          <div className="bg-gray-50 p-4 rounded-2xl">
+          <div className="bg-white p-4 rounded-2xl">
             {/* Related Devices */}
             <DynamicMoreLinks country={entry![0]} more={moreFromBrand || []} brand={device.brand_name} />
 
@@ -515,9 +511,9 @@ export default async function BlogPage({ params }: Params) {
           </div>
         </div>
         <div className='bg-white'>
-        <div className='text-[0.6rem] ml-4 flex flex-col max-w-4xl justify-center items-center bg-white'>
+        <div className='text-[0.6rem] flex flex-col text-center bg-white'>
          <h3 className='mt-4 text-center'> 
-          <strong>Disclaimer: </strong> </h3> <div>
+          <strong>Disclaimer: </strong> </h3> <div><br></br> 
           We do not guarantee that the information on this page is 100% accurate and up to date.  
         <br></br> <br></br> 
           The pricing published on this page is meant for general information purposes only. While we monitor prices regularly, the ones listed above might be outdated. We also cannot guarantee these are the lowest prices available, so shopping around is always a good idea.

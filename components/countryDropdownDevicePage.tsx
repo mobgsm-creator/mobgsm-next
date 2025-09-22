@@ -28,10 +28,10 @@ export default function DynamicCountryLinks({ deviceSlug, country, settings }: D
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <div className="max-h-[160rem] bg-gray-50 mt-6">
+    <div className="max-h-[160rem] bg-white mt-6">
       {/* Header acting as toggle */}
       <div
-        className="bg-gray-50 px-4 py-2 flex items-center justify-between cursor-pointer"
+        className="bg-white px-4 py-2 flex items-center justify-between cursor-pointer"
         onClick={() => setIsOpen(!isOpen)}
       >
         <div className="mt-2 font-bold text-black">COUNTRIES</div>
@@ -55,7 +55,7 @@ export default function DynamicCountryLinks({ deviceSlug, country, settings }: D
                 <span className="text-gray-900 font-medium">
                   {cfg.country || country}
                 </span>
-                <ChevronRight className="h-4 w-4 text-green-500" />
+                <ChevronRight className="h-4 w-4 text-black" />
               </a>
             ))}
         </div>

@@ -6,7 +6,9 @@ import CountrySelector from "@/components/CountrySelector"
 import type { Product, BNPLProvider, ESIMProvider, Device, reloadly } from "../lib/types"
 import Link from "next/link"
 import { Session } from "next-auth";
-import { Wallet } from "lucide-react";
+import { LogIn } from "lucide-react";
+import { Button } from "./ui/button"
+import WalletPopup from "./Wallet"
 type HomePageProps = {
   country_code: string
   products: Product[]
@@ -93,19 +95,12 @@ export default function HomePageClient({
     
           <div className="flex flex-row absolute top-7 right-4">
             {/* Balance Display */}
-    <div className="flex items-center gap-2 bg-gray-50 px-3 py-1 rounded-2xl shadow-sm border">
-        <Wallet className="w-5 h-5 text-green-600" />
-        <div className="flex gap-2">
-          {balance.map((b, idx) => (
-            <span
-              key={idx}
-              className="text-sm font-medium text-gray-800"
-            >
-              {b.amount} {b.currency}
-            </span>
-          ))}
-        </div>
-      </div>
+    {session?.user?.email ? (
+    
+        <WalletPopup balance={balance} />
+      ) : <Button variant="ghost" size="sm" onClick={() => (window.location.href = "/register")}>
+          <LogIn className="w-4 h-4 mr-1 mt-2" />
+        </Button>}
       <div className='mx-2'>
             <CountrySelector country={country} setCountry={setCountry} /></div>
           </div>

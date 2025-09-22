@@ -10,7 +10,7 @@ interface Props {
 }
 
 const CountrySelector = ({ country, setCountry }: Props) => {
-  const [internalCountry, setInternalCountry] = useState(country)
+  const [internalCountry, setInternalCountry] = useState("us")
 
   // If setCountry not provided, fallback to internal state
   const handleChange = (value: string) => {
@@ -157,6 +157,7 @@ const CountrySelector = ({ country, setCountry }: Props) => {
     {'code': 'ZW', 'name': 'Zimbabwe', 'flag': '🇿🇼'}];
   
     const current = setCountry ? country : internalCountry
+   
 
   useEffect(() => {
     localStorage.setItem("selectedCountry", current)
@@ -166,7 +167,7 @@ const CountrySelector = ({ country, setCountry }: Props) => {
 
 
   return (
-    <Select.Root value={country} onValueChange={handleChange}>
+    <Select.Root value={selectedCountry?.code} onValueChange={handleChange}>
       <Select.Trigger
         className="inline-flex items-center justify-between rounded-lg px-4 py-2 border border-gray-300 bg-white text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 min-w-[160px]"
         aria-label="Country"
