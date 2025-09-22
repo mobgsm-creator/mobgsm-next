@@ -97,7 +97,7 @@ export default function HomePageClient({
             {/* Balance Display */}
     {session?.user?.email ? (
     
-        <WalletPopup balance={balance} />
+        <WalletPopup balance={balance} session={session}/>
       ) : <Button variant="ghost" size="sm" onClick={() => (window.location.href = "/register")}>
           <LogIn className="w-4 h-4 mr-1 mt-2" />
         </Button>}
