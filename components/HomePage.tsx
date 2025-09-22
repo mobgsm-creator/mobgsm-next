@@ -6,9 +6,8 @@ import CountrySelector from "@/components/CountrySelector"
 import type { Product, BNPLProvider, ESIMProvider, Device, reloadly } from "../lib/types"
 import Link from "next/link"
 import { Session } from "next-auth";
-import { LogIn } from "lucide-react";
-import { Button } from "./ui/button"
 import WalletPopup from "./Wallet"
+import LoginButton from "./LoginButton"
 type HomePageProps = {
   country_code: string
   products: Product[]
@@ -98,9 +97,7 @@ export default function HomePageClient({
     {session?.user?.email ? (
     
         <WalletPopup balance={balance} session={session}/>
-      ) : <Button variant="ghost" size="sm" onClick={() => (window.location.href = "/register")}>
-          <LogIn className="w-4 h-4 mr-1 mt-2" />
-        </Button>}
+      ) : <LoginButton />}
       <div className='mx-2'>
             <CountrySelector country={country} setCountry={setCountry} /></div>
           </div>

@@ -6,12 +6,10 @@ import fs from 'fs';
 import path from 'path';
 import Link from "next/link"
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { LogIn } from "lucide-react";
-import { Button } from "@/components/ui/button"
 import CountrySelector from "@/components/CountrySelector"
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
-
+import LoginButton from "@/components/LoginButton";
 const devicesJSONPath = path.join(process.cwd(), 'public', 'devices.json');
 const devicesData = JSON.parse(fs.readFileSync(devicesJSONPath, 'utf-8'));
 const countryMap: Record<string, string> = {
@@ -345,9 +343,7 @@ export default async function BlogPage({ params }: Params) {
             {session?.user?.email ? (
     
         <WalletPopup balance={balance} session={session} />
-      ) : <Button variant="ghost" size="sm" onClick={() => (window.location.href = "/register")}>
-          <LogIn className="w-4 h-4 mr-1 mt-2" />
-        </Button>}
+      ) : <LoginButton />}
       <div className='mx-2'>
             <CountrySelector country={entry![0]}  /></div>
           </div>
