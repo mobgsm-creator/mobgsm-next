@@ -43,7 +43,7 @@ function ToggleTabs({ onChange, currentView }: ToggleTabsProps) {
   return (
     
     <Tabs value={currentView} onValueChange={(val: string) => {onChange(val as 'products' | 'esim' | 'bnpl'| 'reloadly-airtime' | 'reloadly-gifts'); router.replace(`${window.location.pathname}#${val}`)}}>
-      <TabsList className = 'flex flex-wrap'>
+      <TabsList className = 'flex flex-wrap text-sm'>
         
         <TabsTrigger value="reloadly-airtime">Airtime Topup</TabsTrigger>
         <TabsTrigger value="reloadly-gifts">Giftcards</TabsTrigger>

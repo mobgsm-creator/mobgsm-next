@@ -344,13 +344,14 @@ export default async function BlogPage({ params }: Params) {
     
         <WalletPopup balance={balance} session={session} />
       ) : <LoginButton />}
-      <div className='mx-2'>
+      <div className='mx-2 gap-4'>
             <CountrySelector country={entry![0]}  /></div>
           </div>
         </div>
       </header>
-        <Tabs value="">
-      <TabsList className="flex flex-wrap">
+      <div className='mt-6 mx-12'>
+        <Tabs className = 'flex justify-center ml-10'value="">
+      <TabsList className="inline-flex flex-wrap gap-2 text-sm">
         <Link href="/#reloadly-airtime" passHref>
           <TabsTrigger value="reloadly-airtime" asChild>
             <button>Airtime Topup</button>
@@ -402,7 +403,7 @@ export default async function BlogPage({ params }: Params) {
           </TabsTrigger>
         </Link>
       </TabsList>
-    </Tabs>
+    </Tabs></div>
 
 
         <div className="mt-8 sm:mt-0 mx-auto flex max-w-7xl flex-col md:flex-row">
