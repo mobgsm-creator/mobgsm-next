@@ -54,9 +54,13 @@ export default function LoginForm() {
 
   const handleOAuthLogin = async () => {
     try {
+      setIsPending(true);
       await signIn("google", { callbackUrl: "/", redirect: true });
     } catch (error) {
       console.error("Error signing in:", error);
+    }
+    finally {
+      setIsPending(false);
     }
   };
 

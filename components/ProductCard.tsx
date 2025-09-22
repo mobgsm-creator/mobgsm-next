@@ -23,7 +23,7 @@ import {
   useStripe,
   useElements,
 } from "@stripe/react-stripe-js";
-import { CheckCircle2 } from "lucide-react";
+import { CheckCircle2, Loader2 } from "lucide-react";
 import { Session } from "next-auth";
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_KEY!);
 type ProductCardProps = {
@@ -226,7 +226,7 @@ export default function ProductCard({ product, session, balance }: ProductCardPr
   })
   const [operatorId,setOperatorId] = useState(0)
   const [EmailValue, setEmailValue] = useState("")
-  const [airtimeOperatorData, setAirtimeOperatorData] = useState([])
+  const [airtimeOperatorData, setAirtimeOperatorData] = useState<any[]>([]);//eslint-disable-line
   const [formData, setFormData] = useState({
     operatorId: 0,
     inputValue: "",
@@ -238,6 +238,7 @@ export default function ProductCard({ product, session, balance }: ProductCardPr
     recipientCountryCode: "",
     recipientNumber: "",
   });
+  const [buttonLoad, setButtonLoad]= useState(false)
  
   const VerificationBox = () => (
     <>
@@ -261,9 +262,23 @@ export default function ProductCard({ product, session, balance }: ProductCardPr
     
     const res = await fetch(`/api/airtime_operator_data?operatorId=${operatorId}`);
     const data = await res.json();
-    //console.log(data)
-    const result = data?.geographicalRechargePlans?.[0]?.localAmounts 
-             ?? data?.suggestedAmounts ?? data?.localFixedAmounts;
+    console.log(data)
+    const arrays = [
+      data?.geographicalRechargePlans?.[0]?.localAmounts,
+      data?.suggestedAmounts,
+      data?.localFixedAmounts,
+      data?.fixedAmounts,
+    ];
+    
+    // filter out null/undefined
+    const validArrays = arrays.filter(Array.isArray);
+    
+    // pick the one with max length
+    const result = validArrays.reduce(
+      (max, arr) => (arr.length > max.length ? arr : max),
+      []
+    );
+    console.log(result)
     return result
 
   }
@@ -1191,7 +1206,7 @@ export default function ProductCard({ product, session, balance }: ProductCardPr
       const localAmounts = await getAirtimeOperatorData(currentProduct.operator_id);
       console.log("Local amounts:", localAmounts);
       setOperatorId(currentProduct.operator_id);
-      setAirtimeOperatorData(localAmounts);
+      setAirtimeOperatorData(localAmounts);//eslint-disable-line
       setIsOpen(true);
     } else {
       setFormData((prevData) => ({
@@ -1235,11 +1250,13 @@ export default function ProductCard({ product, session, balance }: ProductCardPr
       return
     }
     if (currentProduct.img_link?.includes("s3.amazonaws")) {
+      setButtonLoad(true)
       // Fetch operator data & set state
       const localAmounts = await getAirtimeOperatorData(currentProduct.operator_id);
       console.log("Local amounts:", localAmounts);
       setOperatorId(currentProduct.operator_id);
       setAirtimeOperatorData(localAmounts);
+      setButtonLoad(false)
       setIsOpen(true);
     } else {
       setFormData((prevData) => ({
@@ -1252,7 +1269,14 @@ export default function ProductCard({ product, session, balance }: ProductCardPr
   }}
   className="text-xs w-25"
 >
-  Buy Now
+{buttonLoad ? (
+                    <>
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      <div className="text-white/20"> Fetching Rates </div>
+                    </>
+                  ) : (
+                    "Buy Now"
+                  )}
 </Button>
 
 

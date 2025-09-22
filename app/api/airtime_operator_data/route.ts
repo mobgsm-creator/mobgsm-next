@@ -39,7 +39,9 @@ export async function GET(request: NextRequest) {
     let data = null
     try {
       const text = await response.text()
+      
       data = text ? JSON.parse(text) : null
+     
     } catch (err) {
       console.error("Failed to parse JSON:", err)
     }
