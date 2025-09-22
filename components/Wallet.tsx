@@ -121,9 +121,9 @@ export default function WalletPopup({ balance, session }: WalletPopupProps) {
               <DialogHeader className='flex flex-row items-center'>
                 <DialogTitle className='text-center'>{`Welcome ${session?.user?.name}`}</DialogTitle>
                 <Button
-            variant="ghost"
+            variant="destructive"
             size="sm"
-            className="ml-32 w-1/4 text-red-500 hover:text-red-600 hover:bg-red-50"
+            className="ml-32 w-1/4 text-white bg-red-500 hover:text-white/20 hover:bg-red"
             onClick={() => signOut({ callbackUrl: "/" })}
           >
             
