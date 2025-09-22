@@ -349,9 +349,9 @@ export default async function BlogPage({ params }: Params) {
           </div>
         </div>
       </header>
-      <div className='mt-6 mx-12'>
-        <Tabs className = 'flex justify-center ml-10'value="">
-      <TabsList className="inline-flex flex-wrap gap-2 text-sm">
+      <div className='mt-6 mx-0 sm:mx-12'>
+        <Tabs className = 'flex sm:justify-center sm:ml-10'value="">
+      <TabsList className="flex-wrap text-sm">
         <Link href="/#reloadly-airtime" passHref>
           <TabsTrigger value="reloadly-airtime" asChild>
             <button>Airtime Topup</button>
