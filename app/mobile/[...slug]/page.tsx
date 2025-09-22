@@ -5,6 +5,12 @@ import { settings as is } from "@/public/combined_settings"
 import fs from 'fs';
 import path from 'path';
 import Link from "next/link"
+import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { Wallet } from "lucide-react";
+import CountrySelector from "@/components/CountrySelector"
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/lib/auth";
+
 const devicesJSONPath = path.join(process.cwd(), 'public', 'devices.json');
 const devicesData = JSON.parse(fs.readFileSync(devicesJSONPath, 'utf-8'));
 const countryMap: Record<string, string> = {
@@ -110,6 +116,33 @@ interface Params {
 //
 export const revalidate =184600 // 24 hours
 //export const dynamicParams = true
+const getBalance = async () => {
+  const session = await getServerSession(authOptions);
+  const res = await fetch(`https://mobgsm.com/api/get_balance?email=${session?.user?.email}`);
+  const data = await res.json();
+
+  const balances: { amount: number; currency: string }[] = [];
+
+  const credits = data.credit || [];
+  const debits = data.debit || [];
+
+  // index debits by currency for quick lookup
+  const debitMap: Record<string, number> = {};
+  for (const d of debits) {
+    debitMap[d.currency] = (debitMap[d.currency] || 0) + d.amount;
+  }
+
+  for (const c of credits) {
+    const debitAmount = debitMap[c.currency] || 0;
+    balances.push({
+      currency: c.currency,
+      amount: c.amount - debitAmount,
+    });
+  }
+
+  return balances;
+};
+
 
 
 // Static metadata generation
@@ -267,7 +300,7 @@ function DynamicCountryContent({ device, slugcountry}: { device: any, slugcountr
 
 
 export default async function BlogPage({ params }: Params) {
-  
+  const balance= await getBalance()
   const { slug } = await params
   const { pureSlug, rawCountry } = parseSlug(slug);
   
@@ -288,9 +321,10 @@ export default async function BlogPage({ params }: Params) {
 
   return (
     <>
-    <div className="flex justify-center max-w-7xl items-center">
+    <div className="flex justify-center items-center">
       <div className="min-h-screen  bg-white">
-        <header className="bg-white shadow-sm border-b">
+      <header className="bg-white shadow-sm border-b">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 relative">
         <div className="mx-auto px-4 sm:px-6 lg:px-8 py-4 relative">
       <Link  href={`https://${entry?.[0] ? entry[0] + "." : ""}mobgsm.com`}>
         <Image
@@ -302,16 +336,84 @@ export default async function BlogPage({ params }: Params) {
         />
       </Link>
     </div>
-        </header>
-        <Link href={`https://mobgsm.com`}>
-        <div className="relative overflow-hidden bg-gray-950 0 border-b h-6">
-          <p className="absolute whitespace-nowrap animate-marquee text-white text-sm">
-            🚨 Click Here to Topup Airtime across 170+ countries and 800+ operators, Buy Giftcards, Explore BNPL Offers, Esim Details and Browse Mobile Specs!  🚨
-          </p>
-        </div></Link>
+    
+          <div className="flex flex-row absolute top-7 right-4">
+            {/* Balance Display */}
+    <div className="flex items-center gap-2 bg-gray-50 px-3 py-1 rounded-2xl shadow-sm border">
+        <Wallet className="w-5 h-5 text-green-600" />
+        <div className="flex gap-2">
+          {balance.map((b, idx) => (
+            <span
+              key={idx}
+              className="text-sm font-medium text-gray-800"
+            >
+              {b.amount} {b.currency}
+            </span>
+          ))}
+        </div>
+      </div>
+      <div className='mx-2'>
+            <CountrySelector country={entry![0]}  /></div>
+          </div>
+        </div>
+      </header>
+        <Tabs value="">
+      <TabsList className="flex flex-wrap">
+        <Link href="/#reloadly-airtime" passHref>
+          <TabsTrigger value="reloadly-airtime" asChild>
+            <button>Airtime Topup</button>
+          </TabsTrigger>
+        </Link>
+
+        <Link href="/#reloadly-gifts" passHref>
+          <TabsTrigger value="reloadly-gifts" asChild>
+            <button>Giftcards</button>
+          </TabsTrigger>
+        </Link>
+
+        <Link href="/#products" passHref>
+          <TabsTrigger value="products" asChild>
+            <button>
+              Mobiles
+              <sup className="text-[0.4rem] align-super">
+                <span className="font-semibold text-white bg-purple-500 px-2 py-0.5 rounded">
+                  BETA
+                </span>
+              </sup>
+            </button>
+          </TabsTrigger>
+        </Link>
+
+        <Link href="/#esim" passHref>
+          <TabsTrigger value="esim" asChild>
+            <button>
+              eSIM Offers
+              <sup className="text-[0.4rem] align-super">
+                <span className="font-semibold text-white bg-purple-500 px-2 py-0.5 rounded">
+                  BETA
+                </span>
+              </sup>
+            </button>
+          </TabsTrigger>
+        </Link>
+
+        <Link href="/#bnpl" passHref>
+          <TabsTrigger value="bnpl" asChild>
+            <button>
+              BNPL Offers
+              <sup className="text-[0.4rem] align-super">
+                <span className="font-semibold text-white bg-purple-500 px-2 py-0.5 rounded">
+                  BETA
+                </span>
+              </sup>
+            </button>
+          </TabsTrigger>
+        </Link>
+      </TabsList>
+    </Tabs>
 
 
-        <div className=" mx-auto flex max-w-7xl flex-col md:flex-row">
+        <div className="mt-8 sm:mt-0 mx-auto flex max-w-7xl flex-col md:flex-row">
           {/* Main Content */}
           <div className="flex-1 bg-gray-50 rounded-2xl">
             <div className="bg-white p-4 border-b rounded-2xl">

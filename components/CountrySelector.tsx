@@ -2,14 +2,25 @@
 
 import * as Select from "@radix-ui/react-select"
 import { ChevronDown } from "lucide-react"
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
 import Image from "next/image"
 interface Props {
   country: string
-  setCountry: (value: string) => void
+  setCountry?: (value: string) => void
 }
 
 const CountrySelector = ({ country, setCountry }: Props) => {
+  const [internalCountry, setInternalCountry] = useState(country)
+
+  // If setCountry not provided, fallback to internal state
+  const handleChange = (value: string) => {
+    if (setCountry) {
+      setCountry(value)
+    } else {
+      setInternalCountry(value)
+    }
+  }
+
   const countries = [{'code': 'AE', 'name': 'United Arab Emirates', 'flag': '🇦🇪'},
     {'code': 'AF', 'name': 'Afghanistan', 'flag': '🇦🇫'},
     {'code': 'AG', 'name': 'Antigua and Barbuda', 'flag': '🇦🇬'},
@@ -145,17 +156,17 @@ const CountrySelector = ({ country, setCountry }: Props) => {
     {'code': 'ZM', 'name': 'Zambia', 'flag': '🇿🇲'},
     {'code': 'ZW', 'name': 'Zimbabwe', 'flag': '🇿🇼'}];
   
-  
+    const current = setCountry ? country : internalCountry
 
   useEffect(() => {
-    localStorage.setItem("selectedCountry", country)
-  }, [country])
+    localStorage.setItem("selectedCountry", current)
+  }, [current])
 
-  const selectedCountry = countries.find((c) => c.code === country.toUpperCase()) || countries.find((c) => c.code === "US");
+  const selectedCountry = countries.find((c) => c.code === current?.toUpperCase()) || countries.find((c)   => c.code === "US");
 
 
   return (
-    <Select.Root value={country} onValueChange={setCountry}>
+    <Select.Root value={country} onValueChange={handleChange}>
       <Select.Trigger
         className="inline-flex items-center justify-between rounded-lg px-4 py-2 border border-gray-300 bg-white text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 min-w-[160px]"
         aria-label="Country"
