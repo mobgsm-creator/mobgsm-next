@@ -51,7 +51,7 @@ function parseSlug(slugArray: string) {
 
   return {
     pureSlug: fullSlug,
-    rawCountry: null
+    rawCountry: "united-states"
   }
 }
 // Types remain the same
@@ -276,10 +276,9 @@ function DynamicCountryContent({ device, slugcountry}: { device: any, slugcountr
   
   
   const country = slugcountry
-  const entry = 
-  Object.entries(settings).find(
+  const entry = Object.entries(settings).find(
     ([, value]) => value.country.toLowerCase() === country?.toLowerCase()
-  ) ?? "us";
+  )
 
   const setting =  (entry ? settings[entry[0]] : undefined) 
   ?? settings["us"]
@@ -306,22 +305,19 @@ export default async function BlogPage({ params }: Params) {
   const session = await getServerSession(authOptions);
   const { slug } = await params
   const { pureSlug, rawCountry } = parseSlug(slug);
-  
   const country = countryMap[rawCountry!] || rawCountry;
   //console.log("pureSlug",pureSlug)
   // Get static content (this is cached/pre-rendered)
   const staticContent = await StaticDeviceContent({ slug })
   const { device, specs, img_specs, moreFromBrand, uniqueBrands } = staticContent
-  let entry
-  if (rawCountry !== null) {
-    entry = 
-    Object.entries(settings).find(
-      ([, value]) => value.country.toLowerCase() === country?.toLowerCase()
-    ) ?? "us";
   
-  }
- 
-  //console.log("Entry:",entry[0])
+  
+  const entry = Object.entries(settings).find(
+      ([, value]) => value.country.toLowerCase() === country?.toLowerCase()
+    ) // Fallback to default entry if not found
+    
+  
+  
   
 
   return (
