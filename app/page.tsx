@@ -25,13 +25,13 @@ export default async function HomePage() {
   if (parts[0].length === 2) {
     country_domain = parts[0]; // "in" from "in.mobgsm.com"
   }
-  console.log(country_domain)
+  //console.log(country_domain)
   const now = Date.now();
   const country = country_domain ||
     reqHeaders.get('x-geo-country') ||
     reqHeaders.get('cf-ipcountry') ||
     'unknown'
-  console.log("Detected Country:", country);
+  //console.log("Detected Country:", country);
   //console.log("Time since Last Fetch",now - lastFetch)
   if (!cachedData || (now - lastFetch) > CACHE_DURATION) {
     console.log("Fetching Data for Home Page");

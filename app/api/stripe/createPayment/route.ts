@@ -18,7 +18,7 @@ export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
     const { amount, currency } = body;
-    console.log(amount, currency);
+    //console.log(amount, currency);
     const ratelimit = createRateLimit();
     const ip = 
   req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || 
@@ -52,7 +52,7 @@ export async function POST(req: NextRequest) {
       currency: currency,
       automatic_payment_methods: { enabled: true },
     });
-    console.log(paymentIntent);
+    //console.log(paymentIntent);
     return NextResponse.json({ clientSecret: paymentIntent.client_secret });
   } catch (err: any) {//eslint-disable-line
     return NextResponse.json({ error: err.message }, { status: 400 });

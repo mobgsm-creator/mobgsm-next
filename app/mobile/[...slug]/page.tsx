@@ -152,11 +152,11 @@ export async function generateMetadata( props: { params: Promise<{ slug: string 
   const { slug } = await props.params;
   const { pureSlug, rawCountry } = parseSlug(slug);
   const country = countryMap[rawCountry!] || rawCountry;
-  console.log(country)
+  //console.log(country)
   const entry = Object.entries(settings).find(
     ([, value]) => value.country.toLowerCase() === country?.toLowerCase()
   )
-  console.log(entry)
+  //console.log(entry)
   let canonical: string;
   let alternatesLanguages: Record<string, string> = {};
 

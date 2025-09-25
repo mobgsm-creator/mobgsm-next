@@ -16,10 +16,10 @@ export async function GET(request: NextRequest) {
 
 
 
-    console.log("Balance data:", data)
+    //console.log("Balance data:", data)
 
     if (error) {
-      console.error("Fetch error:", error)
+      //console.error("Fetch error:", error)
       return NextResponse.json({ error: "Failed to fetch balance" }, { status: 500 })
     }
 

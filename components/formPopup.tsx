@@ -11,7 +11,7 @@ type ComparePopupProps = {
 
 export default function FormPopup({ onClose, currentProduct }: ComparePopupProps) {
     let formProduct = "'";
-    console.log(typeof(currentProduct))
+    //console.log(typeof(currentProduct))
     if ("product_name" in currentProduct) {
       formProduct = currentProduct.product_name;   // Product
     } else if ("provider" in currentProduct) {

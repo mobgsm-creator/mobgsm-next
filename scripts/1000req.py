@@ -3,7 +3,7 @@ import pandas as pd
 import json
 
 # Path to your CSV file
-csv_file = r'C:\Users\agney\Downloads\devices_rows.csv'
+csv_file = r"C:\Users\agney\Documents\Files\Projects\UK-Dermatologists\test.csv"
 
 # Load CSV
 df = pd.read_csv(csv_file)
@@ -37,7 +37,7 @@ devices_list = df.to_dict(orient='records')
 
 
 # Write JSON file
-with open('devices.json', 'w', encoding='utf-8') as f:
+with open('derms.json', 'w', encoding='utf-8') as f:
     json.dump(devices_list, f, indent=2, ensure_ascii=False)
 
 print("JSON file generated successfully at devices.json")

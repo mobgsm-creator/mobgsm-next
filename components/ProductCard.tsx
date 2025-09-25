@@ -262,7 +262,7 @@ export default function ProductCard({ product, session, balance }: ProductCardPr
     
     const res = await fetch(`/api/airtime_operator_data?operatorId=${operatorId}`);
     const data = await res.json();
-    console.log(data)
+    //console.log(data)
     const arrays = [
       data?.geographicalRechargePlans?.[0]?.localAmounts,
       data?.suggestedAmounts,
@@ -278,7 +278,7 @@ export default function ProductCard({ product, session, balance }: ProductCardPr
       (max, arr) => (arr.length > max.length ? arr : max),
       []
     );
-    console.log(result)
+    //console.log(result)
     return result
 
   }
@@ -315,7 +315,7 @@ export default function ProductCard({ product, session, balance }: ProductCardPr
         body: JSON.stringify(data),
       });
   
-      if (!response.ok) throw new Error("Giftcard purchase failed");
+      if (!response.ok) throw new Error(`Giftcard purchase failed: ${response.text()}`)
   
       const result = await response.json();
       console.log("Giftcard Purchase Success ✅:", result);
