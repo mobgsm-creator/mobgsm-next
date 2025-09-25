@@ -155,7 +155,7 @@ export async function generateMetadata( props: { params: Promise<{ slug: string 
   //console.log(country)
   const entry = Object.entries(settings).find(
     ([, value]) => value.country.toLowerCase() === country?.toLowerCase()
-  )
+  ) ?? ['us', { country: 'us' }];
   //console.log(entry)
   let canonical: string;
   let alternatesLanguages: Record<string, string> = {};
@@ -278,7 +278,7 @@ function DynamicCountryContent({ device, slugcountry}: { device: any, slugcountr
   const country = slugcountry
   const entry = Object.entries(settings).find(
     ([, value]) => value.country.toLowerCase() === country?.toLowerCase()
-  )
+  ) ?? ['us', { country: 'us' }];
 
   const setting =  (entry ? settings[entry[0]] : undefined) 
   ?? settings["us"]
@@ -315,8 +315,8 @@ export default async function BlogPage({ params }: Params) {
   
   const entry = Object.entries(settings).find(
       ([, value]) => value.country.toLowerCase() === country?.toLowerCase()
-    ) // Fallback to default entry if not found
-    
+    ) ?? ['us', { country: 'us' }]; // Fallback to default entry if not found
+  console.log(entry)
   
   
   
