@@ -316,7 +316,7 @@ export default async function BlogPage({ params }: Params) {
   const entry = Object.entries(settings).find(
       ([, value]) => value.country.toLowerCase() === country?.toLowerCase()
     ) ?? ['us', { country: 'us' }]; // Fallback to default entry if not found
-  console.log(entry)
+  //(entry)
   
   
   
