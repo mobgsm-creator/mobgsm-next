@@ -315,7 +315,11 @@ export default function ProductCard({ product, session, balance }: ProductCardPr
         body: JSON.stringify(data),
       });
   
-      if (!response.ok) throw new Error(`Giftcard purchase failed: ${response.text()}`)
+      if (!response.ok) {
+        const errorData = await response.json(); // or response.text() if plain text
+        throw new Error(`Giftcard purchase failed: ${JSON.stringify(errorData)}`);
+      }
+      
   
       const result = await response.json();
       console.log("Giftcard Purchase Success ✅:", result);
