@@ -310,7 +310,8 @@ export default async function BlogPage({ params }: Params) {
   // Get static content (this is cached/pre-rendered)
   const staticContent = await StaticDeviceContent({ slug })
   const { device, specs, img_specs, moreFromBrand, uniqueBrands } = staticContent
-  
+  console.log("Visitor from country:", country)
+  console.log("Page: ",pureSlug)
   
   const entry = Object.entries(settings).find(
       ([, value]) => value.country.toLowerCase() === country?.toLowerCase()

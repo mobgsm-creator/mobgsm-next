@@ -10,7 +10,8 @@ interface Props {
 }
 
 const CountrySelector = ({ country, setCountry }: Props) => {
-  const [internalCountry, setInternalCountry] = useState("us")
+  
+  const [internalCountry, setInternalCountry] = useState(country || "us")
 
   // If setCountry not provided, fallback to internal state
   const handleChange = (value: string) => {
