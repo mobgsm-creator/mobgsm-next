@@ -20,13 +20,27 @@ export function middleware(request: NextRequest) {
   response.headers.set('x-geo-country', country)
   response.headers.set('x-geo-region', region)
   response.headers.set('x-geo-city', city)
-  if (!request.cookies.get("next-auth.session-token")) {
-    // No session → safe to cache
-    response.headers.set("Cache-Control", "public, s-maxage=3600, stale-while-revalidate=60");
-  } else {
-    // Session exists → private
-    response.headers.set("Cache-Control", "private, no-cache, no-store, max-age=0, must-revalidate");
+  // Apply only for /mobile/* paths
+  if (request.nextUrl.pathname.includes("/mobile")) {
+    const hasSession =
+      request.cookies.get("next-auth.session-token") ||
+      request.cookies.get("__Secure-next-auth.session-token");
+
+    if (!hasSession) {
+      // No session → allow public CDN caching
+      response.headers.set(
+        "Cache-Control",
+        "public, s-maxage=3600, stale-while-revalidate=60"
+      );
+    } else {
+      // Authenticated user → disable caching
+      response.headers.set(
+        "Cache-Control",
+        "private, no-cache, no-store, max-age=0, must-revalidate"
+      );
+    }
   }
+
  
 
   return response

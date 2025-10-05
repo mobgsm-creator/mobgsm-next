@@ -1,5 +1,5 @@
 'use client'
-import { useEffect, useState } from "react"
+import { useEffect, useState, useMemo } from "react"
 import ProductListing from "./ProductListing"
 import FilterSidebar from "./FilterSidebar"
 import type { Product, ESIMProvider,BNPLProvider, reloadly } from "../lib/types"
@@ -39,7 +39,6 @@ export default function ProductSectionWrapper({ country,
   const priorityCountries = ['AE', 'AF', 'AG', 'AI', 'AL', 'AM', 'AO', 'AR', 'AS', 'AT', 'AU', 'AW', 'AZ', 'BB', 'BD', 'BE', 'BF', 'BG', 'BH', 'BI', 'BJ', 'BM', 'BO', 'BR', 'BS', 'BW', 'BY', 'BZ', 'CA', 'CD', 'CF', 'CG', 'CH', 'CI', 'CL', 'CM', 'CN', 'CO', 'CR', 'CU', 'CY', 'CZ', 'DE', 'DJ', 'DK', 'DM', 'DO', 'DZ', 'EC', 'EE', 'EG', 'ER', 'ES', 'ET', 'FI', 'FJ', 'FR', 'GA', 'GB', 'GD', 'GE', 'GH', 'GM', 'GN', 'GQ', 'GR', 'GT', 'GW', 'GY', 'HN', 'HT', 'ID', 'IE', 'IL', 'IN', 'IQ', 'IR', 'IS', 'IT', 'JM', 'JO', 'JP', 'KE', 'KG', 'KH', 'KM', 'KN', 'KR', 'KW', 'KY', 'KZ', 'LA', 'LB', 'LK', 'LR', 'LS', 'LT', 'LU', 'LV', 'LY', 'MA', 'MD', 'MG', 'ML', 'MM', 'MN', 'MR', 'MS', 'MT', 'MU', 'MV', 'MW', 'MX', 'MY', 'MZ', 'NA', 'NE', 'NG', 'NI', 'NL', 'NO', 'NP', 'NZ', 'OM', 'PA', 'PE', 'PH', 'PK', 'PL', 'PR', 'PT', 'PY', 'QA', 'RO', 'RS', 'RU', 'RW', 'SA', 'SC', 'SD', 'SE', 'SG', 'SI', 'SK', 'SL', 'SN', 'SO', 'SR', 'SV', 'SZ', 'TC', 'TD', 'TG', 'TH', 'TJ', 'TL', 'TN', 'TR', 'TT', 'TZ', 'UA', 'UG', 'US', 'UY', 'UZ', 'VC', 'VE', 'VG', 'VN', 'WS', 'YE', 'ZA', 'ZM', 'ZW']
   const selectedCountry = priorityCountries.includes(country) ? country : "US";
   const [isOpen, setIsOpen] = useState(false)
-  const [devices, setDevices] = useState<Device[]>([])
   const [product, setProduct] = useState<Product[]>([]);
   const [BNPLProvider, setBNPLProvider] = useState<BNPLProvider[]>([]);
   const [esimProviders, setEsimProviders] = useState<ESIMProvider[]>([]);
@@ -52,54 +51,85 @@ export default function ProductSectionWrapper({ country,
     setEsimProviders(esim);
     setAirtime(airtime);
     setGifts(giftcards);
-    setDevices(device_list);
+  
   },[])
     
     
-  const productsFromDevices: Product[] = devices.map((device) => ({
-    flag: device.id,
-    product_name: device.name,
-    brand_name: device.brand_name,
-    product_links: device.name_url,
-    price: "",
-    mrp: "",
-    discount: "",
-    status: "",
-    payment_options: "",
-    rating: "",
-    reviews: "",
-    img_link: device.image,
-    country: "",
-    store_logo: ""
-  }));
-  let filteredProducts = product.filter((item) => {
-    return priorityCountries.includes(selectedCountry)
-      ? item.country === selectedCountry
-      : true;
-  });
-  filteredProducts = [...filteredProducts,...productsFromDevices]
-  const filteredESIM = (esimProviders ?? []).filter((item) => {
-    return priorityCountries.includes(selectedCountry)
-      ? item.country === selectedCountry
-      : true;
-  });
-  
-  const filteredBNPL = (BNPLProvider ?? []).filter((item) => {
-    return priorityCountries.includes(selectedCountry)
-      ? item.country === selectedCountry
-      : true;
-  });
+  const productsFromDevices = useMemo<Product[]>(() => {
+    return (device_list ?? []).map((device) => ({
+      flag: device.id,
+      product_name: device.name,
+      brand_name: device.brand_name,
+      product_links: device.name_url,
+      price: '',
+      mrp: '',
+      discount: '',
+      status: '',
+      payment_options: '',
+      rating: '',
+      reviews: '',
+      img_link: device.image,
+      country: '',
+      store_logo: '',
+    }))
+  }, [device_list])
+  // let filteredProducts = product.filter((item) => {
+  //   return priorityCountries.includes(selectedCountry)
+  //     ? item.country === selectedCountry
+  //     : true;
+  // });
+  const filteredProducts = useMemo<Product[]>(() => {
+    const base = product.filter((p) => 
+      priorityCountries.includes(selectedCountry) ?
+      p.country ===selectedCountry: true) 
+    
+    return [...base, ...productsFromDevices]
+  },[selectedCountry])
+  // filteredProducts = [...filteredProducts,...productsFromDevices]
+  // const filteredESIM = (esimProviders ?? []).filter((item) => {
+  //   return priorityCountries.includes(selectedCountry)
+  //     ? item.country === selectedCountry
+  //     : true;
+  // });
+  const filteredESIM = useMemo<ESIMProvider[]>(()=>{
+    return esimProviders.filter((e) => 
+      priorityCountries.includes(selectedCountry) ? e.country===selectedCountry : true)
+  },[selectedCountry])
+  // const filteredBNPL = (BNPLProvider ?? []).filter((item) => {
+  //   return priorityCountries.includes(selectedCountry)
+  //     ? item.country === selectedCountry
+  //     : true;
+  // });
+  const filteredBNPL = useMemo<BNPLProvider[]>(() => {
+    return BNPLProvider.filter((b) => 
+      priorityCountries.includes(selectedCountry) 
+    ? b.country === selectedCountry : true
+    )
+  },[selectedCountry])
 
-  const fitleredAirtime = (r_airtime ?? []).filter((item) => {
-    return priorityCountries.includes(selectedCountry)
-      ? item.code === selectedCountry
-      : true;
-  });
-  const fitleredGifts = (r_gifts ?? []).filter((item) => {
-    return priorityCountries.includes(selectedCountry)
-      ? item.code === selectedCountry
-      : true;
-  });
+  // const fitleredAirtime = (r_airtime ?? []).filter((item) => {
+  //   return priorityCountries.includes(selectedCountry)
+  //     ? item.code === selectedCountry
+  //     : true;
+  // });
+  const fitleredAirtime = useMemo<reloadly[]>(() => {
+    return r_airtime.filter((a) => 
+      priorityCountries.includes(selectedCountry) 
+    ? a.code === selectedCountry : true
+    )
+  },[selectedCountry])
+
+  // const fitleredGifts = (r_gifts ?? []).filter((item) => {
+  //   return priorityCountries.includes(selectedCountry)
+  //     ? item.code === selectedCountry
+  //     : true;
+  // });
+  const fitleredGifts = useMemo<reloadly[]>(() => {
+    return r_gifts.filter((g) => 
+      priorityCountries.includes(selectedCountry) 
+    ? g.code === selectedCountry : true
+    )
+  },[selectedCountry])
   //console.log(filteredBNPL)
   
 

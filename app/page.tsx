@@ -49,6 +49,7 @@ export default async function HomePage() {
     ]);
   
     cachedData = { products, bnpl, esim, airtime, giftcards, device_list };
+    console.log(cachedData.airtime)
     lastFetch = now;
    
     
