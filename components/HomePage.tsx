@@ -96,7 +96,7 @@ export default function HomePageClient({
             {/* Balance Display */}
     {session?.user?.email ? (
     
-        <WalletPopup balance={balance} session={session}/>
+        <WalletPopup session={session}/>
       ) : <LoginButton />}
       <div className='mx-2'>
             <CountrySelector country={country} setCountry={setCountry} /></div>
