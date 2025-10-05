@@ -33,7 +33,8 @@ export default function HomePageClient({
     { 
       country_code = "ae"
     }
-  const [country, setCountry] = useState(country_code || "")
+  const [country, setCountry] = useState(country_code.toLocaleUpperCase() || "")
+  
   const [balance, setBalance] = useState<{ amount: number; currency: string }[]>([]);;
   // Load initial country from localStorage
   useEffect(() => {
