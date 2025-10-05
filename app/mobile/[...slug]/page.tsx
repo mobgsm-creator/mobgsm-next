@@ -114,7 +114,7 @@ interface Params {
 // export const dynamicParams = false
 //export const dynamic = 'force-dynamic'
 //
-export const dynamic = 'force-static';  
+
 export const revalidate =184600 // 24 hours
 //export const dynamicParams = true
 
