@@ -30,7 +30,7 @@ export function middleware(request: NextRequest) {
       // No session → allow public CDN caching
       response.headers.set(
         "Cache-Control",
-        "public, s-maxage=3600, stale-while-revalidate=60"
+        "public, s-maxage=31536000, stale-while-revalidate=60"
       );
     } else {
       // Authenticated user → disable caching
