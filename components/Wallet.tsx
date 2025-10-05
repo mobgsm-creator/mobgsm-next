@@ -2,7 +2,7 @@
 'use client'
 import Image from 'next/image'
 import { Card } from './ui/card'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Wallet, CheckCircle2, TrendingUp } from 'lucide-react'
 import { Button } from './ui/button'
 import { loadStripe } from "@stripe/stripe-js";
@@ -14,8 +14,7 @@ import {
 import { Session } from 'next-auth';
 import { signOut } from "next-auth/react";
 interface WalletPopupProps {
-  balance: { amount: number; currency: string }[]
-  session: Session | null
+  session: Session 
 }
 import {
     Dialog,
@@ -27,9 +26,43 @@ import {
   } from "@/components/ui/dialog"
 
   const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_KEY!);
-
-export default function WalletPopup({ balance, session }: WalletPopupProps) {
+  const getBalance = async (session : Session) => {
+    const res = await fetch(`https://mobgsm.com/api/get_balance?email=${session?.user?.email}`);
+    const data = await res.json();
   
+    const balances: { amount: number; currency: string }[] = [];
+  
+    const credits = data.credit || [];
+    const debits = data.debit || [];
+  
+    // index debits by currency for quick lookup
+    const debitMap: Record<string, number> = {};
+    for (const d of debits) {
+      debitMap[d.currency] = (debitMap[d.currency] || 0) + d.amount;
+    }
+  
+    for (const c of credits) {
+      const debitAmount = debitMap[c.currency] || 0;
+      balances.push({
+        currency: c.currency,
+        amount: c.amount - debitAmount,
+      });
+    }
+  
+    return balances;
+  };
+export default function WalletPopup({ session }: WalletPopupProps) {
+  useEffect(()=> {
+    async function getBalanceData() {
+      const balance_data = await getBalance(session)
+      setBalance(balance_data)
+    }
+    getBalanceData()
+    
+  })
+  
+  
+  const [ balance, setBalance] = useState<{ amount: number; currency: string }[]>([])
   const [open, setOpen] = useState(false)
   const [currencyValue, setCurrencyValue] = useState('USD')
   const [amountValue, setAmountValue] = useState(0)

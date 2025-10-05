@@ -1,10 +1,16 @@
 # Traefik
 traefik.enable=true
+traefik.docker.network=coolify
 traefik.http.middlewares.gzip.compress=true
 traefik.http.middlewares.redirect-to-https.redirectscheme.scheme=https
 
 # Service definition
 traefik.http.services.mobgsm-service.loadbalancer.server.port=3000
+# Enable Keep-Alive for the backend
+
+traefik.http.services.mobgsm-service.loadbalancer.keepalive=true
+traefik.http.services.mobgsm-service.loadbalancer.keepaliveidle=30s
+traefik.http.services.mobgsm-service.loadbalancer.keepalivemaxconns=100
 
 # HTTPS router
 traefik.http.routers.mobgsm-https.rule=HostRegexp(`^([a-zA-Z0-9-]+\.)?mobgsm\.com$`)

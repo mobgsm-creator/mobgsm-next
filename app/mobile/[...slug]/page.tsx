@@ -114,34 +114,9 @@ interface Params {
 // export const dynamicParams = false
 //export const dynamic = 'force-dynamic'
 //
+export const dynamic = 'force-static';  
 export const revalidate =184600 // 24 hours
 //export const dynamicParams = true
-const getBalance = async () => {
-  const session = await getServerSession(authOptions);
-  const res = await fetch(`https://mobgsm.com/api/get_balance?email=${session?.user?.email}`);
-  const data = await res.json();
-
-  const balances: { amount: number; currency: string }[] = [];
-
-  const credits = data.credit || [];
-  const debits = data.debit || [];
-
-  // index debits by currency for quick lookup
-  const debitMap: Record<string, number> = {};
-  for (const d of debits) {
-    debitMap[d.currency] = (debitMap[d.currency] || 0) + d.amount;
-  }
-
-  for (const c of credits) {
-    const debitAmount = debitMap[c.currency] || 0;
-    balances.push({
-      currency: c.currency,
-      amount: c.amount - debitAmount,
-    });
-  }
-
-  return balances;
-};
 
 
 
@@ -301,7 +276,7 @@ function DynamicCountryContent({ device, slugcountry}: { device: any, slugcountr
 
 
 export default async function BlogPage({ params }: Params) {
-  const balance= await getBalance()
+  
   const session = await getServerSession(authOptions);
   const { slug } = await params
   const { pureSlug, rawCountry } = parseSlug(slug);
@@ -343,7 +318,7 @@ export default async function BlogPage({ params }: Params) {
             {/* Balance Display */}
             {session?.user?.email ? (
     
-        <WalletPopup balance={balance} session={session} />
+        <WalletPopup session={session} />
       ) : <LoginButton />}
       <div className='mx-2 gap-4'>
             <CountrySelector country={entry![0]}  /></div>

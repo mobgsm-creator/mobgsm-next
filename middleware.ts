@@ -20,6 +20,13 @@ export function middleware(request: NextRequest) {
   response.headers.set('x-geo-country', country)
   response.headers.set('x-geo-region', region)
   response.headers.set('x-geo-city', city)
+  if (!request.cookies.get("next-auth.session-token")) {
+    // No session → safe to cache
+    response.headers.set("Cache-Control", "public, s-maxage=3600, stale-while-revalidate=60");
+  } else {
+    // Session exists → private
+    response.headers.set("Cache-Control", "private, no-cache, no-store, max-age=0, must-revalidate");
+  }
  
 
   return response
