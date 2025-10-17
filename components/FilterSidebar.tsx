@@ -15,9 +15,11 @@ interface ProductListingProps {
   airtime?: reloadly[]
   gifts?: reloadly[]
   view: 'products' | 'esim' | 'bnpl'| 'reloadly-airtime' | 'reloadly-gifts'
+  isOpen: boolean
+  setIsOpen: React.Dispatch<React.SetStateAction<boolean>>
 }
-export default function FilterSidebar( { product, esimProviders, BNPLProvider,airtime,gifts,view }: ProductListingProps ) {
-  //console.log("here")
+export default function FilterSidebar( { product, esimProviders, BNPLProvider,airtime,gifts,view,isOpen,setIsOpen }: ProductListingProps ) {
+  console.log(isOpen)
   const router = useRouter()
   const searchParams = useSearchParams()
   const [selectedBrands, setSelectedBrands] = useState<string[]>([])
@@ -96,6 +98,7 @@ useEffect(() => {
 
     
     router.push(`/?${params.toString()}`)
+    setIsOpen(false)
   }
 
   const clearFilters = () => {

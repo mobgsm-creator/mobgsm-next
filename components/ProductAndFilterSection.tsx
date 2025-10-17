@@ -124,6 +124,8 @@ export default function ProductSectionWrapper({ country,
               airtime={fitleredAirtime}
               gifts={fitleredGifts}
               view={view}
+              isOpen={isOpen}
+              setIsOpen={setIsOpen}
             />
        
         </div>

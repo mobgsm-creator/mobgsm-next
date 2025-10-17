@@ -4,6 +4,7 @@ import { Inter } from "next/font/google"
 import "./globals.css"
 import MixpanelInit from "@/lib/initMixpanel"
 import Script from 'next/script';
+//import FooterCountryLinks from "@/components/footer";
 const inter = Inter({ subsets: ["latin"],
   display: 'swap', })
 

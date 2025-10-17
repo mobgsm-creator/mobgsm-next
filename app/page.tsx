@@ -4,6 +4,7 @@ import { getProducts, getBNPL, getESIM, getReloadlyAirtime, getReloadlyGifts, ge
 //export const runtime = 'edge'
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
+
 //
 //export const dynamic = 'force-static';  
 export const revalidate =184600
