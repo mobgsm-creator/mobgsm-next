@@ -5,23 +5,24 @@ import type { Product, ESIMProvider, BNPLProvider, reloadly } from "../lib/types
 
 type ComparePopupProps = {
   onClose: () => void
-  currentProduct: Product | ESIMProvider | BNPLProvider | reloadly;
+  currentProduct?: Product | ESIMProvider | BNPLProvider | reloadly | string
 };
 
 
 export default function FormPopup({ onClose, currentProduct }: ComparePopupProps) {
     let formProduct = "'";
     //console.log(typeof(currentProduct))
-    if ("product_name" in currentProduct) {
-      formProduct = currentProduct.product_name;   // Product
-    } else if ("provider" in currentProduct) {
-      formProduct = currentProduct.provider;       // ESIMProvider
-    } else if ("Name" in currentProduct) {
-      formProduct = currentProduct.Name;           // BNPLProvider
-    } else if ("operator" in currentProduct) {
-      formProduct = currentProduct.operator;       // Operator
-    }                   // reloadly
- 
+    if (typeof currentProduct === 'string') {
+      formProduct = currentProduct;
+    } else if (currentProduct && 'product_name' in currentProduct) {
+      formProduct = currentProduct.product_name; // Product
+    } else if (currentProduct && 'provider' in currentProduct) {
+      formProduct = currentProduct.provider; // ESIMProvider
+    } else if (currentProduct && 'Name' in currentProduct) {
+      formProduct = currentProduct.Name; // BNPLProvider
+    } else if (currentProduct && 'operator' in currentProduct) {
+      formProduct = currentProduct.operator; // Operator
+    }
  
   const [formData, setFormData] = useState({
     first_name: "",

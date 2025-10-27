@@ -6,6 +6,7 @@ import CredentialsProvider from "next-auth/providers/credentials";
 // import TwitterProvider from "next-auth/providers/twitter";
 // import InstagramProvider from "next-auth/providers/instagram";
 import bcrypt from "bcryptjs";
+import { headers } from "next/headers";
 // Initialize Supabase Client
 if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
   throw new Error("Missing Supabase environment variables");
@@ -85,6 +86,12 @@ export const authOptions: NextAuthOptions = {
     async signIn({ user }) {
       if ( user?.email) {
         try {
+          const reqHeaders = headers();
+          const country =
+            reqHeaders?.get("x-geo-country") ||
+            reqHeaders?.get("cf-ipcountry") ||
+            "unknown";
+            console.log("Country:",country)
           // 🔹 Initialize mindmap usage record for new users
           const { data: existingUsage } = await supabase
             .from("Users")
@@ -95,7 +102,7 @@ export const authOptions: NextAuthOptions = {
           if (!existingUsage) {
             const { error: insertError } = await supabase
               .from("Users")
-              .insert([{ email: user.email, username: user.email.split("@")[0] }]); // Use email prefix as username
+              .insert([{ email: user.email, username: user.email.split("@")[0], country: country }]); // Use email prefix as username
             if (insertError) throw insertError;
             console.log(`✅ New record created: ${user.email}`);
           } else {
