@@ -10,6 +10,7 @@ import CountrySelector from "@/components/CountrySelector"
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import LoginButton from "@/components/LoginButton";
+import GamePopupClient from "@/components/GamesPopup";
 const devicesJSONPath = path.join(process.cwd(), 'public', 'devices.json');
 const devicesData = JSON.parse(fs.readFileSync(devicesJSONPath, 'utf-8'));
 const countryMap: Record<string, string> = {
@@ -503,6 +504,7 @@ export default async function BlogPage({ params }: Params) {
         </div>  
      
     </div></div>
+    <GamePopupClient />
      
    </>
 
