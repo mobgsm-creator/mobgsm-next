@@ -181,6 +181,31 @@ export default function ProductListing({ product, esimProviders, BNPLProvider, a
 ) : (
   
 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+<ProductCard
+    product ={[{
+      product_name: "AD",
+      img_link: "/image.png",
+      product_links: "#",
+      brand_name: "Your Brand",
+      price: "₹100",
+      mrp: "₹100",
+      status: "Available",
+      flag: 0,
+      discount: "₹100",
+      rating: "4",
+      reviews: "10",
+      country: "India",
+      payment_options: "Credit Card, PayTM, UPI",
+      store_logo: "/image.png",}]}
+
+   
+
+  
+    
+    session={session}
+    balance={balance}
+   
+  />
   {data.map((item, index) => {
     // First 2 products load immediately
     if (index < 2) {

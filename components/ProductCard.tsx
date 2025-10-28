@@ -902,38 +902,38 @@ export default function ProductCard({ product, session, balance }: ProductCardPr
   return (
     
     <div className="bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300 overflow-hidden">
-      {isProduct(currentProduct) && ( <><div className="relative">
+      {isProduct(currentProduct) && currentProduct.product_name!=="AD" && ( <><div className="relative">
         {showForm && (
-    <FormPopup
-      onClose={() => setShowForm(false)}
-      currentProduct={currentProduct}
-     
-    />
-  )}
+          <FormPopup
+            onClose={() => setShowForm(false)}
+            currentProduct={currentProduct}
+          
+          />
+        )}
         
         {currentProduct.product_links?.startsWith('https') ? (
   
-  <div className="flex items-center justify-center h-32 w-full bg-white rounded-md shadow-inner p-2 hover:shadow-lg transition-transform transform hover:scale-105">
-  <Image
-    src={currentProduct.img_link}
-    alt={currentProduct.product_name}
-    className="h-20 w-20 object-contain p-1 drop-shadow-sm"
-    width={40} height={40}
+        <div className="flex items-center justify-center h-32 w-full bg-white rounded-md shadow-inner p-2 hover:shadow-lg transition-transform transform hover:scale-105">
+        <Image
+          src={currentProduct.img_link}
+          alt={currentProduct.product_name}
+          className="h-20 w-20 object-contain p-1 drop-shadow-sm"
+          width={40} height={40}
 
-  />
-</div>
+        />
+      </div>
   
-) : (
-  <Link href={`/mobile/${currentProduct.product_links}`}>
-  <div className="flex items-center justify-center h-32 w-full bg-white rounded-md shadow-inner p-2 hover:shadow-lg transition-transform transform hover:scale-105">
-  <Image
-    src={currentProduct.img_link}
-    alt={currentProduct.product_name}
-    className="h-20 w-20 object-contain p-1 drop-shadow-sm"
-    width={40} height={40}
-  />
-</div></Link>
-)}
+      ) : (
+        <Link href={`/mobile/${currentProduct.product_links}`}>
+        <div className="flex items-center justify-center h-32 w-full bg-white rounded-md shadow-inner p-2 hover:shadow-lg transition-transform transform hover:scale-105">
+        <Image
+          src={currentProduct.img_link}
+          alt={currentProduct.product_name}
+          className="h-20 w-20 object-contain p-1 drop-shadow-sm"
+          width={40} height={40}
+        />
+      </div></Link>
+      )}
         {currentProduct.discount ? 
         <Badge className="absolute top-2 right-2 bg-red-500 hover:bg-red-600">
           {currentProduct.discount}
@@ -966,59 +966,59 @@ export default function ProductCard({ product, session, balance }: ProductCardPr
           
           <span className="text-xs text-gray-500">•</span>
           <Badge
-  variant="outline"
-  className="text-xs max-w-[12rem] overflow-hidden whitespace-nowrap p-0 relative"
->
-  <div
-    style={{
-      display: "inline-block",
-      whiteSpace: "nowrap",
-      animation: `scroll-continuous ${Math.max(5, currentProduct.status.length / 7)}s linear infinite`,
-    }}
-  >
-    {currentProduct.status}
-  </div>
+              variant="outline"
+            className="text-xs max-w-[12rem] overflow-hidden whitespace-nowrap p-0 relative"
+          >
+            <div
+              style={{
+                display: "inline-block",
+                whiteSpace: "nowrap",
+                animation: `scroll-continuous ${Math.max(5, currentProduct.status.length / 7)}s linear infinite`,
+              }}
+            >
+              {currentProduct.status}
+            </div>
 
-  <style jsx>{`
-    @keyframes scroll-continuous {
-      0% {
-        transform: translateX(100%);
-      }
-      100% {
-        transform: translateX(-100%);
-      }
-    }
-  `}</style>
-</Badge>
+            <style jsx>{`
+              @keyframes scroll-continuous {
+                0% {
+                  transform: translateX(100%);
+                }
+                100% {
+                  transform: translateX(-100%);
+                }
+              }
+            `}</style>
+          </Badge>
 
 
         </div></>)}
-        <div className="flex flex-col items-center gap-2">
-  <div className="flex justify-center gap-8">
-  
-      <Button onClick={handleForm} className="text-xs w-25">
-        <span className="text-xs">Request Quote</span>
-      </Button>
-  
+        <div className="flex flex-col items-center gap-2 -mt-4">
+              <div className="flex justify-center gap-8">
+        
+                <Button onClick={handleForm} className="text-xs w-25">
+                  <span className="text-xs">Request Quote</span>
+                </Button>
+            
 
-    <Button onClick={handleCompare} className="text-xs w-25">
-      <span className="text-xs text-center">Detail</span>
-    </Button>
-  </div>
+                <Button onClick={handleCompare} className="text-xs w-25">
+                  <span className="text-xs text-center">Detail</span>
+                </Button>
+              </div>
 
-  {currentProduct.payment_options && (
-    <p className="text-xs text-gray-500 text-center">
-      {currentProduct.payment_options}
-    </p>
-  )}
+              {currentProduct.payment_options && (
+                <p className="text-xs text-gray-500 text-center">
+                  {currentProduct.payment_options}
+                </p>
+              )}
 
-  {showCompare && (
-    <ComparePopup
-      products={product.filter(isProduct)}
-      onClose={() => setShowCompare(false)}
-    />
-  )}
-</div>
+            {showCompare && (
+              <ComparePopup
+                products={product.filter(isProduct)}
+                onClose={() => setShowCompare(false)}
+              />
+            )}
+        </div>
 
         {currentProduct.mrp && (<>
         <div className="flex justify-between mt-4">
@@ -1030,6 +1030,30 @@ export default function ProductCard({ product, session, balance }: ProductCardPr
           </Button>
         </div></>)}
       </div></>)}
+      {isProduct(currentProduct) && currentProduct.product_name==="AD" && ( <><div className="relative">
+        {showForm && (
+          <FormPopup
+            onClose={() => setShowForm(false)}
+            currentProduct={"Test Games $19"}
+          
+          />
+        )}
+        <div className='flex flex-col justify-center items-center'>
+        <Image
+          src={currentProduct.img_link}
+          alt={currentProduct.product_name}
+          className="object-fit p-1 drop-shadow-sm"
+          width={300} height={300}
+
+        />
+        <Button onClick={handleForm} className="flex justify-center mt-5 text-xs w-25">
+                  <span className="text-xs">Start Testing</span>
+                </Button></div></div></>
+      )}
+
+
+
+
       {isBNPL(currentProduct)
               && (<>
               {showForm && (
