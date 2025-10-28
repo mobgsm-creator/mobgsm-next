@@ -388,7 +388,7 @@ export default async function BlogPage({ params }: Params) {
           <div className="flex-1 bg-gray-50 rounded-2xl">
             <div className="bg-white p-4 border-b rounded-2xl">
             <h1 className="text-2xl font-bold text-gray-900 mb-2">
-  {`${device.name} ${country ? `Price in ${country}` : ''}`}
+  {`${device.name} ${country && slug[0].includes("price") ? `Price in ${country}` : ''}`}
 </h1>
 
               <div className="flex flex-row gap-4 bg-white p-4 rounded-2xl ">
