@@ -45,7 +45,12 @@ export default function GamePopupClient() {
               </button>
               {showForm && (
                 <FormPopup
-                  onClose={() => setShowForm(false)}
+                  onClose={() => {
+                    setShowForm(false)
+                    setIsOpen(false)
+                  }
+                    
+                  }
                   currentProduct={"Test Games $19"}
                 
                 />

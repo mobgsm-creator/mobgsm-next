@@ -1,4 +1,6 @@
-import { MetadataRoute } from 'next';
+// app/sitemap.xml/route.ts
+import { NextResponse } from 'next/server'
+import { gzipSync } from 'zlib' // built into Node.js
 
 const countryNameMap: Record<string, string> = {
   ae: "united-arab-emirates",
@@ -117,9 +119,31 @@ const countryNameMap: Record<string, string> = {
 };
 
 
-export default function sitemap(): MetadataRoute.Sitemap {
-  return Object.entries(countryNameMap).map(([code, name]) => ({ 
-    url: `https://${code}.mobgsm.com/sitemap/${name}/phones`,
-    lastModified: new Date(),
-  }));
-}
+
+export async function GET() {
+    // 1️⃣ Build XML sitemap index
+    const urls = Object.entries(countryNameMap)
+      .map(
+        ([code, name]) =>
+          `<sitemap><loc>https://${code}.mobgsm.com/sitemap/${name}/phones</loc></sitemap>`
+      )
+      .join('')
+  
+    const xml = `<?xml version="1.0" encoding="UTF-8"?>
+      <sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+        ${urls}
+      </sitemapindex>`
+  
+    // 2️⃣ Gzip compress XML
+    const gzipped = gzipSync(xml)
+  
+    // 3️⃣ Return response with gzip headers
+    return new NextResponse(gzipped, {
+      headers: {
+        'Content-Type': 'application/xml',
+        'Content-Encoding': 'gzip',
+        'Cache-Control': 'public, max-age=3600',
+        'Content-Disposition': 'inline; filename="sitemap.xml.gz"',
+      },
+    })
+  }
