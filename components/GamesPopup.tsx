@@ -7,13 +7,13 @@ export default function GamePopupClient() {
     const [isOpen, setIsOpen] = useState(false)
     useEffect(() => {
         // Show popup after a short delay
-        const timer = setTimeout(() => setIsOpen(true), 25000)
+        const timer = setTimeout(() => setIsOpen(true), 30000)
         return () => clearTimeout(timer)
     }, [])   
 
     
     return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 flex items-center justify-center p-4">
+    <>
       {/* Popup Modal */}
       {isOpen && (
         <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
@@ -54,7 +54,7 @@ export default function GamePopupClient() {
           </div>
         </div>
       )}
-      </div>
+      </>
     )
     
 }
