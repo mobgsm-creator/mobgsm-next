@@ -136,7 +136,7 @@ export async function generateMetadata( props: { params: Promise<{ slug: string 
   let canonical: string;
   let alternatesLanguages: Record<string, string> = {};
 
-  if (entry) {
+  if (entry && slug[0].includes("price")) {
     // Match found → single canonical
     const [key] = entry;
     canonical = `https://${key}.mobgsm.com/mobile/${pureSlug}-price-in-${rawCountry}`;
