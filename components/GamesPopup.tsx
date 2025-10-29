@@ -7,7 +7,7 @@ export default function GamePopupClient() {
     const [isOpen, setIsOpen] = useState(false)
     useEffect(() => {
         // Show popup after a short delay
-        const timer = setTimeout(() => setIsOpen(true), 30000)
+        const timer = setTimeout(() => setIsOpen(true), 15000)
         return () => clearTimeout(timer)
     }, [])   
 
