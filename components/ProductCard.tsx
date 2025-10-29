@@ -1042,13 +1042,13 @@ export default function ProductCard({ product, session, balance }: ProductCardPr
         <Image
           src={currentProduct.img_link}
           alt={currentProduct.product_name}
-          className="object-fit p-1 drop-shadow-sm"
+          className="mt-2 object-fit p-1 drop-shadow-sm"
           width={300} height={300}
 
-        />
-        <Button onClick={handleForm} className="flex justify-center mt-5 text-xs w-25">
+        /><div className='mt-5'>
+        <Button onClick={handleForm} className="flex justify-center mb-4 text-xs w-25">
                   <span className="text-xs">Start Testing</span>
-                </Button></div></div></>
+                </Button></div></div></div></>
       )}
 
 
