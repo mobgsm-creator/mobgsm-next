@@ -71,7 +71,7 @@ export default function WalletPopup({ session }: WalletPopupProps) {
   const [isVerified, setIsVerified] = useState(false);
   const [paymentCreated, setPaymentCreated] = useState(false);
   const PaymentForm = ({ onSuccess }: { onSuccess: () => void }) => {
-    console.log("Rendering PaymentForm with clientSecret:", clientSecret);
+    //console.log("Rendering PaymentForm with clientSecret:", clientSecret);
 
     const stripe = useStripe();
     const elements = useElements();
@@ -146,7 +146,7 @@ export default function WalletPopup({ session }: WalletPopupProps) {
       setPaymentCreated(false)
       setClientSecret(null)
       setSuccessfulPayment(false)
-      console.log("Dialog closed");
+      //console.log("Dialog closed");
       // You can put any other logic here, e.g. reset fields
     }
   }}>

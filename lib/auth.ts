@@ -91,7 +91,7 @@ export const authOptions: NextAuthOptions = {
             reqHeaders?.get("x-geo-country") ||
             reqHeaders?.get("cf-ipcountry") ||
             "unknown";
-            console.log("Country:",country)
+            //console.log("Country:",country)
           // 🔹 Initialize mindmap usage record for new users
           const { data: existingUsage } = await supabase
             .from("Users")

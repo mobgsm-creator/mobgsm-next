@@ -1,12 +1,12 @@
 import { type NextRequest, NextResponse } from "next/server"
 
 export async function GET(request: NextRequest) {
-  console.log("here inside GET operator data")
+  //console.log("here inside GET operator data")
   try {
     const { searchParams } = new URL(request.url)
     const operatorId = searchParams.get("operatorId")
 
-    console.log("operatorId:", operatorId)
+    //console.log("operatorId:", operatorId)
 
     // Validate required field
     if (!operatorId) {
@@ -34,7 +34,7 @@ export async function GET(request: NextRequest) {
       },
     })
 
-    console.log("Response status:", response.status)
+    //console.log("Response status:", response.status)
 
     let data = null
     try {

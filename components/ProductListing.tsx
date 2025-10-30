@@ -75,7 +75,7 @@ const LazyProductCard = dynamic(() => import('./ProductCard'), {
 })
 
 export default function ProductListing({ product, esimProviders, BNPLProvider, airtime, gifts, view, setView, session, balance }: ProductListingProps) {  
-  console.log(balance)
+  //console.log(balance)
   const router = useRouter()
   const urlSearchParams = useSearchParams()
   const [filteredData, setFilteredData] = useState<TabData>([])

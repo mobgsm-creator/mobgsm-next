@@ -302,9 +302,9 @@ export default function ProductCard({ product, session, balance }: ProductCardPr
       },
       preorder : false, // or true based on your logic
      
-    };
+    }//;
   
-    console.log("Giftcard Purchase Request:", data);
+    //console.log("Giftcard Purchase Request:", data);
   
     try {
       const response = await fetch("/api/purchase_giftcard", {
@@ -399,7 +399,7 @@ export default function ProductCard({ product, session, balance }: ProductCardPr
   }
   
   const PaymentForm = ({ onSuccess }: { onSuccess: () => void }) => {
-    console.log("Rendering PaymentForm with clientSecret:", clientSecret);
+    //console.log("Rendering PaymentForm with clientSecret:", clientSecret);
 
     const stripe = useStripe();
     const elements = useElements();
@@ -619,7 +619,7 @@ export default function ProductCard({ product, session, balance }: ProductCardPr
       }
   } else {
     // Placeholder credits flow
-    console.log(balance[0].amount, Number(inputValue))
+    //console.log(balance[0].amount, Number(inputValue))
     if(balance[0].amount >= Number(inputValue)) {
       
    
@@ -1047,7 +1047,7 @@ export default function ProductCard({ product, session, balance }: ProductCardPr
 
         /><div className='mt-5'>
         <Button onClick={handleForm} className="flex justify-center mb-4 text-xs w-25">
-                  <span className="text-xs">Start Testing</span>
+                  <span className="text-xs">Start Earning</span>
                 </Button></div></div></div></>
       )}
 
@@ -1232,7 +1232,7 @@ export default function ProductCard({ product, session, balance }: ProductCardPr
     if (currentProduct.img_link?.includes("s3.amazonaws")) {
       // Fetch operator data & set state
       const localAmounts = await getAirtimeOperatorData(currentProduct.operator_id);
-      console.log("Local amounts:", localAmounts);
+      //console.log("Local amounts:", localAmounts);
       setOperatorId(currentProduct.operator_id);
       setAirtimeOperatorData(localAmounts);//eslint-disable-line
       setIsOpen(true);
@@ -1281,7 +1281,7 @@ export default function ProductCard({ product, session, balance }: ProductCardPr
       setButtonLoad(true)
       // Fetch operator data & set state
       const localAmounts = await getAirtimeOperatorData(currentProduct.operator_id);
-      console.log("Local amounts:", localAmounts);
+      //console.log("Local amounts:", localAmounts);
       setOperatorId(currentProduct.operator_id);
       setAirtimeOperatorData(localAmounts);
       setButtonLoad(false)

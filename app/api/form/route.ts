@@ -10,7 +10,7 @@ export async function POST(req: NextRequest) {
     if (!first_name || !last_name || !mobile || !email || !country || !product) {
       return NextResponse.json({ message: "Missing required fields" }, { status: 400 })
     }
-    console.log("here is the form data:", body)
+    //console.log("here is the form data:", body)
     const supabase = createClient()
 
     const { data, error } = await supabase
@@ -20,7 +20,7 @@ export async function POST(req: NextRequest) {
       .single()
 
     if (error) {
-      console.error("Insert error:", error)
+     // console.error("Insert error:", error)
       return NextResponse.json({ message: "Failed to save form data" }, { status: 500 })
     }
 

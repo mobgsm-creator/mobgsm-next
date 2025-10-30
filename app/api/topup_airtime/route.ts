@@ -27,7 +27,7 @@ export async function POST(request: NextRequest) {
         recipientPhone,
         senderPhone,
       })
-    console.log(req_body)
+    //console.log(req_body)
     // Validate required fields
     if (!operatorId || !amount || !recipientPhone) {
       return NextResponse.json(
@@ -65,14 +65,14 @@ export async function POST(request: NextRequest) {
     }
 
     const data = await response.json()
-    console.log(data)
+    //console.log(data)
     if (!response.ok) {
       return NextResponse.json({ error: "Reloadly API error", details: data }, { status: response.status })
     }
 
     return NextResponse.json(data)
   } catch (error) {
-    console.log(error)
+    //console.log(error)
     console.error("Topup API error:", error)
     return NextResponse.json({ error: "Internal server error" }, { status: 500 })
   }
