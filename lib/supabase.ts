@@ -16,7 +16,7 @@ export function createClient() {
       const response = await fetch(`https://mobgsm.com/api/products?country=${country}`, {
       cache: "force-cache", 
     })
-    //console.log(response)
+    console.log(response)
 
     if (!response.ok) {
       throw new Error("Failed to fetch products")
@@ -36,6 +36,7 @@ export async function getBNPL(): Promise<BNPLProvider[]> {
     const response = await fetch(`https://mobgsm.com/api/BNPL`, {
       cache: "force-cache", // Disable caching for real-time data
     })
+    console.log(response)
 
     if (!response.ok) {
       throw new Error("Failed to fetch products")
@@ -56,7 +57,7 @@ export async function getESIM(): Promise<ESIMProvider[]> {
     const response = await fetch(`https://mobgsm.com/api/ESIM`, {
       cache: "force-cache", // Disable caching for real-time data
     })
-    //console.log(response)
+    console.log(response)
 
     if (!response.ok) {
       throw new Error("Failed to fetch products")
@@ -75,7 +76,7 @@ export async function getReloadlyAirtime(): Promise<reloadly[]> {
     const response = await fetch(`https://mobgsm.com/api/reloadly_airtime`, {
       cache: "force-cache", // Disable caching for real-time data
     })
-    //console.log(response)
+    console.log(response)
 
     if (!response.ok) {
       throw new Error("Failed to fetch products")
@@ -95,7 +96,7 @@ export async function getReloadlyGifts(): Promise<reloadly[]> {
     const response = await fetch(`https://mobgsm.com/api/reloadly_giftcards`, {
       cache: "force-cache", // Disable caching for real-time data
     })
-    //console.log(response)
+    console.log(response)
 
     if (!response.ok) {
       throw new Error("Failed to fetch products")
@@ -114,7 +115,7 @@ export async function getDevices(): Promise<Device[]> {
     const response = await fetch(`https://mobgsm.com/api/devices`, {
       cache: "force-cache", // Disable caching for real-time data
     })
-    //console.log(response)
+    console.log(response)
 
     if (!response.ok) {
       throw new Error("Failed to fetch products")
