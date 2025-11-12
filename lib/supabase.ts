@@ -14,7 +14,13 @@ export function createClient() {
 
     try {
       const response = await fetch(`https://mobgsm.com/api/products?country=${country}`, {
-      cache: "force-cache", 
+      cache: "force-cache",
+      headers: {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36",
+        "Accept": "application/json, text/plain, */*",
+        "Accept-Language": "en-GB,en;q=0.9",
+        "Referer": "https://mobgsm.com/",
+      }, 
     })
     console.log(response)
 
@@ -34,7 +40,13 @@ export async function getBNPL(): Promise<BNPLProvider[]> {
 
   try {
     const response = await fetch(`https://mobgsm.com/api/BNPL`, {
-      cache: "force-cache", // Disable caching for real-time data
+      cache: "force-cache",
+      headers: {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36",
+        "Accept": "application/json, text/plain, */*",
+        "Accept-Language": "en-GB,en;q=0.9",
+        "Referer": "https://mobgsm.com/",
+      }, // Disable caching for real-time data
     })
     console.log(response)
 
@@ -55,7 +67,13 @@ export async function getESIM(): Promise<ESIMProvider[]> {
   try {
 
     const response = await fetch(`https://mobgsm.com/api/ESIM`, {
-      cache: "force-cache", // Disable caching for real-time data
+      cache: "force-cache",
+      headers: {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36",
+        "Accept": "application/json, text/plain, */*",
+        "Accept-Language": "en-GB,en;q=0.9",
+        "Referer": "https://mobgsm.com/",
+      }, // Disable caching for real-time data
     })
     console.log(response)
 
@@ -74,7 +92,13 @@ export async function getReloadlyAirtime(): Promise<reloadly[]> {
 
   try {
     const response = await fetch(`https://mobgsm.com/api/reloadly_airtime`, {
-      cache: "force-cache", // Disable caching for real-time data
+      cache: "force-cache",
+      headers: {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36",
+        "Accept": "application/json, text/plain, */*",
+        "Accept-Language": "en-GB,en;q=0.9",
+        "Referer": "https://mobgsm.com/",
+      }, // Disable caching for real-time data
     })
     console.log(response)
 
@@ -94,7 +118,13 @@ export async function getReloadlyGifts(): Promise<reloadly[]> {
 
   try {
     const response = await fetch(`https://mobgsm.com/api/reloadly_giftcards`, {
-      cache: "force-cache", // Disable caching for real-time data
+      cache: "force-cache",
+      headers: {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36",
+        "Accept": "application/json, text/plain, */*",
+        "Accept-Language": "en-GB,en;q=0.9",
+        "Referer": "https://mobgsm.com/",
+      }, // Disable caching for real-time data
     })
     console.log(response)
 
@@ -113,8 +143,15 @@ export async function getDevices(): Promise<Device[]> {
 
   try {
     const response = await fetch(`https://mobgsm.com/api/devices`, {
-      cache: "force-cache", // Disable caching for real-time data
+      cache: "force-cache",
+      headers: {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36",
+        "Accept": "application/json, text/plain, */*",
+        "Accept-Language": "en-GB,en;q=0.9",
+        "Referer": "https://mobgsm.com/",
+      }, // Disable caching for real-time data
     })
+
     console.log(response)
 
     if (!response.ok) {
