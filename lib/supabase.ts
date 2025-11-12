@@ -22,7 +22,7 @@ export function createClient() {
         "Referer": "https://mobgsm.com/",
       }, 
     })
-    console.log(response)
+    //console.log(response)
 
     if (!response.ok) {
       throw new Error("Failed to fetch products")
@@ -48,7 +48,7 @@ export async function getBNPL(): Promise<BNPLProvider[]> {
         "Referer": "https://mobgsm.com/",
       }, // Disable caching for real-time data
     })
-    console.log(response)
+    //console.log(response)
 
     if (!response.ok) {
       throw new Error("Failed to fetch products")
@@ -75,7 +75,7 @@ export async function getESIM(): Promise<ESIMProvider[]> {
         "Referer": "https://mobgsm.com/",
       }, // Disable caching for real-time data
     })
-    console.log(response)
+    //console.log(response)
 
     if (!response.ok) {
       throw new Error("Failed to fetch products")
@@ -100,7 +100,7 @@ export async function getReloadlyAirtime(): Promise<reloadly[]> {
         "Referer": "https://mobgsm.com/",
       }, // Disable caching for real-time data
     })
-    console.log(response)
+    //console.log(response)
 
     if (!response.ok) {
       throw new Error("Failed to fetch products")
@@ -126,7 +126,7 @@ export async function getReloadlyGifts(): Promise<reloadly[]> {
         "Referer": "https://mobgsm.com/",
       }, // Disable caching for real-time data
     })
-    console.log(response)
+    //console.log(response)
 
     if (!response.ok) {
       throw new Error("Failed to fetch products")
@@ -152,7 +152,7 @@ export async function getDevices(): Promise<Device[]> {
       }, // Disable caching for real-time data
     })
 
-    console.log(response)
+   // console.log(response)
 
     if (!response.ok) {
       throw new Error("Failed to fetch products")
