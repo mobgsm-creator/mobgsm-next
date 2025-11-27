@@ -1,7 +1,7 @@
 "use client"
 
 import { Button } from "./ui/button"
-
+import Image from "next/image"
 export default function HomeBanner() {
     
 
@@ -27,18 +27,24 @@ export default function HomeBanner() {
     return (
     <>
     <div className='flex flex-col items-center justify-center gap-3'>
-      <img
+      <Image
                 src="/mobgsm_banner.jpg"
                 alt="Cheap International Calls."
                 className="w-full h-auto block"
+                width={1200}
+                height={600}
+                priority
               />
               <Button onClick={() => addClick()} className="text-xs w-25">
         <span className="text-[8px]">Choose a Local Landline</span>
       </Button>
-              <img
+              <Image
                 src="/flags.png"
                 alt="Africa."
                 className="w-full h-auto block sm:w-1/2"
+                width={1200}
+                height={200}
+                priority
               /></div>
      
  
