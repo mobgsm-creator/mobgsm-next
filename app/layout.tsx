@@ -4,6 +4,7 @@ import { Inter } from "next/font/google"
 import "./globals.css"
 import MixpanelInit from "@/lib/initMixpanel"
 import Script from 'next/script';
+
 //import FooterCountryLinks from "@/components/footer";
 const inter = Inter({ subsets: ["latin"],
   display: 'swap', })
@@ -20,7 +21,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={inter.className}>
+    <html lang="en" className={`${inter.className}`}>
       <head>
         <link rel="preconnect" href="https://s3.amazonaws.com" crossOrigin="" />
         <link rel="preconnect" href="https://flagcdn.com" crossOrigin="" />

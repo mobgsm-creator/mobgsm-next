@@ -2,6 +2,13 @@
 import { useState } from "react"
 import { Button } from "./ui/button"
 import Image from "next/image"
+import { Rajdhani } from "next/font/google";
+
+const rajdhani = Rajdhani({
+  subsets: ["latin"],
+  weight: ["300", "400", "500", "600", "700"],
+  variable: "--font-rajdhani",
+});
 export default function HomeBanner() {
     const [clicked, setClicked] = useState(false);
     
@@ -30,16 +37,45 @@ export default function HomeBanner() {
     return (
     <>
     <div className='flex flex-col items-center justify-center gap-3'>
-      <Image
-                src="/mobgsm_banner.jpg"
-                alt="Cheap International Calls."
-                className="w-full h-auto block"
-                width={1200}
-                height={600}
-                priority
-              />
+    <div className={`${rajdhani.variable} relative max-w-7xl`}>
+    <Image
+      src="/mobgsm_banner.webp"
+      alt="Cheap International Calls."
+      className="flex items-center justify-center h-auto"
+      width={1200}
+      height={600}
+      priority
+    />
+
+<span
+      className="
+         absolute
+      top-3/4
+      left-[7%]
+      -translate-y-1/2
+      font-bold
+      text-white
+      text-[20px] 
+      sm:text-[30px] sm:leading-[1]
+      md:text-[38px] md:leading-[1]
+      lg:text-[48px] lg:leading-[1]
+      leading-[1.2]   
+      w-[120%] max-w-[1920px]
+      text-left
+      drop-shadow-lg
+      rajdhani-font
+      "
+    >
+      International calls to any mobile or
+      <br />
+      landline in the world without the
+      <br />
+      high cost
+    </span>
+
+  </div>
               <Button onClick={() => addClick()} className="text-xs w-25">
-        <span className="text-[8px]">Choose a Local Landline</span>
+        <span className="text-[12px]">Choose a Local Landline</span>
       </Button>
               <Image
                 src="/flags.png"
