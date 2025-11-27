@@ -8,8 +8,9 @@ import type { Product, BNPLProvider, ESIMProvider, Device, reloadly } from "../l
 import Link from "next/link"
 import { Session } from "next-auth";
 import WalletPopup from "./Wallet"
-
 import LoginButton from "./LoginButton"
+import HomeBanner from "./bannerHome"
+
 type HomePageProps = {
   country_code: string
   products: Product[]
@@ -110,7 +111,8 @@ export default function HomePageClient({
           </div>
         </div>
       </header>
-
+  
+      <HomeBanner />
       <div className="max-w-7xl mx-auto px-4 py-6">
         <ProductSectionWrapper
           country={country}
