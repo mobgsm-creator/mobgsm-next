@@ -1,11 +1,14 @@
 "use client"
-
+import { useState } from "react"
 import { Button } from "./ui/button"
 import Image from "next/image"
 export default function HomeBanner() {
+    const [clicked, setClicked] = useState(false);
     
 
     const addClick = async () => {
+        if (!clicked) {
+            setClicked(true);
         const credit_response = await fetch("/api/clickCounts", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
@@ -20,7 +23,7 @@ export default function HomeBanner() {
           }
     
           console.log("Count incrememnt success:", await credit_response.json());
-          
+        }
     }
 
     
