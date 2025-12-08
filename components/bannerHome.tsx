@@ -3,7 +3,7 @@ import { useState } from "react"
 import { Button } from "./ui/button"
 import Image from "next/image"
 import { Rajdhani } from "next/font/google";
-
+import FormPopup from "./formPopup";
 const rajdhani = Rajdhani({
   subsets: ["latin"],
   weight: ["300", "400", "500", "600", "700"],
@@ -11,6 +11,8 @@ const rajdhani = Rajdhani({
 });
 export default function HomeBanner() {
     const [clicked, setClicked] = useState(false);
+    const [showForm, setShowForm] = useState(false);
+    
     
 
     const addClick = async () => {
@@ -37,12 +39,12 @@ export default function HomeBanner() {
     return (
     <>
     <div className='flex flex-col items-center justify-center gap-3'>
-    <div className={`${rajdhani.variable} relative max-w-7xl`}>
+    <div className={`${rajdhani.variable} relative`}>
     <Image
       src="/mobgsm_banner.webp"
       alt="Cheap International Calls."
       className="flex items-center justify-center h-auto"
-      width={1200}
+      width={1920}
       height={600}
       priority
     />
@@ -56,9 +58,9 @@ export default function HomeBanner() {
       font-bold
       text-white
       text-[20px] 
-      sm:text-[30px] sm:leading-[1]
-      md:text-[38px] md:leading-[1]
-      lg:text-[48px] lg:leading-[1]
+      sm:text-[36px] sm:leading-[1]
+      md:text-[50px] md:leading-[1]
+      lg:text-[72px] lg:leading-[1]
       leading-[1.2]   
       w-[120%] max-w-[1920px]
       text-left
@@ -74,7 +76,9 @@ export default function HomeBanner() {
     </span>
 
   </div>
-              <Button onClick={() => addClick()} className="text-xs w-25">
+              <Button onClick={() => {addClick();
+                setShowForm(true);}
+              } className="text-xs w-25">
         <span className="text-[12px]">Choose a Local Landline</span>
       </Button>
               <Image
@@ -85,6 +89,11 @@ export default function HomeBanner() {
                 height={200}
                 priority
               /></div>
+              {showForm && (
+    <FormPopup
+      onClose={() => setShowForm(false)}
+      currentProduct={"landline"}
+      ></FormPopup>)}
      
  
       </>

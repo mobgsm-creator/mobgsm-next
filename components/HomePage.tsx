@@ -1,7 +1,7 @@
 'use client'
 import Image from "next/image"
 import { useState, useEffect } from "react"
-//import GamePopupClient from "./GamesPopup"
+//uimport GamePopupClient from "./GamesPopup"
 import ProductSectionWrapper from "@/components/ProductAndFilterSection"
 import CountrySelector from "@/components/CountrySelector"
 import type { Product, BNPLProvider, ESIMProvider, Device, reloadly } from "../lib/types"

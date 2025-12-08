@@ -81,7 +81,8 @@ export default function FormPopup({ onClose, currentProduct }: ComparePopupProps
         <form onSubmit={handleSubmit} className="space-y-4">
           <h3 className="text-xl font-semibold">Fill Your Details</h3>
 
-          <div className="flex flex-col gap-3 ">
+          <div className="flex flex-col justify-center gap-3 ">
+            <div className='flex flex-row gap-2'>
             <input
               type="text"
               name="first_name"
@@ -99,7 +100,7 @@ export default function FormPopup({ onClose, currentProduct }: ComparePopupProps
               onChange={handleChange}
               required
               className="border p-2 rounded w-full"
-            />
+            /></div>
             <input
               type="tel"
               name="mobile"
@@ -127,16 +128,17 @@ export default function FormPopup({ onClose, currentProduct }: ComparePopupProps
               required
               className="border p-2 rounded w-full"
             />
-            
-          </div>
-
-          <button
+            <div className='flex items-center justify-center'>
+            <button
             type="submit"
             disabled={loading}
-            className="bg-black text-white px-4 py-2 rounded hover:bg-black"
+            className="bg-black text-white px-4 py-2 rounded hover:bg-black w-1/2 items-center justify-center"
           >
             {loading ? "Submitting..." : "Submit"}
-          </button>
+          </button></div>
+          </div>
+
+          
 
           {message && <p className="mt-2">{message}</p>}
         </form>
