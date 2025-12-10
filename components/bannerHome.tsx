@@ -39,11 +39,19 @@ export default function HomeBanner() {
     return (
     <>
     <div className='flex flex-col items-center justify-center gap-3'>
-    <div className={`${rajdhani.variable} relative`}>
+    <div className={`${rajdhani.variable}`}>
+    <Image
+      src="/mobgsm_banner_2.jpg"
+      alt="Cheap International Calls."
+      className="flex items-center justify-center h-auto hidden lg:block"
+      width={1920}
+      height={600}
+      priority
+    />
     <Image
       src="/mobgsm_banner.webp"
       alt="Cheap International Calls."
-      className="flex items-center justify-center h-auto"
+      className="flex items-center justify-center h-auto lg:hidden"
       width={1920}
       height={600}
       priority
@@ -52,15 +60,15 @@ export default function HomeBanner() {
 <span
       className="
          absolute
-      top-3/4
+      top-[25%]
+      lg:top-[15%]
       left-[7%]
-      -translate-y-1/2
       font-bold
       text-white
       text-[20px] 
       sm:text-[36px] sm:leading-[1]
       md:text-[50px] md:leading-[1]
-      lg:text-[72px] lg:leading-[1]
+      lg:text-[60px] lg:leading-[1]
       leading-[1.2]   
       w-[120%] max-w-[1920px]
       text-left
