@@ -29,18 +29,18 @@ export default function GamePopupClient() {
 
             <div className="relative w-full h-auto">
               <img
-                src="/image.png"
-                alt="Test Games. Earn Cash. Win Phones."
+                src="/landline_popup.webp"
+                alt="International calls to any mobile or landline in the world without the high cost."
                 className="w-full h-auto block"
               />
 
               <button
                 onClick={() => setShowForm(true)}
-                className="flex items-center justify-center whitespace-nowrap absolute bottom-[17%] left-[8%] h-[13%] w-[30%] text-[12px] sm:text-sm sm:bottom-24 sm:left-20 sm:h-12 md:w-60 bg-purple-600 hover:bg-purple-700 text-white font-bold py-3 px-8 rounded-lg transition-colors shadow-lg"
-                aria-label="Start Testing & Earning"
+                className="flex items-center justify-center whitespace-nowrap absolute bottom-[23%] left-[38%] h-[10%] w-[24%] text-[12px] sm:text-sm sm:bottom-[118px] sm:left-[350px] sm:h-12 md:w-60 bg-black text-white font-bold py-3 px-8 rounded-lg transition-colors shadow-lg"
+                aria-label="Choose a local landline"
               >
-                <span className="block sm:hidden font-serif text-[clamp(10px,2vw,14px)]">Earn Now</span>
-                <span className="hidden sm:block font-serif text-[clamp(10px,2vw,14px)]">Start Testing & Earning</span>
+                <span className="block sm:hidden text-[clamp(10px,2vw,14px)]">Choose a Local Landline</span>
+                <span className="hidden sm:block text-[clamp(10px,2vw,14px)]">Choose a Local Landline</span>
 
               </button>
               {showForm && (

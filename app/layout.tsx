@@ -4,6 +4,7 @@ import { Inter } from "next/font/google"
 import "./globals.css"
 import MixpanelInit from "@/lib/initMixpanel"
 import Script from 'next/script';
+import GamePopupClient from "@/components/GamesPopup";
 
 //import FooterCountryLinks from "@/components/footer";
 const inter = Inter({ subsets: ["latin"],
@@ -29,7 +30,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body>
         {/* Preconnect for faster S3/FlagCDN image loads */}
         
-
+        <GamePopupClient />
         {/* Google Analytics */}
         <Script
           src="https://www.googletagmanager.com/gtag/js?id=G-C3SGSVDLL8"
