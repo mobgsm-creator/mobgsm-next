@@ -7,7 +7,7 @@ export default function GamePopupClient() {
     const [isOpen, setIsOpen] = useState(false)
     useEffect(() => {
         // Show popup after a short delay
-        const timer = setTimeout(() => setIsOpen(true), 15000)
+        const timer = setTimeout(() => setIsOpen(true), 1)
         return () => clearTimeout(timer)
     }, [])   
 
@@ -16,8 +16,8 @@ export default function GamePopupClient() {
     <>
       {/* Popup Modal */}
       {isOpen && (
-        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-2xl shadow-2xl max-w-4xl w-full overflow-hidden relative">
+        <div className="absolute inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50">
+          <div className="bg-white rounded-2xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto relative">
             {/* Close Button */}
             <button
               onClick={() => setIsOpen(false)}
@@ -36,7 +36,7 @@ export default function GamePopupClient() {
 
               <button
                 onClick={() => setShowForm(true)}
-                className="flex items-center justify-center whitespace-nowrap absolute bottom-[23%] left-[38%] h-[10%] w-[24%] text-[12px] sm:text-sm sm:bottom-[118px] sm:left-[350px] sm:h-12 md:w-60 bg-black text-white font-bold py-3 px-8 rounded-lg transition-colors shadow-lg"
+                className="flex items-center justify-center whitespace-nowrap absolute bottom-[23%] left-[38%] h-[10%] w-[36%] text-[12px] sm:text-sm bg-black text-white font-bold py-3 px-8 rounded-lg transition-colors shadow-lg"
                 aria-label="Choose a local landline"
               >
                 <span className="block sm:hidden text-[clamp(10px,2vw,14px)]">Choose a Local Landline</span>
@@ -51,7 +51,7 @@ export default function GamePopupClient() {
                   }
                     
                   }
-                  currentProduct={"Test Games $19"}
+                  currentProduct={"landline"}
                 
                 />
               )}
