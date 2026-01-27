@@ -7,9 +7,8 @@ import path from "path";
 import matter from "gray-matter";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
-import WalletPopup from "@/components/Wallet";
-import LoginButton from "@/components/LoginButton";
-import CountrySelector from "@/components/CountrySelector";
+import HeaderClientWrapper from "@/components/headerClientWrapper";
+
 // SEO metadata for the categories page
 export const metadata: Metadata = {
   title: "Everything you need to know about Mobile Phones!",
@@ -75,31 +74,7 @@ export default async function JournalCategories() {
 
   return (
     <div className="max-w-7xl mx-auto px-4 py-8 sm:px-6 lg:px-8">
-      <header className="bg-white shadow-sm border-b">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 relative">
-        <div className="mx-auto px-4 sm:px-6 lg:px-8 py-3 relative">
-      <Link  href={`https://${country ? country + "." : ""}mobgsm.com`}>
-        <Image
-          src="/MOBGSM-svg-vector.svg"
-          alt="MOBGSM Logo"
-          width={40}
-          height={40}
-          className="cursor-pointer"
-        />
-      </Link>
-    </div>
-    
-          <div className="flex flex-row absolute top-7 right-4">
-            {/* Balance Display */}
-    {session?.user?.email ? (
-    
-        <WalletPopup session={session}/>
-      ) : <LoginButton />}
-      <div className='mx-2'>
-            <CountrySelector country={country} /></div>
-          </div>
-        </div>
-      </header>
+      <HeaderClientWrapper country_value={country} session={session!}/>
 
       <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
         {categories.map((category) => (

@@ -6,11 +6,10 @@ import fs from 'fs';
 import path from 'path';
 import Link from "next/link"
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import CountrySelector from "@/components/CountrySelector"
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
-import LoginButton from "@/components/LoginButton";
 import GamePopupClient from "@/components/GamesPopup";
+import HeaderClientWrapper from "@/components/headerClientWrapper";
 const devicesJSONPath = path.join(process.cwd(), 'public', 'devices.json');
 const devicesData = JSON.parse(fs.readFileSync(devicesJSONPath, 'utf-8'));
 const countryMap: Record<string, string> = {
@@ -33,7 +32,6 @@ import  DynamicCountryLinks  from "@/components/countryDropdownDevicePage"
 import DynamicBrandLinks from "@/components/brandsDropdownDevicePage"
 import DynamicMoreLinks from "@/components/moreDropdownDevicePage"
 import { Device } from "@/lib/types"
-import WalletPopup from "@/components/Wallet";
 //export const runtime = 'edge';
 //redeploy
 
@@ -278,7 +276,7 @@ function DynamicCountryContent({ device, slugcountry}: { device: any, slugcountr
 
 export default async function BlogPage({ params }: Params) {
   
-  const session = await getServerSession(authOptions);
+
   const { slug } = await params
   const { pureSlug, rawCountry } = parseSlug(slug);
   const country = countryMap[rawCountry!] || rawCountry;
@@ -289,6 +287,7 @@ export default async function BlogPage({ params }: Params) {
   //console.log("Visitor from country:", country)
   //console.log("Page: ",pureSlug)
   
+  const session = await getServerSession(authOptions);
   const entry = Object.entries(settings).find(
       ([, value]) => value.country.toLowerCase() === country?.toLowerCase()
     ) ?? ['us', { country: 'us' }]; // Fallback to default entry if not found
@@ -301,31 +300,7 @@ export default async function BlogPage({ params }: Params) {
     <>
     <div className="">
       <div className="min-h-screen  bg-white">
-      <header className="bg-white shadow-sm border-b">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 relative">
-        <div className="mx-auto px-4 sm:px-6 lg:px-8 py-4 relative">
-      <Link  href={`https://${entry?.[0] ? entry[0] + "." : ""}mobgsm.com`}>
-        <Image
-          src="/MOBGSM-svg-vector.svg"
-          alt="MOBGSM Logo"
-          width={40}
-          height={40}
-          className="cursor-pointer"
-        />
-      </Link>
-    </div>
-    
-          <div className="flex flex-row absolute top-7 right-4">
-            {/* Balance Display */}
-            {session?.user?.email ? (
-    
-        <WalletPopup session={session} />
-      ) : <LoginButton />}
-      <div className='mx-2 gap-4'>
-            <CountrySelector country={entry![0]}  /></div>
-          </div>
-        </div>
-      </header>
+        <HeaderClientWrapper country_value={entry[0]} session={session!}/>
       <div className='mt-6 mx-0 sm:mx-12'>
         <Tabs className = 'flex sm:justify-center sm:ml-10'value="">
       <TabsList className="flex-wrap text-sm">

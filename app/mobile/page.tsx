@@ -1,10 +1,12 @@
-import Image from "next/image";
+
 import fs from 'fs';
 import path from 'path';
 import { Device } from "@/lib/types"
 import DevicesGrid from "@/components/mobilePageGrid";
-import Link from "next/link";
 import { headers } from 'next/headers'
+import HeaderClientWrapper from "@/components/headerClientWrapper";
+import { getServerSession } from "next-auth"
+import { authOptions } from "@/lib/auth"
 const devicesJSONPath = path.join(process.cwd(), 'public', 'devices.json');
 const devicesData = JSON.parse(fs.readFileSync(devicesJSONPath, 'utf-8'));
 
@@ -32,24 +34,13 @@ export default async function BlogListPage() {
     return acc;
   }, {} as Record<string, typeof devices>);
   const brands = Object.keys(brandMap);
+  const session = await getServerSession(authOptions);
   // Default brand = first key
 
 
   return (
     <>
-      <header className="bg-white shadow-sm border-b">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 justify-center">
-        <Link  href={`https://${country_domain ? country_domain + "." : ""}mobgsm.com`}>
-        <Image
-          src="/MOBGSM-svg-vector.svg"
-          alt="MOBGSM Logo"
-          width={40}
-          height={40}
-          className="cursor-pointer"
-        />
-      </Link>
-        </div>
-      </header>
+      <HeaderClientWrapper session={session!} country_value={country_domain || "us"}/>
 
       {/* Pass everything to a client container */}
       <DevicesGrid brands={brands} brandMap={brandMap} />

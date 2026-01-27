@@ -4,6 +4,10 @@ import ReactMarkdown from "react-markdown"
 import remarkGfm from "remark-gfm"
 import remarkSlug from 'remark-slug';
 import remarkAutolinkHeadings from 'remark-autolink-headings';
+import { getServerSession } from "next-auth"
+import { authOptions } from "@/lib/auth"
+import { headers } from 'next/headers'
+import HeaderClientWrapper from "@/components/headerClientWrapper";
 interface Heading {
   id: string;
   text: string;
@@ -61,8 +65,26 @@ export default async function BlogPage({
     });
   }
   const headings = extractHeadings(blog.content);
+  const session = await getServerSession(authOptions);
+  const reqHeaders = headers()
+    const host =reqHeaders.get("x-forwarded-host") ||
+    reqHeaders.get("host") ||
+    "";
+    // Split hostname by dots
+    const parts = host.split(".");
+    // If it has a subdomain (like "in.mobgsm.com"), take the first part
+    // If it's just "mobgsm.com", then no country subdomain exists
+    let country_domain: string | null = null;
+    if (parts[0].length === 2) {
+      country_domain = parts[0]; // "in" from "in.mobgsm.com"
+    }
+  const country = country_domain ||
+    reqHeaders.get('x-geo-country') ||
+    reqHeaders.get('cf-ipcountry') ||
+    'unknown'
   return (
     <div className="flex justify-center items-center min-h-screen py-10 px-4">
+      <HeaderClientWrapper country_value={country} session={session!}/>
       <div className="flex flex-col max-w-screen-xl ">
         <h1 className="text-3xl font-bold mb-4 text-center">{blog.title}</h1>
         <div className="mt-4 flex flex-col items-center justify-center gap-8">

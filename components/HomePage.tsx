@@ -36,7 +36,7 @@ export default function HomePageClient({
     { 
       country_code = "ae"
     }
-  const [country,] = useState(country_code.toLocaleUpperCase() || "")
+  const [country, setCountry] = useState(country_code.toLocaleUpperCase() || "")
   
   const [balance, setBalance] = useState<{ amount: number; currency: string }[]>([]);
  
@@ -106,7 +106,7 @@ export default function HomePageClient({
         <WalletPopup session={session}/>
       ) : <LoginButton />}
       <div className='mx-2'>
-            <CountrySelector country={country} /></div>
+            <CountrySelector country={country} setCountry={setCountry}/></div>
           </div>
         </div>
       </header>
