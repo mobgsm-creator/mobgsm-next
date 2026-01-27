@@ -6,17 +6,17 @@ import { useEffect, useState } from "react"
 import Image from "next/image"
 interface Props {
   country: string
-  setCountry?: (value: string) => void
 }
 
-const CountrySelector = ({ country, setCountry }: Props) => {
+const CountrySelector = ({ country }: Props) => {
   
   const [internalCountry, setInternalCountry] = useState(country || "us")
+  
 
   // If setCountry not provided, fallback to internal state
   const handleChange = (value: string) => {
-    if (setCountry) {
-      setCountry(value)
+    if (country) {
+      setInternalCountry(value)
     } else {
       setInternalCountry(value)
     }
@@ -157,7 +157,7 @@ const CountrySelector = ({ country, setCountry }: Props) => {
     {'code': 'ZM', 'name': 'Zambia', 'flag': '🇿🇲'},
     {'code': 'ZW', 'name': 'Zimbabwe', 'flag': '🇿🇼'}];
   
-    const current = setCountry ? country : internalCountry
+    const current = internalCountry
    
 
   useEffect(() => {
